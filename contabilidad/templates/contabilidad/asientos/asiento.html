@@ -1,0 +1,175 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Asientos
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/select2/css/select2.min.css" %}'>
+  <link rel="stylesheet" href='{% static "anopa/asientos.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="asientos" %}
+{% endblock %}
+
+{% block header %}
+  Asientos
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+
+    <div class="col-md-3">
+      {% include 'contabilidad/barra.html' %}
+    </div>
+    <div class="col-md-9">
+      {% if errores %}
+        {% include 'comunes/errores.html' with tipo="warning" %}
+      {% endif %}
+      <form action="" method="POST">{% csrf_token %}
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-sm-9">
+                {% if anterior %}
+                  <a href="{% url 'asiento_mod' numero=anterior %}">
+                    <img src="{% static 'assets/images/icons/previous.svg' %}" height="50"/>
+                  </a>
+                {% else %}
+                  <img src="{% static 'assets/images/icons/cancel.svg' %}" height="50"/>
+                {% endif %}
+                {% if posterior %}
+                  <a href="{% url 'asiento_mod' numero=posterior %}">
+                    <img src="{% static 'assets/images/icons/next.svg' %}" height="50"/>
+                  </a>
+                {% else %}
+                  {% if asiento_mod %}
+                    <a href="{% url 'asiento' %}">
+                      <img src="{% static 'assets/images/icons/next.svg' %}" height="50"/>
+                    </a>
+                  {% endif %}
+                {% endif %}
+              </div>
+              <div class="col-sm-3">
+                <label for="asiento-numero">N°</label>
+                <input type="number" id="asiento-numero" readonly step="1" class="form-control input-sm" name="" value="{{numero}}">
+              </div>
+
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-6">
+                {{ form_asiento.fecha_asiento.label_tag }}
+                {{ form_asiento.fecha_asiento }}
+              </div>
+              <div class="col-sm-6">
+                {{ form_asiento.descripcion.label_tag }}
+                {{ form_asiento.descripcion }}
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-condensed">
+                    <thead>
+                      <tr>
+                        <th width="400px">Cuenta</th>
+                        <th>Debe</th>
+                        <th>Haber</th>
+                        <th>Descripcion</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for f in formSetOperaciones %}
+                        <tr class="link-formset">
+                          <td>{{ f.cuenta }}</td>
+                          <td>{{ f.debe }}</td>
+                          <td>{{ f.haber }}</td>
+                          <td>{{ f.descripcion }}</td>
+                          <td class="text-center" style="vertical-align: middle;"></td>
+                        </tr>
+                        {{f.id}}
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>Totales</th>
+                        <th id="suma-debe" class="text-center text-white {%if suma_debe == suma_haber%}bg-success{% else %}bg-danger{%endif%}">{{suma_debe}}</th>
+                        <th id="suma-haber" class="text-center text-white {%if suma_debe == suma_haber%}bg-success{% else %}bg-danger{%endif%}">{{suma_haber}}</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  {{ formSetOperaciones.management_form }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                {% if not asiento_mod.principal %}
+                  <input type="hidden" name="guardar" value="1">
+                  <button type="submit" id="envio" class="btn btn-success btn-bordered pull-right">Guardar</button>
+                {% endif %}
+                {% if asiento_mod %}
+                  <button type="button" class="btn btn-danger btn-bordered" data-toggle="modal" data-target="#delete">Eliminar</button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+  {% if asiento_mod %}
+    <div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog" style="width:55%;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="custom-width-modalLabel">Estas seguro?</h4>
+          </div>
+          <div class="modal-body">
+            <p>Puede haber informacion relacionada con este asiento.</p>
+          </div>
+          <div class="modal-footer">
+            <form action="{% url 'asiento_eliminar' %}" method="POST">{% csrf_token %}
+              <input type="hidden"  name="eliminar" value="{{asiento_mod.id}}">
+              <button type="submit" class="btn btn-danger waves-effect waves-light">Eliminar</button>
+              <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block js %}
+
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "anopa/bootstrap-datepicker.es.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" %}'></script>
+  <script src='{% static "plugins/select2/js/select2.min.js" %}'></script>
+  <script src="{% static 'anopa/jquery.formset.js' %}"></script>
+  <script src='{% static "anopa/asientos.js" %}'></script>
+  <script>
+    $(function(){
+      $('.link-formset').formset({
+          addText: 'Nueva linea',
+          deleteText: '<i class="fa fa-trash-o text-danger"></i>',
+          addCssClass: 'add-row btn btn-bordered btn-default btn-block btn-sm',
+          deleteCssClass: 'delete-row',
+          prefix: '{{formSetOperaciones.prefix}}',
+      });
+      $(".select2").select2();
+    });
+  </script>
+{% endblock %}
+

@@ -1,0 +1,97 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Nota de Debito C {{comprobante.formatoAfipNDC}}</title>
+    <link href="{% static 'anopa/pdf.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="receipt">
+
+      <header>
+        <div class="taxpayer-details group">
+          <address>
+            {% if comprobante.consorcio.contribuyente.extras %}
+              <img src="{{ comprobante.consorcio.contribuyente.extras.logo_as_data_uri }}" alt="Logo"><br>
+            {% else %}
+              <h3>{{ comprobante.consorcio.nombre_completo }}</h3>
+            {% endif %}
+            {{ comprobante.consorcio.domicilio }}<br>
+            {{ comprobante.consorcio.provincia }}
+          </address>
+
+          <div class="receipt-type">
+            <div class="identifier">
+              {{ comprobante.notaDebito.receipt_type.description|slice:"-1:" }}
+            </div>
+            <div class="code">
+              Código {{ comprobante.notaDebito.receipt_type.code }}
+            </div>
+          </div>
+
+          <div class="receipt-details">
+            <div class="receipt-type-description">
+              {{ comprobante.notaDebito.receipt_type.description }}
+            </div>
+            <strong>Nº</strong> {{ comprobante.formatoAfipNDC }}<br>
+            {{ comprobante.notaDebito.issued_date|date:"d/m/Y" }}<br>
+            <small>
+              C.U.I.T.:{{ comprobante.consorcio.cuit }}<br>
+              Ingresos Brutos: Exento<br>
+              Inicio de actividad: {{comprobante.consorcio.contribuyente.active_since|date:"d/m/Y"}}
+            </small>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="client">
+
+          <div class="client-data">
+            <strong>SOCIO:</strong>
+            {{ comprobante.socio }} <br>
+            <strong>{{ comprobante.socio.tipo_documento }}:</strong>
+            {{ comprobante.socio.numero_documento }} <br>
+          </div>
+        </div>
+
+        <hr>
+
+      </header>
+
+      <p><strong>Detalle:</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Concepto</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ comprobante.fecha|date:"d/m/Y" }}</td>
+            <td>Intereses</td>
+            <td>{{ comprobante.notaDebito.total_amount|intcomma }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="taxpayer-details group">
+        <div class="receipt-details">
+          <table>
+              <tr>
+                <th>Total del comprobante</th>
+                <th></th>
+                <th>{{ comprobante.notaDebito.total_amount|intcomma }}</th>
+              </tr>
+          </table>
+        </div>
+      </div>
+
+
+    </div>
+  </body>
+</html>

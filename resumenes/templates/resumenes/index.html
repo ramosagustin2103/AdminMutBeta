@@ -1,0 +1,48 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Resumenes y Análisis
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/jstree/style.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Resumenes y Análisis
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0 m-b-30">Resumenes disponibles</h4>
+        <div class="panel-group" id="accordion-test-2">
+          {% for r in resumenes %}
+            <div class="panel panel-info panel-color">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion-test-2" href="#{{ r.slug }}" aria-expanded="false" class="collapsed">
+                            {{r}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ r.slug }}" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    {{r.descripcion}} <br>
+                    <a class="btn btn-info btn-sm pull-right" href="{% url 'res_par' resumen=r.slug %}"><i class="fa fa-hand-o-right"></i> Ir al resumen</a>
+                  </div>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

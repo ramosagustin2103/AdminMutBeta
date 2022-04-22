@@ -1,0 +1,112 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Liquidacion de facturas: {{liquidacion.formatoAfip}}</title>
+    <link href="{% static 'anopa/pdf.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="receipt">
+
+      <header>
+        <div class="taxpayer-details group">
+          <address>
+            {% if liquidacion.consorcio.contribuyente.extras %}
+              <img src="{{ liquidacion.consorcio.contribuyente.extras.logo_as_data_uri }}" alt="Logo"><br>
+            {% else %}
+              <h3>{{ liquidacion.consorcio.nombre_completo }}</h3>
+            {% endif %}
+            {{ liquidacion.consorcio.domicilio }}<br>
+            {{ liquidacion.consorcio.provincia }}
+          </address>
+
+          <div class="receipt-details">
+            <div class="receipt-type-description">
+              Liquidacion de Facturas
+            </div>
+            <strong>Nº</strong> {{ liquidacion.formatoAfip }}<br>
+            {{ liquidacion.fecha|date:"d/m/Y" }}<br>
+            <small>
+              C.U.I.T.:{{ liquidacion.consorcio.cuit }}<br>
+              Ingresos Brutos: Exento<br>
+              Inicio de actividad: {{liquidacion.consorcio.contribuyente.active_since|date:"d/m/Y"}}
+            </small>
+          </div>
+        </div>
+
+        <hr>
+
+      </header>
+
+      {% if liquidacion.factura_set.all %}
+        <p><strong>Detalle de facturas:</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>N°</th>
+              <th>Destinatario</th>
+              <th>Capital</th>
+              <th>Bonificacion</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for factura in liquidacion.factura_set.all %}
+              <tr>
+                <td>{{ factura.formatoAfip }}</td>
+                <td>{{ factura.socio }}</td>
+                <td>{{ factura.suma_capitales|intcomma }}</td>
+                <td>{% if factura.suma_bonificaciones %}-{{ factura.suma_bonificaciones|intcomma }}{% endif %}</td>
+                <td>{{ factura.receipt.total_amount|intcomma }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>Detalle de los creditos vinculados: </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Detalle</th>
+              <th>Recurso</th>
+              <th>Periodo</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in liquidacion.credito_set.all %}
+              <tr>
+                <td>{{ c.dominio.nombre }} - {{c.socio}}</td>
+                <td>{{ c.ingreso }}</td>
+                <td>{{ c.periodo|date:"Y-m" }}</td>
+                <td>{{ c.capital|intcomma }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+      <div class="taxpayer-details group">
+        <div class="receipt-details">
+          <table>
+            <tr>
+              <th>Suma de Capital:</th>
+              <th>{{ liquidacion.suma_capitales|intcomma }}</th>
+            </tr>
+            <tr>
+              <th>Bonificaciones:</th>
+              <th>{% if liquidacion.suma_bonificaciones %}-{{ liquidacion.suma_bonificaciones|intcomma }}{% else %}0{% endif %}</th>
+            </tr>
+            <tr>
+              <th>Total de la Liquidacion:</th>
+              <th>{{ liquidacion.suma_brutos|intcomma }}</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

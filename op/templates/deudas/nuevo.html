@@ -1,0 +1,44 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Nueva deuda
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="deudas" bhijo1="nuevo" %}
+{% endblock %}
+
+{% block header %}
+  Nueva deuda
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+  	<div class="col-md-3">
+      {% include 'deudas/barra.html' %}
+    </div>
+    <div class="col-md-6">
+	    {% include 'comunes/simple-form-sincancelar.html' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "anopa/bootstrap-datepicker.es.js" %}'></script>
+  <script>
+    $(function () {
+      $('#datepicker-autoclose').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        orientation: 'bottom auto',
+        language: 'es',
+      });
+    })
+  </script>
+{% endblock %}

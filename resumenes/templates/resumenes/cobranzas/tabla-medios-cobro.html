@@ -1,0 +1,34 @@
+{% load resumenes_tags %}
+{% load humanize %}
+<table class="table table-condensed">
+  {% spaceless %}
+    {% for caja, valor in cajas.items %}
+      {% if valor %}
+        <tr>
+          <td>{{ caja.nombre }}:</td>
+          <td class="text-right">{{ valor|porcentaje:total_cajas }}</td>
+          <td class="text-right">${{ valor|intcomma }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  {% endspaceless %}
+  {% if total_saldos_utilizados %}
+    <tr>
+      <td>Utilizaciones de saldos</td>
+      <td class="text-right">{{ total_saldos_utilizados|porcentaje:total_cajas }}</td>
+      <td class="text-right">${{ total_saldos_utilizados|intcomma }}</td>
+    </tr>
+  {% endif %}
+  {% if total_nc %}
+    <tr>
+      <td>Notas de Credito</td>
+      <td class="text-right">{{ total_nc|porcentaje:total_cajas }}</td>
+      <td class="text-right">${{ total_nc|intcomma }}</td>
+    </tr>
+  {% endif %}
+  <tr>
+    <th>Total</th>
+    <th class="text-right">{{ total_cajas|porcentaje:total_cajas }}</th>
+    <th class="text-right">${{ total_cajas|intcomma }}</th>
+  </tr>
+</table>

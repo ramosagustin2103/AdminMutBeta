@@ -1,0 +1,39 @@
+{% load humanize %}
+  <table class="anopa table display nowrap" style="width:100%">
+    <thead>
+      <tr>
+        <th width="20"></th>
+        <th width="20"></th>
+        <th>Dominio</th>
+        <th>Socio</th>
+        <th>Concepto</th>
+        <th>Periodo</th>
+        <th class="text-right">Capital</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for concepto in conceptos %}
+          <tr>
+            <td class="text-center">
+              <a href="{% url 'editar-concepto' pk=objeto.pk %}" id="envio" class="btn btn-icon btn-bordered btn-warning btn-xs">
+                <i class="fa fa-pencil"></i>
+              </a>
+            </td>
+            <td class="text-center">
+              <a href="{% url 'eliminar-concepto' pk=objeto.pk %}" id="envio" class="btn btn-icon btn-bordered btn-danger btn-xs">
+                <i class="fa fa-trash"></i>
+              </a>
+            </td>
+            <td>{{ concepto.dominio.nombre|default:"Cliente" }}</td>
+            {% if not user.groups.first.name == "socio" %}
+              <td>{{ credito.socio }}</td>
+            {% endif %}
+            <td>{{ credito.ingreso }}</td>
+            <td>{{ credito.periodo|date:"Y-m" }}</td>
+            <td class="text-right">
+                {{ credito.capital|intcomma }}
+            </td>
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>

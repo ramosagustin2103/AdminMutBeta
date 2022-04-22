@@ -1,0 +1,197 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Ejercicio {{ejercicio.nombre}}
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/custombox/css/custombox.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="ejercicios" bhijo2=ejercicio.nombre %}
+{% endblock %}
+
+{% block header %}
+  Ejercicio {{ejercicio.nombre}}
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'contabilidad/barra.html' %}
+    </div>
+		<div class="col-md-9">
+  		<div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-purple panel-border">
+            <div class="panel-heading">
+              <h3 class="panel-title">Informacion</h3>
+            </div>
+            <div class="panel-body">
+              <h4 class="m-b-25">Nombre: <small>{{ ejercicio.nombre }}</small></h4>
+              <h4 class="m-b-25">Estado:
+                {% if ejercicio.activo %}
+                  <span class="label label-success">Activo</span>
+                {% else %}
+                  <form action="" method="POST">{% csrf_token %}
+                    <button type="submit" name="activar" value="1" class="btn btn-xs btn-danger waves-effect waves-light">Inactivo</button>
+                  </form>
+                {% endif %}
+              </h4>
+              <h4 class="m-b-25">Inicio: <small>{{ ejercicio.inicio|date:"d/m/Y" }}</small></h4>
+              <h4 class="m-b-25">Cierre: <small>{{ ejercicio.cierre|date:"d/m/Y" }}</small></h4>
+              <div class="table-responsive">
+                <table class="table">
+                  <tr>
+                    <td>Asiento de apertura</td>
+                      {% if ejercicio.asiento_apertura %}
+                      <td class="text-center">
+                        <a href="{% url 'asiento_redireccion' id_asiento=ejercicio.asiento_apertura.id %}" class="btn btn-purple btn-bordered btn-xs pull-right">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                      </td>
+                      <td>
+                        <form action="{% url 'asiento_eliminar' %}" method="POST">{% csrf_token %}
+                          <button type="submit" name="eliminar" value="{{ ejercicio.asiento_apertura.id }}" class="btn btn-danger btn-bordered btn-xs pull-left">
+                            <i class="fa fa-trash-o"></i>
+                          </button>
+                        </form>
+                      </td>
+                      {% else %}
+                        {% if not ejercicio_anterior %}
+                          <td colspan="2" class="text-center">
+                            <small>Primer ejercicio no realiza apertura</small>
+                          </td>
+                        {% else %}
+                        <td colspan="2" class="text-center">
+                          <form action="{% url 'asiento_generador' %}" method="POST">{% csrf_token %}
+                            <input type="hidden" name="operacion" value="asiento_apertura">
+                            <input type="hidden" name="ejercicio" value="{{ejercicio.id}}">
+                            <button class="btn btn-purple btn-bordered btn-xs">Generar</button>
+                          </form>
+                        </td>
+                        {% endif %}
+                      {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Asiento de cierre de resultados</td>
+                    {% if ejercicio.asiento_cierre_res %}
+                      <td class="text-center">
+                        <a href="{% url 'asiento_redireccion' id_asiento=ejercicio.asiento_cierre_res.id %}" class="btn btn-purple btn-bordered btn-xs pull-right">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                      </td>
+                      <td>
+                        <form action="{% url 'asiento_eliminar' %}" method="POST">{% csrf_token %}
+                          <button type="submit" name="eliminar" value="{{ ejercicio.asiento_cierre_res.id }}" class="btn btn-danger btn-bordered btn-xs pull-left">
+                            <i class="fa fa-trash-o"></i>
+                          </button>
+                        </form>
+                      </td>
+                      {% else %}
+                        <td colspan="2" class="text-center">
+                          <form action="{% url 'asiento_generador' %}" method="POST">{% csrf_token %}
+                            <input type="hidden" name="operacion" value="asiento_cierre_res">
+                            <input type="hidden" name="ejercicio" value="{{ejercicio.id}}">
+                            <button class="btn btn-purple btn-bordered btn-xs">Generar</button>
+                          </form>
+                        </td>
+                      {% endif %}
+                  </tr>
+                  <tr>
+                    <td>Asiento de cierre patrimonial</td>
+                      {% if ejercicio.asiento_cierre_pat %}
+                        <td class="text-center">
+                          <a href="{% url 'asiento_redireccion' id_asiento=ejercicio.asiento_cierre_pat.id %}" class="btn btn-purple btn-bordered btn-xs pull-right">
+                            <i class="fa fa-eye"></i>
+                          </a>
+                        </td>
+                        <td class="text-center">
+                          <form action="{% url 'asiento_eliminar' %}" method="POST">{% csrf_token %}
+                            <button type="submit" name="eliminar" value="{{ ejercicio.asiento_cierre_pat.id }}" class="btn btn-danger btn-bordered btn-xs pull-left">
+                              <i class="fa fa-trash-o"></i>
+                            </button>
+                          </form>
+                        </td>
+                      {% else %}
+                        <td colspan="2" class="text-center">
+                          <form action="{% url 'asiento_generador' %}" method="POST">{% csrf_token %}
+                            <input type="hidden" name="operacion" value="asiento_cierre_pat">
+                            <input type="hidden" name="ejercicio" value="{{ejercicio.id}}">
+                            <button class="btn btn-purple btn-bordered btn-xs">Generar</button>
+                          </form>
+                        </td>
+                      {% endif %}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <a href="{% url 'ejercicio_diario' ejercicio=ejercicio.numero_aleatorio %}">
+                  <div class="card-box">
+                      <div class="text-center">
+                        <img src="{% static 'assets/images/icons/news.svg' %}" height="50">
+                      </div>
+                    <div class="text-center">
+                      <h4>Libro Diario</h4>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-md-6">
+                <a href="{% url 'mantenimiento' %}">
+                  <div class="card-box">
+                      <div class="text-center">
+                        <img src="{% static 'assets/images/icons/diploma_1.svg' %}" height="50">
+                      </div>
+                    <div class="text-center">
+                      <h4>Estados contables</h4>
+                    </div>
+                  </div>
+                </a>
+              </div>
+                {% if ejercicio.asiento_apertura or ejercicio.asiento_cierre_res or ejercicio.asiento_cierre_pat %}
+                  <p><small><i>Para eliminar el ejercicio debe eliminar los 3 asientos principales</i></small></p>
+                {% else %}
+                  <div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" style="width:55%;">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                          <h4 class="modal-title" id="custom-width-modalLabel">Estas seguro?</h4>
+                        </div>
+                        <div class="modal-body">
+                          <p>Esto puede generar perdida de informacion importante realcionada con el ejercicio.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <form action="" method="POST">{% csrf_token %}
+                            <input type="hidden"  name="eliminar" value="{{ejercicio.id}}">
+                            <button type="submit" class="btn btn-danger waves-effect waves-light">Eliminar</button>
+                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-bordered" data-toggle="modal" data-target="#delete">Eliminar</button>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+  <script src='{% static "plugins/custombox/js/custombox.min.js" %}'></script>
+  <script src='{% static "plugins/custombox/js/legacy.min.js" %}'></script>
+
+
+
+{% endblock %}

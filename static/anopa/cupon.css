@@ -1,0 +1,237 @@
+/* This is a sample ticket HTML/CSS
+   ========================================================================== */
+
+* {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* Prince declarations
+   ========================================================================== */
+@page {
+    size: 21cm 29.7cm;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* General typography
+   ========================================================================== */
+
+body {
+    background: #FFF;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.4;
+
+    background: #FFF url(bg.svg) no-repeat bottom right;
+    background-size: 11.57cm 7.43cm;
+}
+
+img {
+    max-width: 100%;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Main layout
+   ========================================================================== */
+
+.a4-ticket {
+    height: 100%;
+    width: 100%;
+}
+
+.a4-ticket:before {
+    content: "";
+    background: #D9D9D9;
+    width: 100%;
+    display: block;
+    height: 1cm;
+}
+
+/* Adjust barcode
+   ========================================================================== */
+
+.barcode-holder {
+    background: #FFF;
+    text-align: center;
+}
+
+.barcode-text {
+    background: #FFF;
+    overflow: hidden;
+    text-align: center;
+}
+
+.barcode-hint,
+.barcode {
+    text-align: center;
+    font-family: 'barcode-font';
+    font-size: 12pt;
+}
+
+.barcode img {
+    height: 80px;
+    width: 450px;
+}
+
+.barcode-hint {
+    font-family: monospace;
+    font-size: 6pt;
+    margin-top: 4px;
+}
+
+.barcode {
+    font-family: "barcode39", monospace;
+    font-size: 2.5cm;
+}
+
+
+/* Event header
+   ========================================================================== */
+
+.event-header {
+    padding: 1cm 1cm;
+    overflow: hidden;
+}
+
+.event-header .event-logo {
+    float: left;
+}
+
+.event-header .event-logo img {
+    width: 1.9cm;
+    height: 1.25cm;
+    display: block;
+}
+
+.event-header .event-meta {
+    float: right;
+    text-align: right;
+}
+
+/* Event info
+   ========================================================================== */
+
+.event-info {
+    padding: 1cm 2cm;
+    border-top: 2px solid #DDD;
+}
+
+.event-info h2,
+.event-info p {
+    margin: 0;
+    padding: 0;
+}
+
+.event-info h2 {
+    font-size: 18pt;
+}
+
+.event-info p {
+    text-transform: uppercase;
+}
+
+/* Ticket info
+   ========================================================================== */
+
+.ticket-info {
+    background: #EEE;
+    overflow: hidden;
+    padding: 1cm 2cm;
+    border-top:1 2px solid #DDD;
+    height: 4cm;
+}
+
+
+.ticket-info .ticket-info-left {
+    float: left;
+    width: 30%;
+    margin-left: 5%;
+}
+
+.ticket-info .ticket-info-left p {
+    padding: 0;
+    margin: 0;
+}
+
+.ticket-info .ticket-info-right {
+    float: left;
+    width: 19.9%;
+}
+
+.ticket-info-price {
+    font-size: 18pt;
+    font-weight: 700;
+}
+
+.ticket-info-price span {
+    font-weight: 400;
+}
+
+/* Event calendar
+   ========================================================================== */
+
+.event-calendar {
+    overflow: hidden;
+    padding: 1cm 2cm;
+    border-top: 2px solid #DDD;
+}
+
+.event-calendar .month {
+    width: 33%;
+    float: left;
+}
+
+.event-calendar table {
+    width: 100%;
+}
+
+.event-calendar table td {
+    vertical-align: top;
+    padding-right: 5px;
+}
+
+.event-calendar table td:first-child {
+    font-weight: 700;
+}
+
+/* Legal
+   ========================================================================== */
+
+.legal {
+    border-top: 2px solid #DDD;
+    overflow: hidden;
+    padding: 1cm 2cm;
+    font-size: 6.5pt;
+    color: #999;
+}
+
+/* Sponsors
+   ========================================================================== */
+
+.sponsors-holder {
+    border-top: 2px solid #DDD;
+    padding: 0.5cm 2cm 0 2cm;
+}
+
+.sponsors-holder .sponsors {
+    max-width: 14.2cm;
+}
+
+
+@font-face {
+    font-family: 'barcode-font';
+    src: url('tmglobal/fonts/IDAutomationC128S.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

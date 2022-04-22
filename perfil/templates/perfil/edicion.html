@@ -1,0 +1,34 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Edicion
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="perfil" bhijo1="edicion" %}
+{% endblock %}
+
+{% block header %}
+  Edicion
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+		<div class="col-md-6">
+  		{% include 'comunes/simple-form.html' %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	<script>
+		$(document).ready(function(){
+			$('input').attr('class', 'form-control')
+		});
+	</script>
+{% endblock %}

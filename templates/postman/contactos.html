@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-md-12">
+    <ul class="nav nav-tabs navtab-bg nav-justified">
+      <li class="active">
+          <a href="#administradores" data-toggle="tab" aria-expanded="true">
+              <span class="visible-xs">A</span>
+              <span class="hidden-xs">Administradores</span>
+          </a>
+      </li>
+      {% if user.groups.all.0.name == "administrativo" %}
+      <li class="">
+          <a href="#contadores" data-toggle="tab" aria-expanded="false">
+              <span class="visible-xs">C</span>
+              <span class="hidden-xs">Contadores</span>
+          </a>
+      </li>
+      <li class="">
+          <a href="#socios" data-toggle="tab" aria-expanded="false">
+              <span class="visible-xs">S</span>
+              <span class="hidden-xs">Socios</span>
+          </a>
+      </li>
+      {% endif %}
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="administradores">
+          <select multiple="" class="selector form-control">
+            {% spaceless %}
+              {% for u in consorcio.usuarios.all %}
+                {% if u.groups.all.0.name == "administrativo" and u != user %}
+                  <option value="{{u.username}}">
+                    {% spaceless %}
+                      {% if u.get_full_name %}
+                        {{u.get_full_name}} - {{u.username}}
+                      {% else %}
+                        {{u.username}}
+                      {% endif %}
+                    {% endspaceless %}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            {% endspaceless %}
+          </select>
+        </div>
+        {% if user.groups.all.0.name == "administrativo" %}
+          <div class="tab-pane" id="contadores">
+            <select multiple="" class="selector form-control">
+              {% spaceless %}
+                {% for u in consorcio.usuarios.all %}
+                  {% if u.groups.all.0.name == "contable" %}
+                    <option value="{{u.username}}">
+                      {% spaceless %}
+                        {% if u.get_full_name %}
+                          {{u.get_full_name}} - {{u.username}}
+                        {% else %}
+                          {{u.username}}
+                        {% endif %}
+                      {% endspaceless %}
+                    </option>
+                  {% endif %}
+                {% endfor %}
+              {% endspaceless %}
+            </select>
+          </div>
+          <div class="tab-pane" id="socios">
+            <select multiple="" class="selector form-control">
+              {% spaceless %}
+                {% for u in consorcio.usuarios.all %}
+                  {% if u.groups.all.0.name == "socio" %}
+                    <option value="{{u.username}}">
+                      {% spaceless %}
+                        {% if u.get_full_name %}
+                          {{u.get_full_name}} - {{u.username}}
+                        {% else %}
+                          {{u.username}}
+                        {% endif %}
+                      {% endspaceless %}
+                    </option>
+                  {% endif %}
+                {% endfor %}
+              {% endspaceless %}
+            </select>
+          </div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+<br>

@@ -1,0 +1,52 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Parametrizacion
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="parametros" bhijo1=parametro %}
+{% endblock %}
+
+{% block header %}
+  Parametrizacion
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'arquitectura/barra.html' %}
+    </div>
+		<div class="col-md-6">
+  		{% include 'comunes/simple-form.html' %}
+		</div>
+    {% if object.primario %}
+      <div class="col-md-3">
+        {% include 'comunes/alerta.html' with tipo="warning" %}
+      </div>
+    {% endif %}
+	</div>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "anopa/bootstrap-datepicker.es.js" %}'></script>
+  <script>
+    $(function () {
+      $('.datepicker-autoclose').datepicker({
+          autoclose: true,
+          todayHighlight: true,
+          format: 'yyyy-mm-dd',
+          language: 'es',
+          orientation: 'bottom'
+      });
+    })
+  </script>
+{% endblock %}
+

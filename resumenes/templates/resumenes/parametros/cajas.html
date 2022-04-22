@@ -1,0 +1,10 @@
+<label for="id_cajas">Metodos de cobro: </label>
+<select id="id_cajas" name="cajas" multiple="" required="" class="selector form-control">
+  {% spaceless %}
+    {% for c in consorcio.caja_set.all %}
+      <option value="{{c.id}}">
+          {{c}}
+      </option>
+    {% endfor %}
+  {% endspaceless %}
+</select>

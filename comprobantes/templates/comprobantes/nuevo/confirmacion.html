@@ -1,0 +1,180 @@
+{% extends extension %}
+{% load humanize %}
+
+{% block panel-body %}
+  <div class="card-box text-center">
+    <h4 class="m-t-0 header-title"><i class="fa fa-exclamation-triangle"></i> Confirmación</h4>
+    <p>
+      Estas por generar: {{tipo}}. <br>
+      Revisa y aceptá solo si tenes certeza de que los datos que ingresaste son los correctos. <br>
+      Recorda que una vez generado no se puede eliminar.
+    </p>
+  </div>
+  <hr>
+  {% if masivo %}
+    <!--
+      Generar template de generacion masiva de recibos x (EXP) 
+      También revisar el encabezado
+    -->
+    <div class="table-responsive">
+      <table class="table table-condensed table-bordered">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th width="15%">Fecha de Factura</th>
+            <th width="15%">Numero de Factura</th>
+            <th width="15%">Importe</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for documento in documentos %}
+              <tr>
+                <th colspan="4" class="info">
+                  Socio: {{documento.socio}} - {{documento.descripcion}}
+                  {% for caja in documento.data_cajas %}
+                    Total Pagado: <u>${{caja.subtotal|intcomma}}</u>
+                  {% endfor %}
+                </th>
+              </tr>
+              <tr>
+                <th colspan="4" class="secondary">
+                  Imputaciones
+                </th>
+              </tr>
+            {% for cobro in documento.data_cobros %}
+              <tr>
+                <td>{{cobro.credito.ingreso}}: {{cobro.credito.periodo.year}}-{{cobro.credito.periodo.month}}</td>
+                <td>{{cobro.credito.fecha|date:"d/m/Y"}}</td>
+                <td>{{cobro.credito.factura.receipt}}</td>
+                <td>${{cobro.subtotal|intcomma}}</td>
+              </tr>
+            {% endfor %}
+            {% if documento.data_nuevo_saldo %}
+              <tr>
+                <th colspan="4" class="text-right" style="background-color: #e6e6fa;">
+                  Saldo a favor luego de imputaciones: <u>${{documento.data_nuevo_saldo|intcomma}}</u>
+                </th>
+              </tr>
+            {% endif %}
+            <tr style="height: 50px;">
+              <td colspan="4"></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    
+  {% else %}
+    <div class="table-responsive">
+      <table class="table table-condensed table-bordered">
+        <tbody>
+            <tr>
+              <th class="success text-center" colspan="2">Detalles de la operacion</th>
+            </tr>
+          <tr>
+            <th>Operacion</th>
+            <th class="text-right">{{tipo}}</th>
+          </tr>
+          <tr>
+            <th>Socio</th>
+            <th class="text-right">{{socio}}</th>
+          </tr>
+          {% if descripcion %}
+            <tr>
+              <th>Descripcion</th>
+              <th class="text-right">{{descripcion}}</th>
+            </tr>
+          {% endif %}
+          {% if total %}
+            <tr>
+              <th>Total del comprobante</th>
+              <th class="text-right">${{total|intcomma}}</th>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    {% if cobros %}
+      <hr>
+      <div class="table-responsive">
+        <table class="table table-condensed table-bordered">
+          <tbody>
+            <tr>
+              <th class="info text-center" colspan="2">Cobros realizados</th>
+            </tr>
+            {% for c in cobros %}
+              <tr>
+                <th>{{c.credito.dominio.nombre}} {{c.credito.ingreso}}. {{ c.credito.periodo|date:"Y-m" }}</th>
+                <td class="text-right">
+                  ${{c.subtotal|intcomma}}
+                </td>
+              </tr>
+            {% endfor %}
+            {% if creditos %}
+              <tr class="warning">
+                <th class="text-center" colspan="2">Deudas pendientes</th>
+              </tr>
+              {% for c in creditos %}
+                <tr>
+                  <th>{{c.dominio.nombre}} {{c.ingreso}}. {{ c.periodo|date:"Y-m" }}</th>
+                  <td class="text-right">
+                    ${{c.capital|intcomma}}
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    <hr>
+    {% if cajas %}
+      <div class="table-responsive">
+        <table class="table table-condensed table-bordered">
+          <tbody>
+            <tr>
+              <th class="info text-center" colspan="2">Medios de pago</th>
+            </tr>
+            {% for c in cajas %}
+              <tr>
+                <th>{{ c.caja }}</th>
+                <td class="text-right">
+                  ${{c.valor|intcomma}}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    {% if saldos or nuevo_saldo %}
+      <div class="table-responsive">
+        <table class="table table-condensed table-bordered">
+          <tbody>
+            <tr>
+              <th class="warning text-center" colspan="2">Saldos del socio</th>
+            </tr>
+            {% for s in saldos %}
+                <tr>
+                  <th>{{ s.nombre }}</th>
+                  <td class="text-right">
+                    ${{ s.subtotal|intcomma }}
+                  </td>
+                </tr>
+            {% endfor %}
+            {% if nuevo_saldo %}
+              <tr>
+                <th>Nuevo saldo</th>
+                <td class="text-right">
+                  ${{ nuevo_saldo.subtotal|intcomma }}
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endblock %}

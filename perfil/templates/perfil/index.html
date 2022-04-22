@@ -1,0 +1,142 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Perfil del usuario
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="perfil" %}
+{% endblock %}
+
+{% block header %}
+  Perfil del usuario
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card-box">
+        <h4 class="header-title text-left m-t-0">
+          <img src="{% static 'assets/images/icons/assistant.svg' %}" alt="" class="thumb-lg img-circle"> Informacion del usuario
+        </h4>
+        <div class="table-responsive">
+          <table class="table">
+            <tr>
+              <th class="text-right">
+                Usuario:
+              </th>
+              <td class="text-left">
+                {{user}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">
+                Nombre:
+              </th>
+              <td class="text-left">
+                {% if user.first_name %}
+                  {{user.first_name}} {{user.last_name}}
+                {% else %}
+                  Falta actualizar
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">
+                E-mail:
+              </th>
+              <td class="text-left">
+                {% if user.email %}
+                  {{user.email}}
+                {% else %}
+                  Falta actualizar
+                {% endif %}               
+              </td>
+            </tr>
+              <tr>
+                <th class="text-right">
+                  Grupo:
+                </th>
+                <td class="text-left">
+                  {{user.groups.all.0.name|capfirst}}       
+                </td>
+              </tr>
+
+
+          </table>
+        </div>
+        <a href="{% url 'perfil_edicion' %}" class="btn btn-block btn-purple">Actualizar informacion</a>
+        <a href="{% url 'perfil_pass' %}" class="btn btn-block btn-pink">Modificar contraseña</a>
+      </div>
+    </div>
+    {% if user.groups.all.0.name == "socio" %}
+      <div class="col-md-6">
+        <div class="card-box">
+          <h4 class="header-title text-right m-t-0">
+            Informacion del Socio<img src="{% static 'assets/images/icons/selfie.svg' %}" alt="" class="thumb-lg img-circle">
+          </h4>
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th class="text-right">#</th>
+                <td class="text-left">{{ socio.numero }}</td>
+              </tr>
+              <tr>
+                <th class="text-right">Nombre</th>
+                <td class="text-left">{{ socio }}</td>
+              </tr>
+              <tr>
+                <th class="text-right">{{socio.tipo_documento}}</th>
+                <td class="text-left">{{socio.numero_documento}}</td>
+              </tr>
+              <tr>
+                <th class="text-right">Profesion</th>
+                <td class="text-left">{{socio.profesion}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>      
+        <div class="card-box">
+          <h4 class="header-title text-right m-t-0">
+            Informacion de dominios<img src="{% static 'assets/images/icons/home.svg' %}" alt="" class="thumb-lg img-circle">
+          </h4>
+          <div class="table-responsive">
+            <table class="table">
+              {% for dominio in dominios %}
+                <tr class="info">
+                  <th class="text-right">#</th>
+                  <td class="text-left">{{ dominio.numero }}</td>
+                </tr>
+                {% if dominio.identificacion %}
+                  <tr>
+                    <th class="text-right">Vinculo</th>
+                    <td class="text-left">{{dominio.identificacion}}</td>
+                  </tr>
+                {% endif %}               
+                {% if dominio.superficie_total %}
+                  <tr>
+                    <th class="text-right">Sup. total</th>
+                    <td class="text-left">{{dominio.superficie_total}}</td>
+                  </tr>
+                {% endif %}
+
+                {% if dominio.superficie_cubierta %}
+                  <tr>
+                    <th class="text-right">Sup. cubierta</th>
+                    <td class="text-left">{{dominio.superficie_cubierta}}</td>
+                  </tr>
+                {% endif %}
+
+
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      </div>
+    {% endif %}   
+  </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Errores de de facturas {{liquidacion.formatoAfip}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="facturacion" bhijo1="registro de liquidaciones" bhijo2=liquidacion.formatoAfip %}
+{% endblock %}
+
+{% block header %}
+  Errores de de facturas {{liquidacion.formatoAfip}}
+{% endblock %}
+
+{% block contenido %}
+  <form method="POST">{% csrf_token %}
+    <div class="row">
+      {% for factura in facturas_invalidas %}
+        <div class="col-md-4">
+          <div class="card-box widget-box-three ribbon-box">
+            <div class="bg-icon pull-left">
+              <img src="{% static 'assets/images/icons/leave.svg' %}">
+            </div>
+            <div class="text-right">
+              <h2 class="m-b-10">{{ factura.socio.nombre_completo }}</h2>
+              <p class="m-t-5 text-uppercase font-14 font-600">AFIP informa:</p>
+              <p>{{factura.observacion}}</p>
+              <p class="font-14 font-600">
+                Si desea revisar los datos del destinatario de esta factura
+                {% if factura.socio.es_socio %}
+                  <a href="{% url 'instancia' modelo='Socio' pk=factura.socio.pk %}" target="_blank">click aqui</a>
+                {% else %}
+                  <a href="{% url 'instancia' modelo='Cliente' pk=factura.socio.pk %}" target="_blank">click aqui</a>
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-block btn-info" type="submit" value="Save">Reintentar envio hacia AFIP</button>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}

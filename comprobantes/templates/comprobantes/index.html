@@ -1,0 +1,117 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Cobranzas
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="cobranzas" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Cobranzas
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3">
+    {% include 'comprobantes/barra.html' %}
+  </div>
+
+  <div class="col-md-9">
+
+    <div class="row">
+
+      <div class="col-md-6">
+        <div class="card-box widget-box-four">
+          {% if a_generar_mp or a_generar_exp %}
+            <div class="pull-right">
+              <img src="{% static 'assets/images/icons/medium_priority.svg' %}" height="80">
+            </div>
+            <div class="wigdet-four-content pull-left">
+              <h4 class="m-t-0 font-16 m-b-5 text-overflow">Cobros recibidos</h4>
+              {% if a_generar_mp %}
+                <p class="font-secondary text-muted">
+                  Debes generar recibos para {{a_generar_mp}} cobros de MercadoPago
+                  <a href="{% url 'nuevo-rcxmp' %}">Click aqui</a>
+                </p>
+              {% endif %}
+              {% if a_generar_exp %}
+                <p class="font-secondary text-muted">
+                  Debes generar recibos para {{a_generar_exp}} cobros <br>
+                  <a href="{% url 'nuevo-rcxexp' %}" class="btn m-t-10 btn-default btn-bordered">Generación Individual</a>
+                  <a href="{% url 'nuevo-rcxexp-masivo' %}" class="btn m-t-10 btn-default btn-bordered">Generación Masiva</a>
+                </p>
+              {% endif %}              
+            </div>
+            <div class="clearfix"></div>
+          {% else %}
+            <div class="pull-right">
+              <img src="{% static 'assets/images/icons/approval.svg' %}" height="80">
+            </div>
+            <div class="wigdet-four-content pull-left">
+              <h4 class="m-t-0 font-16 m-b-5 text-overflow">Cobros documentados</h4>
+                <p class="font-secondary text-muted">
+                  No hay cobros que necesiten recibo. <br>
+                  Para generar un nuevo comprobante, <br>
+                  busca la opcion en el menu.
+                </p>
+            </div>
+            <div class="clearfix"></div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card-box widget-box-four">
+          {% with filter.qs|first as comp %}
+            {% if comp %}
+              <div class="pull-right">
+                <img src="{% static 'assets/images/icons/document.svg' %}" height="80">
+              </div>
+              <div class="wigdet-four-content pull-left">
+                <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">Ultimo comprobante</h4>
+                <p class="font-secondary text-muted">
+                  <strong>Socio: </strong>{{comp.socio}} <br>
+                  <strong>Total: </strong>${{comp.total|intcomma}} <br>
+                </p>
+                <h3 class="m-b-0">
+                  <a href="{% url 'pdf-comprobante' pk=comp.pk %}" target="_blank">
+                    {{comp.nombre}}
+                  </a>
+                </h3>
+              </div>
+              <div class="clearfix"></div>
+            {% else %}
+              <p>
+                Aun no hay comprobantes. <br>
+              </p>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Ultimos comprobantes generados</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'comprobantes/registros/tabla-comprobantes.html' with comprobantes=lista %}
+              <a href="{% url 'registro' %}" class="btn btn-link btn-block">Ver mas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+

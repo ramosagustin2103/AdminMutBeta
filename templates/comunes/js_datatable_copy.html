@@ -1,0 +1,49 @@
+{% load staticfiles %}
+<script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+<script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+<script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+<script src='{% static "plugins/datatables/dataTables.responsive.min.js" %}''></script>
+<script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+<script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+<script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+<script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $(".anopa").length && $(".anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "copy",
+                      className: "btn-sm",
+                      header:false,
+                  }],
+                  scrollX: true,
+                  ordering:false,
+                    language: {
+                      "emptyTable": "No hay entradas",
+                      "search": "Buscar: ",
+                      "paginate": {
+                          "first":"Primero",
+                          "last":"Ultimo",
+                          "next":">",
+                          "previous":"<",
+                      },
+                      "lengthMenu": "Ver _MENU_ entradas",
+                      "info": "Visualizando _START_ a _END_ de _TOTAL_ entradas",
+                      "infoEmpty": "Visualizando 0 a 0 de 0 entradas",
+                    },
+                });
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+    });
+  </script>

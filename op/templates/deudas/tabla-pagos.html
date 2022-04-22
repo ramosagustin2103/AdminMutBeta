@@ -1,0 +1,39 @@
+{% load humanize %}
+<table class="anopa table table-condensed">
+  <thead>
+    <tr>
+      <th>Orden de pago</th>
+      <th class="text-right">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for pago in deuda.deudaop_set.all %}
+      {% if pago.op.confirmado %}
+        <tr>
+          <td>{{ pago.op.formatoAfip }}</td>
+          <td class="text-right">{{ pago.valor|intcomma }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+    <tr>
+      <th>Saldo:</th>
+      <th class="text-right">{{deuda.saldo|intcomma}}</th>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed">
+  {% if not deuda.pagado %}
+    <tr>
+      <td>
+        <a href="{% url 'op_d_parcial' pk=deuda.pk %}"><i class="fa fa-money"></i> Nuevo pago parcial</a>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>
+        <a href="{% url 'deud_vincular_pago' pk=deuda.pk %}"><i class="fa fa-random"></i> Vincular pago</a>
+      </td>
+      <td></td>
+    </tr>
+  {% endif %}
+</table>

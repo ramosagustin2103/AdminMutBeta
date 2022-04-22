@@ -1,0 +1,54 @@
+{% extends 'creditos/nuevo/index.html'%}
+
+{% block panel-body %}
+
+  {{ wizard.form.management_form }}
+  <h4 class="m-t-0 header-title">Confirme los siguientes plazos</h4>
+
+  {% if accesorios %}
+    <p>Las siguientes son las fechas de vencimiento predeterminadas para el calculo de intereses y descuentos.</p>
+    <p>Desea modificarlas?</p>
+      <div class="table-responsive">
+        <table class="table table-striped table-condensed">
+          <thead>
+            <tr>
+              <th>Ingreso</th>
+              <th class="text-center">Metodo</th>
+              <th width="200" class="text-center">Vencimiento</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in accesorios %}
+              <tr>
+                <td>
+                  <ul>
+                    {% for ingreso in a.ingreso.all %}
+                      <li>{{ingreso}}</li>
+                    {% endfor %}
+                  </ul>
+                </td>
+                <td class="text-center">
+                  {{a.get_clase_display}}: {% if a.tipo == "tasa" %}{{a.monto}}%{% else %} ${{a.monto}} {% endif %}
+                </td>
+                <td class="text-center">
+                  <input type="hidden" name="{{wizard.form.prefix}}-{{forloop.counter0}}-accesorio" value="{{a.id}}">
+                  <input type="text" name="{{wizard.form.prefix}}-{{forloop.counter0}}-plazo" value="{{a.fecha|date:"Y-m-d"}}" class="form-control input-sm datepicker" id="id_{{wizard.form.prefix}}-{{forloop.counter0}}-plazo" >
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  {% else %}
+    <div class="alert alert-icon alert-white alert-info" role="alert">
+        <i class="mdi mdi-information"></i>
+        <strong>No existen plazos para el calculo de intereses y/o descuentos!.</strong>
+        Si desea colocar algun metodo de calculo para los mismos, dirijase al modulo de <a href="{% url 'parametros' %}">Parámetros</a>.
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block js %}
+    {% include 'comunes/datepicker.html' %}
+{% endblock %}

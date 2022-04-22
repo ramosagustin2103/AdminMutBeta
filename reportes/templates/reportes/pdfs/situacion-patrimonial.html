@@ -1,0 +1,28 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Situacion patrimonial</title>
+    <link href='{% static "anopa/reportes.pdf.css" %}' rel="stylesheet" type="text/css" />
+  </head>
+
+<body>
+
+  {% include 'reportes/pdfs/encabezado.html' %}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="text-center">
+        <h2>Bienes y Deudas al {{cierre.periodo|date:"d/m/Y"}} </h2>
+        <hr>
+      </div>
+        {% include 'reportes/tabla-situacion-patrimonial.html' %}
+    </div>
+  </div>
+
+
+  {% include 'reportes/pdfs/pie.html' %}
+
+
+</body>

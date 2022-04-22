@@ -1,0 +1,136 @@
+{% load static django_afip %}
+<!DOCTYPE html>
+{# pdf is a ReceiptPDF object #}
+{# taxpayer is a TaxPayer object #}
+{# TODO: ¿How do we deal with multiple entries with different VAT types? #}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static "receipts/receipt.css" %}">
+  </head>
+  <body>
+    <div class="receipt">
+
+      <header>
+        <div class="taxpayer-details group">
+          <address>
+            {% if extras and extras.logo %}
+              <img src="{{ extras.logo_as_data_uri }}" alt="Logo"><br>
+            {% endif %}
+            <strong>{{ pdf.issuing_name }}</strong><br>
+            {{ pdf.issuing_address|linebreaksbr }}<br>
+            {% if pdf.issuing_email %}
+            <a href="mailto:{{ pdf.issuing_email }}">{{ pdf.issuing_email }}</a>
+            <br>
+            {% endif %}
+            {{ pdf.vat_condition }}<br>
+          </address>
+
+          <div class="receipt-type">
+            <div class="identifier">
+              {{ pdf.receipt.receipt_type.description|slice:"-1:" }}
+            </div>
+            <div class="code">
+              Código {{ pdf.receipt.receipt_type.code }}
+            </div>
+          </div>
+
+          <div class="receipt-details">
+            <div class="receipt-type-description">
+              {{ pdf.receipt.receipt_type.description }}
+            </div>
+            <strong>Nº</strong> {{ pdf.receipt|receiptnumber }}
+            <br>
+            <strong>Fecha de emisión:</strong> <time>{{ pdf.receipt.issued_date }}</time><br>
+            <strong>CUIT:</strong> {{ taxpayer.cuit|format_cuit }}<br>
+            <strong>Ingresos Brutos:</strong> {{ pdf.gross_income_condition }}<br>
+            <strong>Inicio de Actividades:</strong> {{ taxpayer.active_since }}
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="client">
+          <div><strong>Facturado a:</strong></div>
+          <div class="sale-conditions">
+            <strong>Condición de IVA:</strong> {{ pdf.client_vat_condition }}<br>
+            <strong>Condición de Pago:</strong> {{ pdf.sales_terms }}
+          </div>
+          <div class="client-data">
+            {{ pdf.client_name }},
+            {{ pdf.receipt.document_type }}
+            {{ pdf.receipt.document_number }}<br>
+            {{ pdf.client_address|linebreaksbr }}<br>
+          </div>
+        </div>
+
+        {% if not pdf.receipt.concept.code == "1" %}
+        <hr>
+        <div class="service-dates">
+          <div>
+            <strong>Periodo del servicio:</strong>
+            {{ pdf.receipt.service_start }} al {{ pdf.receipt.service_end }}
+          </div>
+          <div class="expiration">
+            <strong>Vencimiento:</strong> {{ pdf.receipt.expiration_date }}
+          </div>
+        </div>
+        {% endif %}
+
+      </header>
+
+      <hr>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Monto</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in pdf.receipt.entries.all %}
+          <tr>
+            <td>{{ entry.description }}</td>
+            <td>{{ entry.quantity }}</td>
+            <td>{{ entry.unit_price }}</td>
+            <td>{{ entry.total_price }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{ pdf.receipt.total_amount }}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <footer>
+        <p class="cae">
+          <strong>CAE</strong>
+          {{ pdf.receipt.validation.cae }}
+          <strong>Vto CAE</strong>
+          {{ pdf.receipt.validation.cae_expiration }}
+        </p>
+
+        <div class="barcode">
+          <img src="data:image/png;base64,{{barcode}}">
+        </div>
+
+        Consultas de validez:
+        <a href="http://www.afip.gob.ar/genericos/consultacae/">
+          http://www.afip.gob.ar/genericos/consultacae/
+        </a>
+        <br>
+        Teléfono Gratuito CABA, Área de Defensa y Protección al Consumidor.
+        Tel 147
+      </footer>
+
+    </div>
+  </body>
+</html>

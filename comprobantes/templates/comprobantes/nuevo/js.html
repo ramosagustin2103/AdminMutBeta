@@ -1,0 +1,123 @@
+{% load staticfiles %}
+<script>
+  $(document).ready(function(){
+    var suma = parseFloat($('#suma').text().replace(/,/g, '.'));
+    subtotales = $('.subtotal');
+
+    $('#form-nuevo').validate({
+      errorPlacement: function (error, element) {
+        element.attr('title', error.text());
+        $(".error").tooltip();
+      },
+    });
+    {% if no_cero %}
+      $(".subtotal").each(function() {
+          $(this).rules('add', {no_cero: true});
+      });
+
+      $.validator.addMethod(
+          "no_cero",
+          function(value, element) {
+            var subtotales = 0;
+            $('.subtotal').each(function(){
+              if (this.value) {
+                subtotales += parseFloat(this.value);
+              }
+            });
+              if (subtotales === 0){
+                return false
+              } else {
+                return true
+              }
+          },
+          "Debe agregar valor en algun campo"
+      );
+    {% endif %}
+    {% if validar %}
+      $(".subtotal").each(function() {
+          $(this).rules('add', {pivot_sum: true});
+      });
+
+      $.validator.addMethod(
+          "pivot_sum",
+          function(value, element) {
+            var subtotales = 0;
+            $('.subtotal').each(function(){
+              if (this.value) {
+                subtotales += parseFloat(this.value);
+              }
+            });
+            subtotales = subtotales.toFixed(2);
+            {% if "igual" in validar %}
+              if (suma === subtotales) {
+                return true
+              } else {
+                return false
+              }
+            {% else %}
+              if ({% if "mayor" in validar %} suma < subtotales {% else %} subtotales < suma {% endif %}){
+                return false
+              } else {
+                return true
+              }
+            {% endif %}
+          },
+          "{{validar}}"
+      );
+    {% endif %}
+
+    {% if wizard.steps.current == "cajas" %}
+      $(".caja").each(function() {
+          $(this).rules('add', {no_cajas: true});
+      });
+
+      $.validator.addMethod(
+          "no_cajas",
+          function(value, element) {
+            var row = element.closest('tr');
+            var value_subtotal = $(row).find('.subtotal').val();
+            if (value_subtotal.length != 0) {
+              if (value.length != 0) {
+                return true;
+              } else {
+                return false;
+              }
+            } else {
+              return true;
+            }
+          },
+          "Debe seleccionar un medio de cobro"
+      );
+    {% endif %}
+  });
+</script>
+
+{% block js-extra %}
+{% endblock %}
+
+{% if sumar %}
+  <script>
+    $('.subtotal').on( 'change', function() {
+      var final = 0;
+      $('.subtotal').each(function(){
+        if (this.value) {
+          final += parseFloat(this.value);
+        }
+      });
+      $('#suma').text(final.toFixed(2));
+    });
+
+  </script>
+{% endif %}
+
+{% if no_cero %}
+  <script>
+    $(function () {
+      var inputs = $(document).find("input[type!='hidden']");
+      if (inputs.length === 0) {
+        $(':input[type="submit"]').prop('disabled', true);
+      }
+    });
+  </script>
+{% endif %}
+

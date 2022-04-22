@@ -1,0 +1,73 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Pagos
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="OP" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Pagos
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3">
+    {% include 'op/barra.html' %}
+  </div>
+
+  <div class="col-md-9">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-box widget-box-four">
+          {% if ultima %}
+            <div class="pull-right">
+              <img src="{% static 'assets/images/icons/money_transfer.svg' %}" height="80">
+            </div>
+              <div class="wigdet-four-content pull-left">
+                <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">Ultimo pago realizado</h4>
+                <p class="font-secondary text-muted">
+                  <strong>Acreedor: </strong>{{ultima.acreedor}} <br>
+                  <strong>Total: </strong>${{ultima.total|intcomma}} <br>
+                </p>
+                <h3 class="m-b-0">
+                  <a href="{% url 'op_pdf' pk=ultima.pk %}" target="_blank">
+                    {{ultima.formatoAfip}}
+                  </a>
+                </h3>
+              </div>
+              <div class="clearfix"></div>
+          {% else %}
+            <p>
+              Aun no has registrado ningun pago. <br>
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Ultimos pagos generados</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'op/registros/tabla-ops.html' %}
+              <a href="{% url 'registro de pagos' %}" class="btn btn-link btn-block">Ver mas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+

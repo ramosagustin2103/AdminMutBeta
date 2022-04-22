@@ -1,0 +1,64 @@
+{% extends 'raiz.html' %}
+{% load humanize %}
+
+{% block titulo %}
+  Liquidar sin factura {{object}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="conceptos" bhijo1="liquidar" %}
+{% endblock %}
+
+{% block header %}
+  Liquidar sin factura {{object}}
+{% endblock %}
+
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+    <div class="panel panel-border panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Estas seguro que desea liquidar sin factura los siguientes conceptos?</h3>
+      </div>
+      <form id="" method="POST">{% csrf_token %}
+        <div class="panel-body">
+          <table class="table anopa display nowrap" style="width:100%">
+              <thead>
+              <tr>
+                  <th>Dominio</th>
+                  <th>Socio</th>
+                  <th>Concepto</th>
+                  <th>Periodo</th>
+                  <th class="text-right">Capital</th>
+              </tr>
+              </thead>
+              <tbody>
+                {% for concepto in conceptos %}
+                  <input type="hidden" name="conceptos[]" value={{concepto.id}}>
+                    <tr>
+                      <td>{{ concepto.dominio.nombre|default:"Cliente" }}</td>
+                      <td>{{ concepto.socio }}</td>
+                      <td>{{ concepto.ingreso }}</td>
+                      <td>{{ concepto.periodo|date:"Y-m" }}</td>
+                      <td class="text-right">
+                          {{ concepto.capital|intcomma }}
+                      </td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </div>
+        <div class="panel-footer">
+          <input type="hidden" name="Save" value="1">
+          <button class="btn btn-block btn-info btn-bordered" type="submit">
+
+            <span>SI, LIQUIDAR</span>
+          </button>
+        </div>
+
+        </form>
+
+      </div>
+  </div>
+{% endblock %}

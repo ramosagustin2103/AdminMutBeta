@@ -1,0 +1,155 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Mayores
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-daterangepicker/daterangepicker.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="mayores" %}
+{% endblock %}
+
+{% block header %}
+  Mayores
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+
+  <div class="col-md-3">
+    {% include 'contabilidad/barra.html' %}
+  </div>
+  {% if not fechas %}
+    <div class="col-md-9">
+      <div class="card-box">
+        <h4 class="header-title m-t-0">Seleccionar los parametros</h4>
+        <br>
+        <form action="" method="POST">{% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+              <label for="input-daterange-datepicker">Fechas:</label>
+              <input type="text" id="input-daterange-datepicker" required="" name="fechas" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label for="id_cuentas">Cuentas: </label>
+              <select id="id_cuentas" name="cuentas" multiple="" required="" class="selector form-control">
+                {% spaceless %}
+                  {% for c in consorcio.plan_set.all.0.cuentas.all %}
+                      <option value="{{c.id}}">
+                          {{c}}
+                      </option>
+                  {% endfor %}
+                {% endspaceless %}
+              </select>
+            </div>
+          </div>
+          <br>
+          <button type="submit" class="accion_envio btn btn-purple btn-block">Filtrar</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+  <div class="col-md-9">
+    <div class="panel panel-border panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Mayores desde {{fecha_ini}} hasta {{fecha_fin}}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          {% include 'contabilidad/libros/mayores-tabla.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.print.min.js" %}''></script>
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-daterangepicker/daterangepicker.js" %}'></script>
+  <script>
+    $(function () {
+      $('#input-daterange-datepicker').daterangepicker({
+          buttonClasses: ['btn', 'btn-sm'],
+          applyClass: 'btn-success',
+          cancelClass: 'btn-default',
+          locale: {
+              format: 'YYYY-MM-DD',
+              applyLabel: 'Aplicar',
+              cancelLabel: 'Limpiar',
+              fromLabel: 'Desde',
+              toLabel: 'Hasta',
+              separator: " / ",
+              customRangeLabel: 'Seleccionar rango',
+              daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+              monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre',
+                  'Diciembre'],
+              firstDay: 1
+          }
+      });
+    });
+  </script>
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $("#anopa").length && $("#anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm"
+                  }, {
+                      extend: "print",
+                      className: "btn-sm"
+                  }],
+                  responsive: !0,
+                  ordering: false,
+                  pageLength: 50,
+                  language: {
+                    "emptyTable": "No hay entradas",
+                    "search": "Buscar: ",
+                    "paginate": {
+                        "first":"Primero",
+                        "last":"Ultimo",
+                        "next":">",
+                        "previous":"<",
+                    },
+                    "lengthMenu": "Ver _MENU_ entradas",
+                    "info": "Visualizando _START_ a _END_ de _TOTAL_ entradas",
+                    "infoEmpty": "Visualizando 0 a 0 de 0 entradas",
+                  }
+              })
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Parametrizacion
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="parametros" bhijo1=parametro %}
+{% endblock %}
+
+{% block header %}
+  Parametrizacion
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'arquitectura/barra.html' %}
+    </div>  
+		<div class="col-md-6">
+  		{% include 'comunes/simple-form.html' %}
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block js %}
+
+  <script type="text/javascript">
+    $( document ).ready(function() {
+      $('#id_tipo').change(function () {
+          if ($(this).val() == 'tasa') {
+            $('label[for="id_base_calculo"], #id_base_calculo').show();
+          }
+          else{
+            $('label[for="id_base_calculo"], #id_base_calculo').hide();
+      
+          }
+      });     
+    });
+  </script>  
+{% endblock %}

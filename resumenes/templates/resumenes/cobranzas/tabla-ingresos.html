@@ -1,0 +1,34 @@
+{% load resumenes_tags %}
+{% load humanize %}
+<table class="table table-condensed">
+  {% spaceless %}
+    {% for ingreso, valor in ingresos.items %}
+      {% if valor %}
+        <tr>
+          <td>{{ ingreso.nombre }}:</td>
+          <td class="text-right">{{ valor|porcentaje:total_ingresos }}</td>
+          <td class="text-right">${{ valor|intcomma }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  {% endspaceless %}
+  {% if total_saldos_nuevos %}
+    <tr>
+      <td>Pagos a cuenta</td>
+      <td class="text-right">{{ total_saldos_nuevos|porcentaje:total_ingresos }}</td>
+      <td class="text-right">${{ total_saldos_nuevos|intcomma }}</td>
+    </tr>
+  {% endif %}
+  {% if intereses %}
+    <tr>
+      <td>Intereses/Descuentos</td>
+      <td class="text-right">{{ intereses|porcentaje:total_ingresos }}</td>
+      <td class="text-right">${{ intereses|intcomma }}</td>
+    </tr>
+  {% endif %}
+  <tr>
+    <th>Total</th>
+    <th class="text-right">{{ total_ingresos|porcentaje:total_ingresos }}</th>
+    <th class="text-right">${{ total_ingresos|intcomma }}</th>
+  </tr>
+</table>

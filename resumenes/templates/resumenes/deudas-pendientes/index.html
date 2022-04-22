@@ -1,0 +1,71 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" bhijo1=resumen.nombre %}
+{% endblock %}
+
+{% block header %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block contenido %}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0">Deudas pendientes por acreedor al {{ fecha }} <a href="{% url 'res_par' resumen=resumen.slug %}" class="btn pull-right btn-pink waves-effect waves-light"><i class="fa fa-hand-o-left"></i> Consultar otros parametros</a> </h4>
+        <br>
+        <div class="table-responsive">
+        	<table class="anopa table">
+        		<thead>
+        			<tr class="active">
+        				<th>Acreedor</th>
+                <th>Cuenta</th>
+                <th>Fecha</th>
+                <th>Numero</th>
+                <th class="text-right">Total</th>
+                <th class="text-right">Pagado</th>
+                <th class="text-right">Adeudado</th>
+        			</tr>
+        		</thead>
+        		<tbody>
+              {% for d in saldos %}
+                <tr>
+                  <td>{{ d.acreedor }}</td>
+                  <td>{{ d.acreedor.cuenta_contable.nombre }}</td>
+                  <td>{{ d.fecha|date:"d/m/Y" }}</td>
+                  <td>{{ d.numero }}</td>
+                  <td class="text-right">{{ d.total|intcomma }}</td>
+                  <td class="text-right">{{ d.cancelado|intcomma }}</td>
+                  <td class="text-right">{{ d.saldito|intcomma }}</td>
+                </tr>
+              {% endfor %}
+        		</tbody>
+            <tfoot>
+              <tr>
+                <th>Total</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th class="text-right">${{total_adeudado|intcomma}}</th>
+                <th class="text-right">${{total_cancelado|intcomma}}</th>
+                <th class="text-right">${{total_saldo|intcomma}}</th>
+              </tr>
+            </tfoot>
+        	</table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel_titulo.html' with titulo_print=resumen.nombre with_footer='True' %}
+{% endblock %}

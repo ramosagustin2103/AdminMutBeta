@@ -1,0 +1,47 @@
+{% extends 'herramientas/transferencias/nuevo/index.html' %}
+{% load staticfiles %}
+
+{% block panel-body %}
+
+  {{ wizard.form.management_form }}
+  <h4 class="m-t-0 header-title">Seleccione cajas de origen de la transferencia</h4>
+  <div class="table-responsive">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Medio</th>
+          <th>Referencia</th>
+          <th width="200">Valor</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in wizard.form.forms %}
+          <tr class="link-formset">
+            <td>{{ f.caja }}</td>
+            <td>{{ f.referencia }}</td>
+            <td>{{ f.subtotal }}</td>
+            <td class="text-center" style="vertical-align: middle;"></td>
+          </tr>
+          {{f.id}}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
+
+{% block js-extra %}
+  <script src="{% static 'anopa/jquery.formset.js' %}"></script>
+  <script>
+    $(function(){
+      $('.link-formset').formset({
+          addText: 'Agregar linea',
+          deleteText: '<i class="fa fa-trash-o text-danger"></i>',
+          addCssClass: 'add-row btn btn-bordered btn-default btn-block btn-sm',
+          deleteCssClass: 'delete-row',
+          prefix: '{{wizard.form.prefix}}',
+      });
+    });
+  </script>
+{% endblock %}

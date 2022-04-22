@@ -1,0 +1,187 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{factura.receipt.receipt_type}} {{factura.formatoAfip}}</title>
+    <link href="{% static 'anopa/pdf.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="receipt">
+
+      <header>
+        <div class="taxpayer-details group">
+          <address>
+            {% if factura.consorcio.contribuyente.extras %}
+              <img src="{{ factura.consorcio.contribuyente.extras.logo_as_data_uri }}" alt="Logo"><br>
+            {% else %}
+              <h3>{{ factura.consorcio.nombre_completo }}</h3>
+            {% endif %}
+            {{ factura.consorcio.domicilio }}<br>
+            {{ factura.consorcio.provincia }}
+          </address>
+
+          <div class="receipt-type">
+            <div class="identifier">
+              {{ factura.receipt.receipt_type.description|slice:"-1:" }}
+            </div>
+            <div class="code">
+              Código {{ factura.receipt.receipt_type.code }}
+            </div>
+          </div>
+
+          <div class="receipt-details">
+            <div class="receipt-type-description">
+              {{ factura.receipt.receipt_type.description }}
+            </div>
+            <strong>Nº</strong> {{ factura.formatoAfip }}<br>
+            {{ factura.receipt.issued_date|date:"d/m/Y" }}<br>
+            <small>
+              C.U.I.T.:{{ factura.consorcio.cuit }}<br>
+              Ingresos Brutos: Exento<br>
+              Inicio de actividad: {{factura.consorcio.contribuyente.active_since|date:"d/m/Y"}}
+            </small>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="client">
+
+          <div class="client-data">
+            <strong>{% if factura.consorcio.id == 10 %}CLIENTE:{% else %}SOCIO:{% endif %}</strong>
+            {{ factura.socio }} <br>
+            <strong>{{ factura.socio.tipo_documento }}:</strong>
+            {{ factura.socio.numero_documento }} <br>
+          </div>
+        </div>
+
+        <hr>
+
+      </header>
+
+      <p><strong>Detalle de creditos:</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Dominio</th>
+            <th>Concepto</th>
+            <th>Periodo</th>
+            <th>Capital</th>
+            <th>Bonificacion</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for credito in factura.credito_set.all %}
+            <tr>
+              <td>{{ credito.dominio.nombre }}</td>
+              <td>{{ credito.ingreso }}{% if credito.detalle_limpio %}*{% endif %}</td>
+              <td>{{ credito.periodo|date:"Y-m" }}</td>
+              <td>{{ credito.capital|intcomma }}</td>
+              <td>{% if credito.bonificacion %}-{{ credito.bonificacion|intcomma }}{% else %}0{% endif %}</td>
+              <td>{{ credito.bruto|intcomma }}{% if credito.acc_desc %}**{% endif %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if factura.detalles %}
+        <p><strong>* Detalles:</strong></p>
+        <p>
+          <ul>
+            {% for detalle in factura.detalles %}
+              <li>{{detalle}}</li>
+            {% endfor %}
+          </ul>
+        </p>
+      {% endif %}
+
+      {% if factura.descuentos %}
+        <p><strong>** Descuentos:</strong></p>
+        <p>
+          <ul>
+            {% for descuento in factura.descuentos %}
+              <li>{{descuento}}</li>
+            {% endfor %}
+          </ul>
+        </p>
+      {% endif %}
+
+
+      <div class="taxpayer-details group">
+        <div class="receipt-details">
+          <table>
+            <tr>
+              <th>Suma de Capital:</th>
+              <th>{{ factura.suma_capitales|intcomma }}</th>
+            </tr>
+            <tr>
+              <th>Bonificaciones:</th>
+              <th>{% if factura.suma_bonificaciones %}-{{ factura.suma_bonificaciones|intcomma }}{% else %}0{% endif %}</th>
+            </tr>
+            <tr>
+              <th>Total del Comprobante:</th>
+              <th>{{ factura.receipt.total_amount|intcomma }}</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      {% if tablas_vencimientos %}
+
+        <p><strong>El monto a pagar de su factura es:</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>1° Vencimiento</th>
+              {% if tablas_vencimientos.fecha1 != tablas_vencimientos.fecha2  %}
+                <th>2° Vencimiento</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>${{ tablas_vencimientos.saldo1|floatformat:2 }}</td>
+                {% if tablas_vencimientos.fecha1 != tablas_vencimientos.fecha2  %}
+                  <td>${{ tablas_vencimientos.saldo2|floatformat:2 }}</td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td>{{ tablas_vencimientos.fecha1|date:"d/m/Y" }}</td>
+                {% if tablas_vencimientos.fecha1 != tablas_vencimientos.fecha2  %}
+                  <td>{{ tablas_vencimientos.fecha2|date:"d/m/Y" }}</td>
+                {% endif %}                
+              </tr>              
+          </tbody>
+        </table>        
+        
+        <p>Esta factura corresponde exclusivamente a las expensas del mes en curso. Las deudas anteriores serán informadas por aparte</p>
+        
+
+      {% endif %}
+
+      {% if texto_saldo %}
+        <p><strong>Saldo a la fecha:</strong></p>
+        <p>{{texto_saldo}}</p>
+      {% endif %}
+
+      <footer>
+        <div class="{% if factura.credito_set.all.count > 25 %}footer_varias_paginas{% else %}footer_recibo{% endif %}">
+        <hr>
+          <div class="cae">
+            <strong>CAE</strong>
+            {{ factura.receipt.validation.cae }}
+            <strong>Vto CAE</strong>
+            {{ factura.receipt.validation.cae_expiration|date:"d/m/Y" }}
+          </div>
+          <div class="barcode">
+            <img src="data:image/png;base64,{{barcode}}">
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </body>
+</html>

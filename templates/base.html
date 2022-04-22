@@ -1,0 +1,36 @@
+{% extends "raiz.html" %}
+
+{% block titulo %}
+  {% block title %}Notificaciones{% endblock %}
+{% endblock %}
+
+{% block css %}
+  {% block extrahead %}{% endblock %}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+        <div class="card-box">
+              <div class="inbox-leftbar">
+
+                  <a href="{% url 'postman:write' %}" class="btn btn-info btn-block waves-effect waves-light">Iniciar Notificación</a>
+
+                  <div class="mail-list  m-t-20">
+                    {% block postman_menu %}{% endblock %}
+                  </div>
+
+
+              </div>
+
+            <div class="inbox-rightbar">
+              {% block content %}{% endblock %}
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+  </div>
+
+{% endblock %}

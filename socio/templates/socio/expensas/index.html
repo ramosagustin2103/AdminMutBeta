@@ -1,0 +1,235 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Liquidaciones de expensas
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-daterangepicker/daterangepicker.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="expensas" %}
+{% endblock %}
+
+{% block header %}
+  Expensas
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-9">
+
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Liquidaciones de expensas</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table" id="anopa">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Liquidacion</th>
+                    <th>Dominio</th>
+                    <th>Concepto</th>
+                    <th>Periodo</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for exp in expensas %}
+                    <tr>
+                      {% ifchanged exp.liquidacion %}
+                        <td>
+                          <a href="{% url 'liq_pdf' numero_aleatorio=exp.liquidacion.numero_aleatorio %}" target="_blank" class="btn btn-icon btn-xs btn-purple btn-bordered waves-efect waves-light">
+                            <i class="fa fa-print"></i>
+                          </a>
+                        </td>
+                        <td>
+                            {{ exp.liquidacion.puntof }}-{{ exp.liquidacion.numero }}
+                        </td>
+                      {% else %}
+                        <td></td>
+                        <td></td>
+                      {% endifchanged %}
+                      <td>{{ exp.dominio }}</td>
+                      <td>{{ exp.ingreso }}</td>
+                      <td>{{ exp.periodo|date:"Y-m" }}</td>
+                      {% if exp.compensado %}
+                        <td class="text-center"><span class="label label-success">Pagado</span></td>
+                        <td></td>
+                      {% else %}
+                          <td class="text-center total_individual" title="Capital: ${{exp.capital}}{% if exp.detalle %} / {{exp.detalle}}{% endif %}">{{ exp.subtotal }}</td>
+                          <td class="text-center">
+                          {% if bloqueo %}
+                            {% if exp.ingreso.prioritario %}
+                              <input type="checkbox" class="credclass" id="select_one" value="{{ exp.id }}">
+                            {% else %}
+                              <i title="Debe abonar otros conceptos pendientes." class="fa fa-warning"></i>
+                            {% endif %}
+                          {% else %}
+                            <input type="checkbox" class="credclass" id="select_one" value="{{ exp.id }}">
+                          {% endif %}
+                          </td>
+                      {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+
+        <div id="enviar_mp" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+          <div class="modal-dialog" style="width:55%;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="custom-width-modalLabel">Estas seguro?</h4>
+              </div>
+              <div class="modal-body">
+                <p>Seras redireccionado a MercadoPago para finalizar la operacion.</p>
+              </div>
+              <div class="modal-footer">
+                <form id="formExpensas" action="" method="POST">{% csrf_token %}
+
+                  <button type="submit" class="btn btn-info waves-effect waves-light">Ir a mercadopago</button>
+                  <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="borrar_preferencias" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+          <div class="modal-dialog" style="width:55%;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="custom-width-modalLabel">Estas seguro?</h4>
+              </div>
+              <div class="modal-body">
+                <p>Estas por desechar ordenes de pago de MercadoPago no procesadas.</p>
+              </div>
+              <div class="modal-footer">
+                <form action="{% url 'socio:eliminar_pagos' %}" method="POST">{% csrf_token %}
+                  <button type="submit" class="btn btn-danger waves-effect waves-light">Eliminar</button>
+                  <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-border panel-warning">
+              <div class="panel-heading">
+                <h3 class="panel-title">Pago</h3>
+              </div>
+              <div class="panel-body">
+                <p>
+                  <small>
+                      Si queres podes abonar por alguno de los metodos habilitados en mercadopago. <br>
+                      Debes seleccionar los conceptos, presiona el boton enviar y serás redireccionado a la entidad.
+                  </small>
+                </p>
+                <p>
+                  <table class="table table-condensed">
+                    <tr>
+                      <td>Total expensas</td>
+                      <td class="text-right" id="total_expensas">0.00</td>
+                    </tr>
+                    <tr>
+                      <td>Costo MP</td>
+                      <td class="text-right" id="total_comision">0.00</td>
+                    </tr>
+                    <tr>
+                      <th>Total Final</th>
+                      <th class="text-right" id="total_final">0.00</th>
+                    </tr>
+                  </table>
+                </p>
+                <p>
+                  <button id="btn-pago" disabled="" type="button" class="btn btn-default btn-bordered btn-block" data-toggle="modal" data-target="#enviar_mp">Enviar</button>
+                </p>
+              </div>
+            </div>
+
+            <div class="panel panel-border panel-danger">
+              <div class="panel-heading">
+                <h3 class="panel-title">Desechar pagos no realizados</h3>
+              </div>
+              <div class="panel-body">
+                <p>
+                  <button type="button" class="btn btn-default btn-bordered btn-block" data-toggle="modal" data-target="#borrar_preferencias">Desechar <i class="fa fa-trash"></i></button>
+                </p>
+              </div>
+            </div>
+        </div>
+
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "anopa/expensas.js" %}'></script>
+  <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.print.min.js" %}''></script>
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $("#anopa").length && $("#anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm"
+                  }, {
+                      extend: "print",
+                      className: "btn-sm"
+                  }],
+                  responsive: !0,
+                  ordering: false,
+                  bInfo: false,
+                  language: {
+                    "emptyTable": "No hay entradas",
+                    "search": "Buscar: ",
+                    "paginate": {
+                        "first":"Primero",
+                        "last":"Ultimo",
+                        "next":">",
+                        "previous":"<",
+                    },
+                    "lengthMenu": "Ver _MENU_ entradas",
+                    "info": "Visualizando _START_ a _END_ de _TOTAL_ entradas",
+                    "infoEmpty": "Visualizando 0 a 0 de 0 entradas",
+                  }
+              })
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+    });
+
+  </script>
+{% endblock %}

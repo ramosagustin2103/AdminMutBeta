@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: django-afip
+Version: 7.1.2
+Summary: AFIP integration for django
+Home-page: https://github.com/WhyNotHugo/django-afip
+Author: Hugo Osvaldo Barrera
+Author-email: hugo@barrera.io
+License: ISC
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.2
+Classifier: Framework :: Django :: 3.0
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: ISC License (ISCL)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: django (>=2.0.0)
+Requires-Dist: django-renderpdf (>=0.1.0)
+Requires-Dist: lxml (>=3.4.4)
+Requires-Dist: pyopenssl (>=16.2.0)
+Requires-Dist: python-barcode (>=0.8.0)
+Requires-Dist: pytz (>=2015.4)
+Requires-Dist: setuptools-git (>=1.1)
+Requires-Dist: setuptools-scm (>=1.7.0)
+Requires-Dist: wheel (>=0.24.0)
+Requires-Dist: zeep (>=1.1.0)
+Provides-Extra: docs
+Requires-Dist: Sphinx ; extra == 'docs'
+Requires-Dist: sphinx-autobuild ; extra == 'docs'
+Provides-Extra: factories
+Requires-Dist: factory-boy ; extra == 'factories'
+Provides-Extra: mysql
+Requires-Dist: mysqlclient ; extra == 'mysql'
+Provides-Extra: postgres
+Requires-Dist: psycopg2 ; extra == 'postgres'
+
+django-afip
+===========
+
+.. image:: https://travis-ci.com/WhyNotHugo/django-afip.svg?branch=master
+  :target: https://travis-ci.com/WhyNotHugo/django-afip
+  :alt: build status
+
+.. image:: https://codecov.io/gh/WhyNotHugo/django-afip/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/WhyNotHugo/django-afip
+  :alt: Build coverage
+
+.. image:: https://readthedocs.org/projects/django-afip/badge/?version=latest
+  :target: http://django-afip.readthedocs.io/en/latest/?badge=latest
+  :alt: Documentation Status
+
+.. image:: https://img.shields.io/pypi/v/django-afip.svg
+  :target: https://pypi.python.org/pypi/django-afip
+  :alt: version on pypi
+
+.. image:: https://img.shields.io/pypi/l/django-afip.svg
+  :target: https://github.com/WhyNotHugo/django-afip/blob/master/LICENCE
+  :alt: licence
+
+What's this?
+------------
+
+AFIP is Argentina's tax collection agency. For emitting invoices, taxpayers are
+required to inform AFIP of each invoice by using a dedicated SOAP-like web
+service for that.
+
+**django-afip** is a Django application implementing the necessary bits for
+Django-based applications to both store and comunícate invoicing information.
+
+Features
+--------
+
+* Validate invoices and other receipt types with AFIP's WSFE service.
+* Generate valid PDF files for those receipts to send to clients.
+
+Documentation
+-------------
+
+For detailed configuration, have a look at the latest docs at readthedocs_.
+
+.. _readthedocs: https://django-afip.readthedocs.io/
+
+Licence
+-------
+
+This software is distributed under the ISC licence. See LICENCE for details.
+
+Copyright (c) 2015-2018 Hugo Osvaldo Barrera <hugo@barrera.io>
+
+

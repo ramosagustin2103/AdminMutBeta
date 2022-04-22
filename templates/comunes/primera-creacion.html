@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-color panel-info">
+      <div class="panel-heading">
+      	<h1 class="text-white"><i class="fa fa-cogs"></i> Bienvenid@ a esta nueva herramienta.</h1>
+        <h3 class="text-white">Agregando objetos en ella estarás completando el proceso de instalación.</h3> 
+      	<h5 class="text-white"><i>Una vez que todas las herramientas esten activas, el sistema estará en condiciones de funcionar en forma óptima. </i></h5>
+      	<br>
+      	<h4 class="text-white">Sigamos...</h4>
+      	<ul>
+      		{% for url, nombre in botones.items %}
+      			<li class="text-white"><a href="{{ url }}"> Click aquí</a> para agregar {{ nombre }}.</li>
+      		{% endfor %}
+      	</ul>
+        <br>
+        <p class="text-white"><i class="fa fa-exclamation-triangle"></i> Recorda que si necesitas ayuda podes consultar en nuestra <a href="{% url 'biblioteca' %}">Biblioteca</a></p>
+      </div>
+    </div>  
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{% extends 'registration/raiz.html' %}
+{% block titulo %}Sign Up{% endblock %}
+{% block content %}
+    <form class="form-horizontal" action="" method="POST">{% csrf_token %}
+      {% for field in form %}
+        <div class="form-group m-b-20">
+            {{field.errors}}
+            {{field.label_tag}}
+            {{field}}
+            {% if field.name == "codigo" %}
+              {{field.help_text}}
+            {% endif %}
+        </div>
+      {% endfor %}
+
+
+      <div class="form-group text-center m-t-10">
+          <button class="btn btn-md btn-block btn-success waves-effect waves-light" type="submit">Registrarse</button>
+      </div>
+
+    </form>
+{% endblock %}

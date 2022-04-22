@@ -1,0 +1,86 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" bhijo1=resumen.nombre %}
+{% endblock %}
+
+{% block header %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0">Saldos pendientes al {{ fecha|date:"d/m/Y" }} <a href="{% url 'res_par' resumen=resumen.slug %}" class="btn pull-right btn-pink waves-effect waves-light"><i class="fa fa-hand-o-left"></i> Consultar otros parametros</a> </h4>
+        <br>
+        <div class="table-responsive">
+        	<table class="anopa table display nowrap" style="width:100%">
+        		<thead>
+        			<tr class="active">
+        				<th>Dominio</th>
+                <th>Concepto</th>
+                <th>Saldo final</th>
+                <th>Pagos a cuenta</th>
+        				{% for periodo in periodos %}
+                  {% if not forloop.counter == 1 and not forloop.counter == 2 %}
+        					 <th class="text-center">{{ periodo|date:"Y-m" }}</th>
+                  {% endif %}
+        				{% endfor %}
+        			</tr>
+        		</thead>
+        		<tbody>
+              {% for objeto, ingresos in data.items %}
+                {% for ingreso, periodos in ingresos.items %}
+                  <tr>
+                    <td>
+                      {% if objeto.nombre_completo %}
+                        {{objeto}} (Baja o sin dominio)
+                      {% else %}
+                        {{objeto.socio}} - #{{objeto}}
+                      {% endif %}
+                      
+                    </td>
+                    <td>{{ingreso}}</td>
+                    {% for periodo, valor in periodos.items|dictsortreversed:0 %}
+                      <td class="text-center">{% if valor %}{{valor}}{% else %}-{% endif %}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              {% for dominio, ingresos in data_totales.items %}
+                {% for ingreso, periodos in ingresos.items %}
+                  <tr class="info">
+                    <th></th>
+                    <th>{{ingreso}}</th>
+                    {% for periodo, valor in periodos.items|dictsortreversed:0 %}
+                      <th class="text-center">{% if valor %}{{valor}}{% else %}-{% endif %}</th>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </tfoot>
+        	</table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel_titulo.html' with titulo_print=resumen.nombre with_footer='True' %}
+{% endblock %}

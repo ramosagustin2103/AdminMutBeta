@@ -1,0 +1,29 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Nueva Orden de pago
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="OP" bhijo1="nuevo" %}
+{% endblock %}
+
+{% block header %}
+  Nueva Orden de pago
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+  	<div class="col-md-3">
+      {% include 'op/barra.html' %}
+    </div>
+    <div class="col-md-6">
+	    {% include 'comunes/simple-form-sincancelar.html' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/datepicker.html' %}
+{% endblock %}

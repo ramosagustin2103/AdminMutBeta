@@ -1,0 +1,92 @@
+{% load humanize %}
+{% load staticfiles %}
+  <table class="anopa table display nowrap" style="width:100%">
+    <thead>
+      <tr>
+        <th>Factura</th>
+        {% if user.groups.first.name == "socio" and expensas_pagas %}
+          <th>Cupon ExpensasPagas</th>
+        {% endif %}        
+        <th>Fecha</th>
+        <th>Dominio</th>
+        {% if not user.groups.first.name == "socio" %}
+          <th>Destinatario</th>
+        {% endif %}
+        <th>Concepto</th>
+        <th>Periodo</th>
+        <th class="text-right">Capital</th>
+        <th class="text-right">Bruto</th>
+        <th class="text-right warning">Saldo</th>
+        {% if user.groups.first.name == "socio" and mercado_pago %}
+          <th class="text-center"></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for credito in creditos %}
+          <tr>
+            <td>
+              {% if credito.factura %}
+                <a href="{% url 'pdf-factura' pk=credito.factura.pk %}" target="_blank">{{ credito.factura.formatoAfip }}</a>
+              {% endif %}
+            </td>
+            {% if user.groups.first.name == "socio" and expensas_pagas %}
+              <td>
+                {% with cupon=credito.factura.exp.first %}
+                  {% if cupon.pdf %}
+                    <a href="{{cupon.pdf.url}}" target="_blank">Ver Cupon</a>                
+                  {% endif %}
+                {% endwith %}
+              </td>
+            {% endif %}                    
+            <td>{{credito.fecha|date:"d/m/Y"}}</td>
+            <td>{{ credito.dominio.nombre|default:"Cliente" }}</td>
+            {% if not user.groups.first.name == "socio" %}
+              <td>{{ credito.socio }}</td>
+            {% endif %}
+            <td>{{ credito.ingreso }}</td>
+            <td>{{ credito.periodo|date:"Y-m" }}</td>
+            <td class="text-right">
+                {{ credito.capital|intcomma }}
+            </td>
+            <td class="text-right">
+                {{ credito.bruto|intcomma }}
+            </td>
+            <td class="text-right warning total_individual">
+            {% if user.groups.first.name == "socio" %}
+              {% if bloqueo_descuento %}
+                {{credito.saldo_socio}}
+              {% else %}
+                {{credito.saldo}}
+              {% endif %}
+            {% else %}
+              {{credito.saldo}}
+            {% endif %}
+            </td>
+            {% if user.groups.first.name == "socio" and mercado_pago %}
+              <td class="text-right">
+                {% if not credito.saldo == 0 %}
+                  {% with pago=credito.actual.cobro_set.first %}
+                    {% if pago %}
+                      {% if not pago.preference.paid %}
+                        <a href="{% url 'preference-delete' pk=pago.preference.id %}" class="btn btn-danger btn-xs btn-bordered" title="Eliminar peticion de pago a MercadoPago"><i class="fa fa-trash"></i></a>
+                      {% endif %}
+                    {% else %}
+                      {% if bloqueo %}
+                        {% if credito.ingreso.prioritario %}
+                          <input type="checkbox" class="credclass" id="select_one" value="{% if credito.ultimo_hijo %}{{ credito.ultimo_hijo.id }}{% else %}{{ credito.id }}{% endif %}">
+                        {% else %}
+                          <i title="Debe abonar otros conceptos pendientes." class="fa fa-warning"></i>
+                        {% endif %}
+                      {% else %}
+                        <input type="checkbox" class="credclass" id="select_one" value="{% if credito.ultimo_hijo %}{{ credito.ultimo_hijo.id }}{% else %}{{ credito.id }}{% endif %}">
+                      {% endif %}
+                    {% endif %}
+                  {% endwith %}
+                {% endif %}
+              </td>
+            {% endif %}
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>

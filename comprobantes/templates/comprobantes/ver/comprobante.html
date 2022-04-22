@@ -1,0 +1,161 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Comprobante {{comprobante.nombre}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="cobranzas" bhijo1="registro" bhijo2=comprobante.nombre %}
+{% endblock %}
+
+{% block header %}
+  Comprobante {{comprobante.nombre}}
+{% endblock %}
+
+{% block contenido %}
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="card-box widget-box-three">
+        <div class="bg-icon pull-left">
+          <img src="{% static 'assets/images/icons/fine_print.svg' %}">
+        </div>
+        <div class="text-right">
+          <table class="table">
+            {% if comprobante.anulado %}
+              <tr>
+                <th>Estado</th>
+                <td><h2 class="text-danger">Cobro Anulado el {{ comprobante.anulado|date:"d/m/Y" }}</h2></td>
+              </tr>
+            {% endif %}
+            <tr>
+              <th>{{ comprobante.tipo }}</th>
+              <td>
+                <a href="{% url 'pdf-comprobante' pk=comprobante.pk %}" target="_blank">
+                  {{comprobante.nombre}}
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <th>Fecha del comprobante</th>
+              <td>
+              {% if comprobante.receipt %}
+                {{ comprobante.receipt.issued_date|date:"d/m/Y" }}
+              {% else %}
+                {{ comprobante.fecha|date:"d/m/Y" }}
+              {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>Descripcion</th>
+              <td>
+                {% if comprobante.descripcion %}
+                  {{ comprobante.descripcion }}
+                {% else %}
+                  No hay aclaraciones
+                {% endif %}
+              </td>
+            </tr>
+            {% if comprobante.cajacomprobante_set.all or comprobante.saldos_utilizados.all %}
+            <tr>
+              <th>Formas de cobro</th>
+              <td>
+                <ul>
+                  {% for saldo in comprobante.saldos_utilizados.all %}
+                    <li>Saldo de {{saldo.comprobante_origen}}: ${{saldo.subtotal_invertido}}</li>
+                  {% endfor %}
+                  {% for c in comprobante.cajacomprobante_set.all %}
+                    <li>{{ c.caja }}: ${{ c.valor|intcomma }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+
+            <tr>
+              <th>Emision del comprobante</th>
+              <td>$
+                {% if comprobante.receipt %}
+                  {{ comprobante.receipt.total_amount|intcomma }}
+                {% else %}
+                  {{ comprobante.total|intcomma }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>Acciones</th>
+              <td>
+                {% if user.groups.all.0.name == "contable" %}
+                  {% if comprobante.asiento %}
+                    <a href="{% url 'asiento_redireccion' id_asiento=comprobante.asiento.id %}" class="btn btn-icon btn-xs btn-info btn-bordered waves-efect waves-light">
+                      Ver asiento
+                    </a>
+                  {% endif %}
+                  {% if comprobante.asiento_anulado %}
+                    <a href="{% url 'asiento_redireccion' id_asiento=comprobante.asiento_anulado.id %}" class="btn btn-icon btn-xs btn-info btn-bordered waves-efect waves-light">
+                      Ver asiento anulacion
+                    </a>
+                  {% endif %}
+                {% endif %}
+                {% if user.groups.all.0.name == "administrativo" %}
+                  {% if not comprobante.anulado and comprobante.punto %}
+                    <a href="{% url 'anular-comprobante' pk=comprobante.pk %}" class="btn btn-icon btn-xs btn-danger btn-bordered waves-efect waves-light">
+                      Anular
+                    </a>
+                  {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <div class="panel panel-border panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Listado de creditos cobrados</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'comprobantes/ver/tabla-cobros.html' with objeto=comprobante %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+  {% if comprobante.saldos.all %}
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <div class="panel panel-border panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Saldo a favor creado</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'comprobantes/ver/tabla-saldos.html' with objeto=comprobante %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel_titulo.html' %}
+{% endblock %}

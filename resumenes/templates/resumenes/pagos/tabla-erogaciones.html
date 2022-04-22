@@ -1,0 +1,27 @@
+{% load humanize %}
+{% load resumenes_tags %}
+<table class="table table-condensed">
+  {% if total_deudas %}
+    <tr>
+      <td>Deudas:</td>
+      <td class="text-right">{{ total_deudas|porcentaje:total_conceptos }}</td>
+      <td class="text-right">${{ total_deudas|intcomma }}</td>
+    </tr>
+  {% endif %}
+  {% spaceless %}
+		{% for erogacion, valor in erogaciones.items %}
+      {% if valor %}
+				<tr>
+					<td>{{ erogacion.nombre }}:</td>
+          <td class="text-right">{{ valor|porcentaje:total_conceptos }}</td>
+					<td class="text-right">${{ valor|intcomma }}</td>
+				</tr>
+      {% endif %}
+		{% endfor %}
+  {% endspaceless %}
+	<tr>
+		<th>Total</th>
+    <th class="text-right">{{ total_conceptos|porcentaje:total_conceptos }}</th>
+		<th class="text-right">${{ total_conceptos|intcomma }}</th>
+	</tr>
+</table>

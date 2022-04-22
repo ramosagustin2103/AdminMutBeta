@@ -1,0 +1,85 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Confirmacion del pago
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="OP" bhijo1="confirmacion" %}
+{% endblock %}
+
+{% block header %}
+  Confirmacion del pago
+{% endblock %}
+
+
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel panel-border panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Datos de la Orden de Pago</h3>
+        </div>
+        <div class="panel-body">
+          <h3>Orden de pago para {{ op.acreedor }}</h3>
+          {% if deudaOP %}
+            <p>Que abona las siguientes deudas:</p>
+            <ul>
+              {% for deuda in deudaOP %}
+                <li>Comp {{ deuda.deuda.numero }} del {{ deuda.deuda.fecha|date:"d/m/Y" }} por ${{ deuda.valor }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if gastoOP %}
+            <p>Vinculado a las siguientes erogaciones:</p>
+            <ul>
+              {% for gasto in gastoOP %}
+                <li>{{ gasto.gasto }} por ${{ gasto.valor }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+
+          {% if op.descripcion %}
+            <h4>Descripcion: </h4>
+            <p><i>{{ op.descripcion|safe|linebreaks }}</i></p>
+          {% endif %}
+
+          <p>Pagada mediante:</p>
+          <ul>
+            {% for caja in cajaOP %}
+              <li>{{ caja.caja }} por ${{ caja.valor }}</li>
+            {% endfor %}
+          </ul>
+
+          {% if retencionOP %}
+            <p>Genera las siguientes retenciones:</p>
+            <ul>
+              {% for retencion in retencionOP %}
+                <li>{{ retencion.deuda.retencion }} por ${{ retencion.valor }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="affix">
+        <div class="card-box">
+          <h4 class="header-title m-t-0"><i class="fa fa-exclamation-triangle"></i> Importante</h4>
+          <p>Estas por generar una nueva Orden de pago.</p>
+          <p>Revisa y aceptá solo si tenes certeza de que los datos que ingresaste son los correctos</p>
+          <p>Recorda que una vez generada la OP no se puede eliminar.</p>
+        </div>
+        <form id="process" action="" method="POST">{% csrf_token %}
+          <a href="{% url 'op_eliminar' pk=op.pk %}" class="accion_envio btn btn-danger pull-left">Cancelar</a>
+          <input type="hidden" name="accion" value="confirm">
+          <button type="submit" class="accion_envio btn btn-info pull-right">Confirmar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

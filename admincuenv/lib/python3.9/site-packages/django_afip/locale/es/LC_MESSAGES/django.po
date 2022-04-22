@@ -1,0 +1,513 @@
+# django-afip
+# Copyright (C) 2015-2017 Hugo Osvaldo Barrera
+# This file is distributed under the same license as the django-afip package.
+# Hugo Osvaldo Barrera <hugo@barrera.io>, 2015-2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: django-afip\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-29 04:37+0000\n"
+"PO-Revision-Date: 2019-01-29 01:38-0300\n"
+"Last-Translator: Hugo Osvaldo Barrera <hugo@barrera.io>\n"
+"Language-Team: Hugo Osvaldo Barrera <hugo@barrera.io>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2.1\n"
+
+msgid "The AFIP Taxpayer certificate has expired."
+msgstr "El certificado de contribuyente del AFIP venció."
+
+msgid "The AFIP Taxpayer certificate is untrusted."
+msgstr "El certificado de contribuyente del AFIP no es de confianza."
+
+msgid "The AFIP Taxpayer certificate is corrupt."
+msgstr "El certificado de contribuyente del AFIP no está corrupto."
+
+#, python-format
+msgid "An unknown authentication error has ocurred: %s"
+msgstr "Error desconocido en la autenticación: %s"
+
+msgid "status"
+msgstr "estado"
+
+msgid "Validated"
+msgstr "Validados"
+
+msgid "Not validated"
+msgstr "No validados"
+
+msgid "receipt number"
+msgstr "número de comprobante"
+
+msgid "total amount"
+msgstr "monto total"
+
+msgid "validated"
+msgstr "validado"
+
+msgid "Create"
+msgstr "Crear"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "PDF"
+msgstr "PDF"
+
+msgid "cae"
+msgstr "cae"
+
+#, python-format
+msgid "Receipt validation failed: %s"
+msgstr "Validación de comprobante falló: %s"
+
+msgid "Validate"
+msgstr "Validar"
+
+#, python-format
+msgid "%d points of sales created."
+msgstr "%d puntos de venta creados."
+
+#, python-format
+msgid "%d points of sales already existed."
+msgstr "%d puntos de ventas ya existían."
+
+msgid "Fetch points of sales"
+msgstr "Obtener puntos de venta"
+
+msgid "Key generated successfully."
+msgstr "Clave generada con éxito."
+
+#, python-format
+msgid "%d keys generated successfully."
+msgstr "%d claves generadas con éxito."
+
+msgid "No keys generated; Taxpayers already had keys."
+msgstr "Claves no generadas; todos los contribuyentes tenían claves."
+
+msgid "Generate key"
+msgstr "Generar clave"
+
+msgid "Can only generate CSR for one taxpayer at a time"
+msgstr "Sólo se pueden generar CSR para un contribuyente por vez."
+
+msgid "Generate CSR"
+msgstr "Generar CSR"
+
+msgid "Has file"
+msgstr "Tiene archivo"
+
+msgid "Generate pdf"
+msgstr "Generar pdf"
+
+msgid "result"
+msgstr "resultado"
+
+msgid "Fetches required AFIP metadata and stores it locally"
+msgstr "Obtiene metadatos necesarios del AFIP y los almacena localmente."
+
+msgid "code"
+msgstr "código"
+
+msgid "description"
+msgstr "descripción"
+
+msgid "valid from"
+msgstr "válido desde"
+
+msgid "valid until"
+msgstr "válido hasta"
+
+msgid "receipt type"
+msgstr "tipo de comprobante"
+
+msgid "receipt types"
+msgstr "tipos de comprobante"
+
+msgid "concept type"
+msgstr "tipo de concepto"
+
+msgid "concept types"
+msgstr "tipos de concepto"
+
+msgid "document type"
+msgstr "tipo de documento"
+
+msgid "document types"
+msgstr "tipos de documento"
+
+msgid "vat type"
+msgstr "tipo de iva"
+
+msgid "vat types"
+msgstr "tipos de iva"
+
+msgid "tax type"
+msgstr "tipo de tributo"
+
+msgid "tax types"
+msgstr "tipos de tributo"
+
+msgid "currency type"
+msgstr "tipo de moneda"
+
+msgid "currency types"
+msgstr "tipos de moneda"
+
+msgid "name"
+msgstr "nombre"
+
+msgid "A friendly name to recognize this taxpayer."
+msgstr "Un nombre amigable para reconocer a este contribuyente."
+
+msgid "key"
+msgstr "clave"
+
+msgid "certificate"
+msgstr "certificado"
+
+msgid "cuit"
+msgstr "cuit"
+
+msgid "is sandboxed"
+msgstr "modo prueba"
+
+msgid ""
+"Indicates if this taxpayer interacts with the sandbox servers rather than "
+"the production servers"
+msgstr ""
+"Indica si el contribuyente interactúa con los servidores de prueba en vez de "
+"los servidores productivos."
+
+msgid "certificate expiration"
+msgstr "expiración de certificado"
+
+msgid ""
+"Stores expiration for the current certificate. Note that this field is "
+"updated pre-save, so the value may be invalid for unsaved models."
+msgstr ""
+"Guarda la fecha de expiración del certificado actual. Nótese que este campo "
+"es actualizado previo a guardar, así que el valor puede ser inválido para "
+"modelos sin guardar."
+
+msgid "active since"
+msgstr "inicio de actividades"
+
+msgid "Date since which this taxpayer has been legally active."
+msgstr "Fecha desde la cual el contribuyente está legalmente activo."
+
+msgid "taxpayer"
+msgstr "contribuyente"
+
+msgid "taxpayers"
+msgstr "contribuyentes"
+
+msgid "issuing name"
+msgstr "nombre del emisor"
+
+msgid "issuing address"
+msgstr "domicilio del emisor"
+
+msgid "issuing email"
+msgstr "email del emisor"
+
+msgid "vat condition"
+msgstr "condición de IVA"
+
+msgid "gross income condition"
+msgstr "condición ingresos brutos"
+
+msgid "sales terms"
+msgstr "condición de venta"
+
+msgid ""
+"The terms of the sale printed onto receipts by default (eg: single payment, "
+"checking account, etc)."
+msgstr ""
+"Los términos de venta impresos en los comprobantes por defecto (eg: un pago, "
+"cuenta corriente, etc)."
+
+msgid "taxpayer profile"
+msgstr "perfil de contribuyente"
+
+msgid "taxpayer profiles"
+msgstr "perfiles de contribuyentes"
+
+msgid "pdf file"
+msgstr "archivo pdf"
+
+msgid "A logo to use when generating printable receipts."
+msgstr "Logo a usar al generar imprimibles de recibos."
+
+msgid "taxpayer extras"
+msgstr "extras de contribuyente"
+
+msgid "taxpayers extras"
+msgstr "extras de contribuyentes"
+
+msgid "number"
+msgstr "número"
+
+msgid "issuance type"
+msgstr "tipo de emisión"
+
+msgid "blocked"
+msgstr "bloqueado"
+
+msgid "drop date"
+msgstr "fecha de baja"
+
+msgid "owner"
+msgstr "dueño"
+
+msgid "point of sales"
+msgstr "punto de ventas"
+
+msgid "points of sales"
+msgstr "puntos de venta"
+
+msgid "There are no taxpayers to generate a ticket."
+msgstr "No hay contribuyentes para generar un certificado"
+
+msgid "unique id"
+msgstr "id único"
+
+msgid "generated"
+msgstr "generado"
+
+msgid "expires"
+msgstr "vence"
+
+msgid "service"
+msgstr "servicio"
+
+msgid "Service for which this ticket has been authorized"
+msgstr "Servicio para el cual este ticket ha sido autorizado."
+
+msgid "token"
+msgstr "token"
+
+msgid "signature"
+msgstr "firma"
+
+msgid "authorization ticket"
+msgstr "ticket de autorización"
+
+msgid "authorization tickets"
+msgstr "tickets de autorización"
+
+msgid "concept"
+msgstr "concepto"
+
+msgid "The document type of the customer to whom this receipt is addressed"
+msgstr "El tipo de documento del client para el cual este recibo es emitido."
+
+msgid "document number"
+msgstr "número de documento"
+
+msgid "The document number of the customer to whom this receipt is addressed"
+msgstr ""
+"El número de documento del cliente para el cual este comprobante es emitido."
+
+msgid ""
+"If left blank, the next valid number will assigned when validating the "
+"receipt."
+msgstr ""
+"Si queda en blanco, se completará con el próximo número válido al validar el "
+"comprobante."
+
+msgid "issued date"
+msgstr "fecha de emisión"
+
+msgid "Can diverge up to 5 days for good, or 10 days otherwise"
+msgstr "Puede diverger hasta 5 días para bienes, o 10 en otros casos."
+
+msgid ""
+"Must be equal to the sum of net_taxed, exempt_amount, net_taxes, and all "
+"taxes and vats."
+msgstr ""
+"Debe ser igual a la suma de monto no gravado, monto exento, monto gravado, y "
+"todos los tributos e ivas."
+
+msgid "total untaxable amount"
+msgstr "monto total no gravado"
+
+msgid ""
+"The total amount to which taxes do not apply. For C-type receipts, this must "
+"be zero."
+msgstr ""
+"El total para el cual impuestos no aplican. Para comprobantes tipo C, debe "
+"ser cero."
+
+msgid "total taxable amount"
+msgstr "monto total gravado"
+
+msgid ""
+"The total amount to which taxes apply. For C-type receipts, this is equal to "
+"the subtotal."
+msgstr ""
+"EL total para el cual impuestos  aplican. Para comprobantes tipo C, esto es "
+"igual al subtotal."
+
+msgid "exempt amount"
+msgstr "monto exento"
+
+msgid ""
+"Only for categories which are tax-exempt. For C-type receipts, this must be "
+"zero."
+msgstr ""
+"Sólo para rubros que son exentos de impuestos. Para comprobantes tipo C, "
+"debe ser cero."
+
+msgid "service start date"
+msgstr "fecha de comienzo de servicio"
+
+msgid "Date on which a service started. No applicable for goods."
+msgstr "Fecha en la cual el servicio comenzó. No aplica a bienes."
+
+msgid "service end date"
+msgstr "fecha de fin de servicio"
+
+msgid "Date on which a service ended. No applicable for goods."
+msgstr "Fecha en la cual el servicio finalizó. No aplica a bienes."
+
+msgid "receipt expiration date"
+msgstr "fecha de vencimiento del comprobante"
+
+msgid "Date on which this receipt expires. No applicable for goods."
+msgstr "Fecha en la cual este comprobante expira. No aplica a bienes."
+
+msgid "currency"
+msgstr "moneda"
+
+msgid "Currency in which this receipt is issued."
+msgstr "Moneda en la cual el comprobante es emitido."
+
+msgid "currency quote"
+msgstr "cotización de moneda"
+
+msgid "Quote of the day for the currency used in the receipt"
+msgstr "Cotizacón del día para la moneda usada en el comprobante."
+
+msgid "related receipts"
+msgstr "comprobantes relacionados"
+
+#, python-format
+msgid "Unnumbered %s"
+msgstr "%s sin número"
+
+msgid "receipt"
+msgstr "comprobante"
+
+msgid "receipts"
+msgstr "comprobantes"
+
+msgid "The actual file which contains the PDF data."
+msgstr "El archivo que contiene el PDF en sí."
+
+msgid "client name"
+msgstr "nombre del cliente"
+
+msgid "client address"
+msgstr "domicilio del cliente"
+
+msgid "client vat condition"
+msgstr "condición de IVA del client"
+
+msgid "Should be something like \"Cash\", \"Payable in 30 days\", etc"
+msgstr "Debería ser algo como \"Efectivo\" o \"Pagable a 30 días\", etc"
+
+msgid "Cannot generate pdf for non-authorized receipt"
+msgstr "No se puede generar un PDF para un comprobante no-autorizado."
+
+#, python-format
+msgid "Receipt PDF for %s"
+msgstr "PDF de comprobante para %s"
+
+msgid "receipt pdf"
+msgstr "pdf del comprobante"
+
+msgid "receipt pdfs"
+msgstr "pdfs de comprobantes"
+
+msgid "quantity"
+msgstr "cantidad"
+
+msgid "unit price"
+msgstr "precio unitario"
+
+msgid "Price per unit before vat or taxes."
+msgstr "Precio por unidad antes de IVA o impuestos."
+
+msgid "vat"
+msgstr "iva"
+
+msgid "receipt entry"
+msgstr "entrada de comprobante"
+
+msgid "receipt entries"
+msgstr "entradas de comprobantes"
+
+msgid "base amount"
+msgstr "monto base"
+
+msgid "aliquot"
+msgstr "alicuota"
+
+msgid "amount"
+msgstr "monto"
+
+msgid "tax"
+msgstr "tributo"
+
+msgid "taxes"
+msgstr "tributos"
+
+msgid "message"
+msgstr "mensaje"
+
+msgid "observation"
+msgstr "observación"
+
+msgid "observations"
+msgstr "observaciones"
+
+msgid "approved"
+msgstr "aprobado"
+
+msgid "rejected"
+msgstr "rechazado"
+
+msgid "Indicates whether the validation was succesful or not"
+msgstr "Indica si la validación fue exitosa o no."
+
+msgid "processed date"
+msgstr "fecha procesado"
+
+msgid "The CAE as returned by the AFIP"
+msgstr "El CAE, tal como fue devuelto por el AFIP."
+
+msgid "cae expiration"
+msgstr "expiración de cae"
+
+msgid "The CAE expiration as returned by the AFIP"
+msgstr "El vencimiento de CAE, tal como fue devuelto por el AFIP."
+
+msgid ""
+"The observations as returned by the AFIP. These are generally present for "
+"failed validations."
+msgstr ""
+"Las observaciones devueltas por el AFIP. Generalmente están presentes para "
+"validaciones fallidas."
+
+msgid "The Receipt for which this validation applies"
+msgstr "El comprobante para el cual esta  validación aplica."
+
+msgid "receipt validation"
+msgstr "validación de comprobante"
+
+msgid "receipt validations"
+msgstr "validaciones de comprobante"

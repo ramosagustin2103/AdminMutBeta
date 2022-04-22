@@ -1,0 +1,98 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Nuevo {{ tipo }}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="cobranzas" bhijo1=tipo %}
+{% endblock %}
+
+{% block header %}
+  Nuevo {{ tipo }}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <form action="" id="form-nuevo" method="POST">{% csrf_token %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Paso {{ wizard.steps.step1 }} de {{ wizard.steps.count }}</h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              {% if socio and wizard.steps.prev %}
+                <div class="col-md-4">
+                  <div class="card-box widget-box-three">
+                    <div class="bg-icon pull-left">
+                      <img src="{% static 'assets/images/icons/manager.svg' %}">
+                    </div>
+                    <div class="text-right">
+                      <p class="m-t-5 text-uppercase font-14 font-600">{{tipo}} para el Socio</p>
+                      <h2 class="m-b-10">{{ socio }}</h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card-box widget-box-three">
+                    <div class="bg-icon pull-left">
+                      <img src="{% static 'assets/images/icons/sales_performance.svg' %}">
+                    </div>
+                    <div class="text-right">
+                      <p class="m-t-5 text-uppercase font-14 font-600">Subtotal creditos</p>
+                      <h2 class="m-b-10">$<span id="suma">{{suma|default:0|floatformat:2 }}</span></h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card-box widget-box-three">
+                    <div class="bg-icon pull-left">
+                      <img src="{% static 'assets/images/icons/survey.svg' %}">
+                    </div>
+                    <div class="text-right">
+                      <p class="m-t-5 text-uppercase font-14 font-600">Total del comprobante</p>
+                      <h2 class="m-b-10">$<span id="total">{{total|default:0|floatformat:2 }}</span></h2>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+            {{ wizard.management_form }}
+            <div class="row">
+              <div class="col-md-12">
+                {% block panel-body %}
+                {% endblock %}
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-md-3">
+                {% if wizard.steps.prev %}
+                  <a href="{% url 'nuevo-ncc' %}?reset" class="btn btn-bordered btn-default btn-block">Resetear</a>
+                {% endif %}
+              </div>
+              <div class="col-md-9">
+                <button type="submit" id="next-step" class="{% if not wizard.steps.current == wizard.steps.last %}no-disabled {% endif %}btn btn-bordered btn-primary btn-block">
+                  {% if wizard.steps.current == wizard.steps.last %}
+                    Confirmar
+                  {% else %}
+                    Siguiente
+                  {% endif %}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block js %}
+  {% include 'comprobantes/nuevo/js.html' %}
+{% endblock %}

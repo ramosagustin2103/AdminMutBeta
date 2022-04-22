@@ -1,0 +1,465 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" bhijo1=resumen.nombre %}
+{% endblock %}
+
+{% block header %}
+	{{resumen.nombre}}
+{% endblock %}
+
+{% block contenido %}
+  {% if opcion == 'totales' %}
+    <div class="row">
+      <div class="col-md-12">
+          <div class="card-box">
+              <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h3>{{ consorcio.nombre_completo }}</h3>
+                    <h4>Totales de cobranzas</h4>
+                    <p>Desde {{ rango.0 }} / Hasta {{ rango.1 }}</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="card-box">
+                  <h4 class="header-title m-t-0 ">Totales por medios de cobro</h4>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <div class="table-responsive">
+                        {% include 'resumenes/cobranzas/tabla-medios-cobro.html' %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 text-center">
+                      <canvas id="doughnut" height="300" class="m-t-10"></canvas>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="card-box">
+                  <h4 class="header-title m-t-0 ">Totales por ingresos</h4>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <div class="table-responsive">
+                        {% include 'resumenes/cobranzas/tabla-ingresos.html' %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 text-center">
+                      <canvas id="bar" height="300" class="m-t-10"></canvas>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="hidden-print m-t-30 m-b-30">
+                <div class="text-right">
+                <a href="{% url 'res_par' resumen=resumen.slug %}" class="btn btn-pink waves-effect waves-light"><i class="fa fa-hand-o-left"></i> Consultar otros parametros</a>
+                    <a href="javascript:window.print()" class="btn btn-primary waves-effect waves-light"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  {% elif opcion == 'por-cajas' %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Comprobantes por formas de cobro</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="anopa table">
+                <thead>
+                  <tr class="active">
+                    <th>Fecha</th>
+                    <th>Comprobante</th>
+                    <th>Conceptos</th>
+                    <th>Socio</th>
+                    <th>Mediante</th>
+                    <th class="text-right">Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for f in formas_de_cobro %}
+                    <tr>
+                      <td>{{ f.fecha|date:"d/m/Y" }}</td>
+                      <td>
+                        <a href="{% url 'ver-comprobante' pk=f.comprobante.pk %}">
+                          {{ f.comprobante.tipo }} - {{ f.comprobante.nombre }}
+                        </a>
+                      </td>
+                      <td>
+                        {% for cobro in f.comprobante.cobro_set.all %}
+                          <h6>
+                            {{cobro.credito.dominio.nombre}} {{ cobro.credito.ingreso }}. {{ cobro.credito.periodo|date:"Y-m" }}: ${{ cobro.subtotal }}
+                          </h6>
+                        {% endfor %}
+                      </td>
+                      <td>{{ f.socio }}</td>
+                      <td>{{ f.caja }}</td>
+                      <td class="text-right">{{ f.valor }}</td>
+                    </tr>
+                  {% endfor %}
+                  {% for s in saldos_utilizados %}
+                    <tr>
+                      <td>{{ s.fecha|date:"d/m/Y" }}</td>
+                      <td>
+                        {% if s.comprobante_destino %}
+                          <a href="{% url 'ver-comprobante' pk=s.comprobante_destino.pk %}">
+                            {{ s.comprobante_destino.tipo }} - {{ s.comprobante_destino.nombre }}
+                          </a>
+                        {% else %}
+                          <a href="{% url 'ver-comprobante' pk=s.comprobante_origen.pk %}">
+                            {{ s.comprobante_origen.tipo }} - {{ s.comprobante_origen.nombre }}
+                          </a>
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if s.comprobante_destino %}
+                          {% for cobro in s.comprobante_destino.cobro_set.all %}
+                            <h6>
+                              {{cobro.credito.dominio.nombre}} {{ cobro.credito.ingreso }}. {{ cobro.credito.periodo|date:"Y-m" }}: ${{ cobro.subtotal }}
+                            </h6>
+                          {% endfor %}
+                        {% endif %}
+                      </td>
+                      <td>{{ s.socio }}</td>
+                      <td>Utilizacion de <small>{{s.nombre}}</small> </td>
+                      <td class="text-right">{{ s.subtotal_invertido }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  {% for n in nc %}
+                    <tr>
+                      <td>{{ n.fecha|date:"d/m/Y" }}</td>
+                      <td>
+                        <a href="{% url 'ver-comprobante' pk=n.pk %}">
+                          {{ n.tipo }} - {{ n.nombre }}
+                        </a>
+                      </td>
+                      <td>
+                        {% for cobro in n.comprobante.cobro_set.all %}
+                          <h6>
+                            {{cobro.credito.dominio.nombre}} {{ cobro.credito.ingreso }}. {{ cobro.credito.periodo|date:"Y-m" }}: ${{ cobro.subtotal }}
+                          </h6>
+                        {% endfor %}
+                      </td>
+                      <td>{{ n.socio }}</td>
+                      <td>Nota de Credito</td>
+                      <td class="text-right">{{ n.total }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-box">
+          <h4 class="header-title m-t-0 ">Totales por medios de cobro</h4>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="table-responsive">
+                {% include 'resumenes/cobranzas/tabla-medios-cobro.html' %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+  {% elif opcion == 'por-conceptos' %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Comprobantes por concepto de cobro</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="anopa table">
+                <thead>
+                  <tr class="active">
+                    <th>Fecha</th>
+                    <th>Comprobante</th>
+                    <th>Dominio</th>
+                    <th>Recurso</th>
+                    <th>Periodo</th>
+                    <th class="text-right">Capital</th>
+                    <th class="text-right">Int/Desc</th>
+                    <th class="text-right">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in cobros %}
+                    <tr>
+                      <td>
+                        {{c.fecha|date:"d/m/Y"}}
+                      </td>
+                      <td>
+                          <a href="{% url 'ver-comprobante' pk=c.comprobante.pk %}">
+                            {{ c.comprobante.tipo }} - {{ c.comprobante.nombre }}
+                          </a>
+                      </td>
+                      <td>{{ c.credito.dominio.nombre }}</td>
+                      <td>{{ c.credito.ingreso }}</td>
+                      <td>{{ c.credito.periodo|date:"Y-m" }}</td>
+                      <td class="text-right">{{ c.capital }}</td>
+                      <td class="text-right">{{ c.int_desc }}</td>
+                      <td class="text-right">{{ c.subtotal }}</td>
+                    </tr>
+                  {% endfor %}
+                  {% for s in saldos_nuevos %}
+                    <tr>
+                      <td>{{ s.fecha|date:"d/m/Y" }}</td>
+                      <td>
+                        {% if s.comprobante_origen %}
+                          <a href="{% url 'ver-comprobante' pk=s.comprobante_origen.pk %}">
+                            {{ s.nombre }}
+                          </a>
+                        {% else %}
+                            {{ s.nombre }}
+                        {% endif %}
+                      </td>
+                      <td></td>
+                      <td>Pago a cuenta</td>
+                      <td></td>
+                      <td class="text-right">{{s.subtotal}}</td>
+                      <td class="text-right">0,00</td>
+                      <td class="text-right">{{s.subtotal}}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-box">
+          <h4 class="header-title m-t-0 ">Totales por ingresos</h4>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="table-responsive">
+                {% include 'resumenes/cobranzas/tabla-ingresos.html' %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+
+{% block js %}
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  {% if opcion == 'totales' %}
+    <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+    <script src='{% static "plugins/bootstrap-daterangepicker/daterangepicker.js" %}'></script>
+    <script src='{% static "plugins/chart.js/chart.min.js" %}'></script>
+    <script>
+      $(function () {
+        $('#input-daterange-datepicker').daterangepicker({
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-success',
+            cancelClass: 'btn-default',
+            locale: {
+                format: 'YYYY-MM-DD',
+                applyLabel: 'Aplicar',
+                cancelLabel: 'Limpiar',
+                fromLabel: 'Desde',
+                toLabel: 'Hasta',
+                separator: " / ",
+                customRangeLabel: 'Seleccionar rango',
+                daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre',
+                    'Diciembre'],
+                firstDay: 1
+            }
+        });
+      });
+    </script>
+    <script>
+      $(function () {
+      "use strict";
+
+      var ChartJs = function() {};
+
+      ChartJs.prototype.respChart = function(selector,type,data, options) {
+          // get selector by context
+          var ctx = selector.get(0).getContext("2d");
+          // pointing parent container to make chart js inherit its width
+          var container = $(selector).parent();
+
+          // enable resizing matter
+          $(window).resize( generateChart );
+
+          // this function produce the responsive Chart JS
+          function generateChart(){
+              // make chart width fit with its container
+              var ww = selector.attr('width', $(container).width() );
+              switch(type){
+                  case 'Doughnut':
+                      new Chart(ctx, {type: 'doughnut', data: data, options: options});
+                      break;
+                  case 'Bar':
+                      new Chart(ctx, {type: 'bar', data: data, options: options});
+                      break;
+              }
+              // Initiate new chart or Redraw
+
+          };
+          // run function - render chart at first load
+          generateChart();
+      },
+      //init
+      ChartJs.prototype.init = function() {
+          var donutChart = {
+              labels: [
+              {% spaceless %}
+                {% for caja, valor in cajas.items %}
+                  {% if valor %}
+                    "{{caja.nombre}}",
+                  {% endif %}
+                {% endfor %}
+              {% endspaceless %}
+              {% if total_saldos_utilizados %}
+                "Utilizaciones de saldos",
+              {% endif %}
+              {% if total_nc %}
+                "Notas de credito",
+              {% endif %}
+              ],
+
+              datasets: [
+                  {
+                      data: [
+                        {% spaceless %}
+                          {% for caja, valor in cajas.items %}
+                            {% if valor %}
+                              {{ valor|get_digit:"0" }},
+                            {% endif %}
+                          {% endfor %}
+                        {% endspaceless %}
+                        {% if total_saldos_utilizados %}
+                          {{total_saldos_utilizados|get_digit:"0"}},
+                        {% endif %}
+                        {% if total_nc %}
+                          {{total_nc|get_digit:"0"}},
+                        {% endif %}
+                      ],
+                      backgroundColor: [
+                          "#5553ce",
+                          "#297ef6",
+                          "#e52b4c",
+                          "#ffa91c",
+                          "#32c861",
+                          "#7FFF00",
+                          "#B8860B",
+                          "#9932CC",
+                          "#2F4F4F",
+                          "#FF1493",
+                      ],
+                      hoverBackgroundColor: [
+                          "#5553ce",
+                          "#297ef6",
+                          "#e52b4c",
+                          "#ffa91c",
+                          "#32c861",
+                          "#7FFF00",
+                          "#B8860B",
+                          "#9932CC",
+                          "#2F4F4F",
+                          "#FF1493",
+                      ],
+                      hoverBorderColor: "#fff"
+                  }]
+          };
+          this.respChart($("#doughnut"),'Doughnut',donutChart);
+
+
+          //barchart
+          var barChart = {
+              labels: [
+              {% spaceless %}
+                {% for ingreso, valor in ingresos.items %}
+                  {% if valor %}
+                    "{{ ingreso.nombre }}",
+                  {% endif %}
+                {% endfor %}
+              {% endspaceless %}
+              {% if total_saldos_nuevos %}
+                "Pagos a cuenta",
+              {% endif %}
+              {% if intereses %}
+                "Intereses/Descuentos",
+              {% endif %}
+              ],
+              datasets: [
+                  {
+                      label: "Totales",
+                      backgroundColor: "rgba(236, 103, 148, 0.3)",
+                      borderColor: "#ec6794",
+                      borderWidth: 2,
+                      hoverBackgroundColor: "rgba(236, 103, 148, 0.6)",
+                      hoverBorderColor: "#ec6794",
+                      data: [
+                        {% spaceless %}
+                          {% for ingreso, valor in ingresos.items %}
+                            {% if valor %}
+                              {{ valor|get_digit:"0" }},
+                            {% endif %}
+                          {% endfor %}
+                        {% endspaceless %}
+                        {% if total_saldos_nuevos %}
+                          {{ total_saldos_nuevos|get_digit:"0" }},
+                        {% endif %}
+                        {% if intereses %}
+                          {{ intereses|get_digit:"0" }},
+                        {% endif %}
+                      ]
+                  }
+              ]
+          };
+          this.respChart($("#bar"),'Bar',barChart);
+      },
+      $.ChartJs = new ChartJs, $.ChartJs.Constructor = ChartJs
+
+      });
+
+      //initializing
+      $(function () {
+          "use strict";
+          $.ChartJs.init()
+      });
+    </script>
+  {% else %}
+    {% include 'comunes/js_datatable_print_excel_titulo.html' with titulo_print=resumen.nombre %}
+  {% endif %}
+
+{% endblock %}

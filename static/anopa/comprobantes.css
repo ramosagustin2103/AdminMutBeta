@@ -1,0 +1,29 @@
+@page {
+  size: A4;
+  margin-top: 0mm;
+  margin-bottom: 0mm;
+}
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+  }
+
+	.alt-comp {
+	  height: 148.5mm;
+	  vertical-align: middle;
+	}
+
+	.header-cbte {
+	   height: 30mm;
+	}
+
+	.body-cbte {
+	   height: 70mm;
+	}
+
+	.footer-cbte {
+	   height: 30mm;
+	}
+
+}

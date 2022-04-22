@@ -1,0 +1,137 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Cierre {{object.periodo|date:"Y-m"}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="reportes" bhijo1=object.periodo|date:"Y-m" %}
+{% endblock %}
+
+{% block header %}
+  Cierre {{object.periodo|date:"Y-m"}}
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="card-box">
+      <div class="panel-group">
+        <div class="panel panel-info panel-color">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                Encabezados
+              </h4>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-6 text-center">
+                    <img src="{{ consorcio.contribuyente.extras.logo_as_data_uri }}" alt="Logo" height="80"><br>
+                    <h3>{{ consorcio.nombre_completo }}</h3>
+                    <h5>{{ consorcio.provincia }}</h5>
+                    <h5>{{ consorcio.contribuyente.cuit }}</h5>
+                    <h5>Cierre al {{ object.periodo|date:"d/m/Y" }}</h5>
+                </div>
+                <div class="col-md-6 text-center">
+                  {% if cierre.logo_auditor %}
+                    <img src="{{ cierre.logo_auditor.url }}" alt="Logo" height="80"><br>
+                  {% endif %}
+                  {% if cierre.auditor %}
+
+                    <h5>Auditado por:</h5>
+                    <h3>{{cierre.auditor}}</h3>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="panel-group" id="accordion-resultados">
+        <div class="panel panel-info panel-color">
+            <div class="panel-heading">
+              <a data-toggle="collapse" data-parent="#accordion-resultados" href="#resultados" aria-expanded="false" class="collapsed">
+                <h4 class="panel-title">
+                  Ingresos y Gastos
+                </h4>
+              </a>
+            </div>
+            <div id="resultados" class="panel-collapse collapse">
+              <div class="panel-body">
+                <div class="table-responsive">
+                  {% include 'reportes/tabla-resultados.html' %}
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="panel-group" id="accordion-sit-pat">
+        <div class="panel panel-info panel-color">
+            <div class="panel-heading">
+              <a data-toggle="collapse" data-parent="#accordion-sit-pat" href="#sit-pat" aria-expanded="false" class="collapsed">
+                <h4 class="panel-title">
+                      Bienes y Deudas
+                </h4>
+              </a>
+            </div>
+            <div id="sit-pat" class="panel-collapse collapse">
+              <div class="panel-body">
+                <div class="table-responsive">
+                  {% include 'reportes/tabla-situacion-patrimonial.html' %}
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="panel-group" id="accordion-archivos">
+        <div class="panel panel-info panel-color">
+            <div class="panel-heading">
+              <a data-toggle="collapse" data-parent="#accordion-archivos" href="#archivos" aria-expanded="false" class="collapsed">
+                <h4 class="panel-title">
+                      Archivos vinculados
+                </h4>
+              </a>
+            </div>
+            <div id="archivos" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div class="table-responsive">
+                    <div class="col-md-12">
+                      <div class="card-box">
+                        {% if object.reportes.all %}
+                          <div class="row">
+                            {% for archivo in object.reportes.all %}
+                              <div class="col-xs-6 col-sm-4 col-md-4">
+                                <div class="file-man-box">
+                                    <div class="file-img-box">
+                                        <img src="{% static archivo.imagen %}" alt="icon">
+                                    </div>
+                                    <a href="{% url 'archivo-descargar' pk=archivo.pk %}" class="file-download"><i class="mdi mdi-download"></i> </a>
+                                    <div class="file-man-title">
+                                        <h5 class="m-b-0 text-overflow">{{archivo.nombre}}</h5>
+                                    </div>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        {% else %}
+                          <div class="text-center">
+                            Aun no tiene archivos cargados
+                          </div>
+                        {% endif %}
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

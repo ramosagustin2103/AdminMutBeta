@@ -1,0 +1,27 @@
+{% load staticfiles %}
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-daterangepicker/daterangepicker.css" %}'>
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-daterangepicker/daterangepicker.js" %}'></script>
+  <script>
+      $('.daterangepicker').daterangepicker({
+          buttonClasses: ['btn', 'btn-sm'],
+          applyClass: 'btn-success',
+          cancelClass: 'btn-default',
+          locale: {
+              format: 'YYYY-MM-DD',
+              applyLabel: 'Aplicar',
+              cancelLabel: 'Limpiar',
+              fromLabel: 'Desde',
+              toLabel: 'Hasta',
+              separator: " / ",
+              customRangeLabel: 'Seleccionar rango',
+              daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+              monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre',
+                  'Diciembre'],
+              firstDay: 1
+          }
+      });
+  </script>

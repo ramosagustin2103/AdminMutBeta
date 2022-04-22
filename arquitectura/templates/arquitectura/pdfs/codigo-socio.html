@@ -1,0 +1,53 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{factura.receipt.receipt_type}} {{factura.formatoAfip}}</title>
+    <link href="{% static 'anopa/pdf.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="receipt">
+
+
+
+    <div style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;padding: 30px;border: 3px solid #46a5b6;border-radius: 7px; background-color: #fff;">
+        <header>
+          <div class="taxpayer-details group">
+            <div class="receipt-details">
+              <address>
+                  <img src="{% static "anopa/images/logo.png" %}" alt="Logo"><br>
+              </address>
+            </div>
+          </div>
+        </header>
+
+        <p>{{socio}}, te damos la bienvenida</p>
+
+        <strong><i>AdminCU es una plataforma integrada de gestión, administración, contabilidad y comunicación que te permitirá:</i></strong>
+        <ul>
+            <li>Consultar tu estado de cuenta a la fecha.</li>
+            <li>Enterarte de los proximos vencimientos.</li>
+            <li>Realizar pagos de expensas con tarjeta o efectivo en bocas de pago (Por MercadoPago).</li>
+            <li>Recibir por mail e imprimir facturas y todos los comprobantes que te involucren.</li>
+            <li>Recibir por mail e imprimir los reportes mensuales del consorcio.</li>
+            <li>Descargar los reglamentos y estatutos del consorcio.</li>
+            <li>Proximamente podrás comunicar eventualidades a la administración del consorcio.</li>
+            <li>Proximamente podrás reservar el uso de instalaciones comunes.</li>
+            <li>Proximamente podrás Obtener una guia de servicios</li>
+            <li>Y muchas funciones mas.</li>
+        </ul>
+
+        <strong>Debes utilizar el siguiente codigo para la creación de tu usuario: </strong>
+          <a href="#" class="btn-primary" itemprop="url"
+          style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #34d3eb; margin: 0; border-color: #34d3eb; border-style: solid; border-width: 8px 16px;">
+            {{socio.codigo}}
+          </a>
+
+
+    </div>
+
+    </div>
+  </body>
+</html>

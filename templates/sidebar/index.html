@@ -1,0 +1,27 @@
+<li class="has-submenu">
+  <a href="{% url 'home' %}"><i class="fi-air-play"></i>Home</a>
+</li>
+
+{% if user.groups.all.0.name == "superusuario" %}
+
+  {% include 'sidebar/superusuario.html' %}
+
+{% elif user.groups.all.0.name == "socio" %}
+
+  {% include 'sidebar/socio.html' %}
+
+{% elif user.groups.all.0.name == "contable" %}
+
+	{% include 'sidebar/contable.html' %}
+  {% include 'sidebar/reportes.html' %}
+  {% include 'sidebar/herramientas.html' %}
+	{% include 'sidebar/parametros.html' %}
+
+{% else %}
+
+  {% include 'sidebar/basico.html' %}
+  {% include 'sidebar/reportes.html' %}
+  {% include 'sidebar/herramientas.html' %}
+  {% include 'sidebar/parametros.html' %}
+
+{% endif %}

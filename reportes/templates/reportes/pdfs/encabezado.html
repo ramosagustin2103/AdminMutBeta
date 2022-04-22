@@ -1,0 +1,29 @@
+{% load staticfiles %}
+  <div class="row">
+    <div class="col-md-12">
+      <header>
+        <div class="taxpayer-details group">
+          <address>
+            <img src="{{ cierre.consorcio.contribuyente.extras.logo_as_data_uri }}" alt="Logo"><br>
+            {{ cierre.consorcio.nombre_completo }}<br>
+            {{ cierre.consorcio.domicilio }}<br>
+          </address>
+
+
+
+          <div class="receipt-details">
+            <div class="receipt-type-description">
+              <address>
+              <img src="{{ logo_auditor }}" alt="Logo">
+                Auditado por: <br>
+                {{cierre.auditor}}
+              </address>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+      </header>
+    </div>
+  </div>

@@ -1,0 +1,136 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Modulo Reportes
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/jstree/style.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="reportes" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Reportes
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0 m-b-30">Listado de Periodos reportados</h4>
+          {% if not user.groups.all.0.name == "socio" %}
+            <div class="row">
+              <div class="col-md-12">
+                <a href="{% url 'cierre-nuevo' %}" class="btn btn-info pull-right m-b-30">
+                  <i class="fa fa-plus"></i> Nueva Cierre
+                </a>
+
+              </div>
+            </div>
+          {% endif %}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel-group" id="accordion-test-2">
+                {% for anio, meses in anios.items %}
+                  <div class="panel panel-info panel-color">
+                      <div class="panel-heading">
+                        <a data-toggle="collapse" data-parent="#accordion-test-2" href="#{{ anio }}" aria-expanded="false" class="collapsed">
+                          <h4 class="panel-title">
+                                  {{ anio }}
+                          </h4>
+                        </a>
+                      </div>
+                      <div id="{{ anio }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <table class="table">
+                              <tbody>
+                                <tr>
+                                  <th>Periodo</th>
+                                  <th>Auditador por</th>
+                                  <th>Ingresos-Gastos</th>
+                                  <th width="20"></th>
+                                </tr>
+                                {% for mes in meses %}
+                                  <tr {% if not mes.confirmado %}class="active"{% endif %}>
+                                    <td>{{ mes.periodo|date:"Y-m" }}</td>
+                                    <td>{{ mes.auditor|default:"" }}</td>
+                                    <td>{{ mes.total|floatformat:"0" }}</td>
+                                    <td>
+                                      {% if not mes.confirmado %}
+                                        <a href="{% url 'cierre-procesamiento' pk=mes.pk %}" class="btn btn-icon btn-purple btn-bordered waves-efect waves-light">
+                                          <i class="fa fa-check-square-o"></i> Continuar
+                                        </a>
+                                      {% else %}
+                                        <a href="{% url 'cierre-ver' pk=mes.pk %}" class="btn btn-icon btn-success btn-bordered waves-efect waves-light">
+                                          <i class="fa fa-mail-forward"></i> Ver cierre
+                                        </a>
+                                      {% endif %}
+                                    </td>
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+                      </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+
+{% block js %}
+  <script src='{% static "plugins/jstree/jstree.min.js" %}'></script>
+  <script>
+    $(document).ready(function(){
+      $('#basicTree').jstree({
+      'core' : {
+        'themes' : {
+          'responsive': false
+        }
+      },
+          'types' : {
+
+              'file' : {
+                  'icon' : 'fa fa-file'
+              },
+              'pendiente' : {
+                  'icon' : 'fa fa-warning'
+              },
+              'pdf' : {
+                  'icon' : 'fa fa-file-pdf-o'
+              },
+              'xlsx' : {
+                  'icon' : 'fa fa-file-excel-o'
+              },
+              'xls' : {
+                  'icon' : 'fa fa-file-excel-o'
+              },
+              'doc' : {
+                  'icon' : 'fa fa-file-word-o'
+              },
+              'docx' : {
+                  'icon' : 'fa fa-file-word-o'
+              },
+
+
+          },
+          'plugins' : ['types',]
+      }).bind("select_node.jstree", function (e, data) {
+           var href = data.node.a_attr.href;
+           document.location.href = href;
+      });
+    });
+  </script>
+{% endblock %}

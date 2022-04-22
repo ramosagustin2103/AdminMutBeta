@@ -1,0 +1,131 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Compensacion {{compensacion.formatoAfip}}
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% if not user.groups.all.0.name == "socio" %}
+    {% include 'comunes/breadcrum.html' with bpadre="comprobantes" bhijo1="registro de compensaciones" bhijo2=compensacion.formatoAfip %}
+  {% endif %}
+{% endblock %}
+
+{% block header %}
+  Compensacion {{compensacion.formatoAfip}} de {{compensacion.socio}}
+{% endblock %}
+
+{% block contenido %}
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="card-box widget-box-three">
+        <div class="bg-icon pull-left">
+          <img src="{% static 'assets/images/icons/fine_print.svg' %}">
+        </div>
+        <div class="text-right">
+          <table class="table">
+            <tr>
+              <th>Compensacion</th>
+              <td>
+                <a href="{% url 'compens_pdf' numero_aleatorio=compensacion.numero_aleatorio %}" target="_blank">
+                  {{compensacion.formatoAfip}}
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <th>Fecha de la compensacion</th>
+              <td>{{ compensacion.fecha|date:"d/m/Y" }}</td>
+            </tr>
+            {% if user.groups.all.0.name == "contable" %}
+              {% if compensacion.asiento %}
+                <tr>
+                  <th>Acciones</th>
+                  <td>
+                      <a href="{% url 'asiento_redireccion' id_asiento=compensacion.asiento.id %}" class="btn btn-icon btn-xs btn-info btn-bordered waves-efect waves-light">
+                        Ver asiento
+                      </a>
+                  </td>
+                </tr>
+              {% endif %}
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <div class="panel panel-border panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Listado de creditos cobrados</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'comprobantes/ver/tabla-cobros.html' with objeto=compensacion %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.print.min.js" %}''></script>
+
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $(".anopa").length && $(".anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm"
+                  }],
+                  responsive: !0,
+                  ordering: false,
+                  paging: false,
+                  bInfo: false,
+                  language: {
+                    "emptyTable": "No hay entradas",
+                    "search": "Buscar: ",
+                    "lengthMenu": "Ver _MENU_ entradas",
+                  }
+              })
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+
+    });
+
+  </script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load staticfiles %}
+{% load humanize %}
+<table id="anopa" class="table">
+  <thead>
+    <tr>
+      <th width="20"></th>
+      <th>Nombre</th>
+      <th>Inicio</th>
+      <th>Cierre</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ejercicio in ejercicios %}
+      <tr>
+        <td class="text-center">
+          <a href="{% url 'ejercicio_set' ejercicio=ejercicio.numero_aleatorio %}" class="btn btn-icon btn-bordered btn-purple btn-xs">
+            <i class="fa fa-eye"></i>
+          </a>
+        </td>
+        <td>{{ ejercicio.nombre }}</td>
+        <td>{{ ejercicio.inicio|date:"d/m/Y" }}</td>
+        <td>{{ ejercicio.cierre|date:"d/m/Y" }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

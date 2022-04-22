@@ -1,0 +1,58 @@
+{% extends 'raiz.html' %}
+{% load humanize %}
+
+{% block titulo %}
+  Eliminar peticion de pago a MercadoPago
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="facturacion" %}
+{% endblock %}
+
+{% block header %}
+  Eliminar peticion de pago a MercadoPago
+{% endblock %}
+
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+    <div class="panel panel-border panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">Estas seguro?</h3>
+      </div>
+      <div class="panel-body">
+        <form id="form-team-new" method="POST">{% csrf_token %}
+          <p>Estas seguro que quieres eliminar tu peticion a MercadoPago?</p>
+          <p>Informacion de los pagos a eliminar:</p>
+          <table class="anopa table table-condensed display nowrap" style="width:100%">
+            <thead>
+              <tr>
+                <th>Dominio</th>
+                <th>Concepto</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cobro in object.cobro_set.all %}
+                <tr>
+                  <td>{{ cobro.credito.dominio.nombre }}</td>
+                  <td>{{ cobro.credito.ingreso }} {{ cobro.credito.periodo|date:"Y-m" }}</td>
+                  <td>{{ cobro.subtotal }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <button class="btn btn-block btn-warning btn-bordered" type="submit" value="Save">
+            <span>SI, ELIMINAR</span>
+          </button>
+          <br>
+          <i>
+            Recorda que las peticiones de pago son validas durante el dia en que se las genera. <br>
+            Una vez eliminada podes generar una nueva.
+          </i>
+        </form>
+
+      </div>
+  </div>
+{% endblock %}

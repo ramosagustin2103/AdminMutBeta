@@ -1,0 +1,48 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Ejercicio {{ejercicio}} - Libro Diario
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="ejercicios" bhijo2="diario" %}
+{% endblock %}
+
+{% block header %}
+  Ejercicio {{ejercicio}} - Libro Diario
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-3 hidden-print">
+      {% include 'contabilidad/barra.html' %}
+    </div>
+
+    <div class="col-md-9">
+      {% if not asientos %}
+        {% include 'comunes/alerta.html' with tipo="warning" alerta="El ejercicio aun no tiene asientos" %}
+      {% endif %}
+      <div class="card-box">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="hidden-print m-t-30 m-b-30">
+              <div class="text-right">
+                <a href="javascript:window.print()" class="btn btn-primary waves-effect waves-light"><i class="fa fa-print m-r-5"></i> Imprimir</a>
+              </div>
+            </div>        
+            <h3>{{ consorcio.nombre_completo }}</h3>
+            <h4>Ejercicio {{ ejercicio }} ({{ejercicio.inicio|date:"d/m/Y"}} - {{ejercicio.cierre|date:"d/m/Y"}})</h4>
+            <h5>Libro diario</h5>
+            <div class="table-responsive">
+              {% include 'contabilidad/ejercicios/tabla-diario.html' %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>   
+
+  </div>
+{% endblock %}
+

@@ -1,0 +1,76 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Home
+{% endblock %}
+
+{% block header %}
+  Home
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-sm-9">
+    <div class="panel panel-border panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Hola, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <p class="m-t-5">Si necesitas ayuda para navegar en el portal, tenes a disposicion una <a href="{% url 'biblioteca' %}">biblioteca</a>. <br>
+            En ella podras encontrar informacion sobre las herramientas disponibles y del funcionamiento del sistema. </p><br>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h5>Ultimos comprobantes</h5>
+            <div class="table-responsive">
+              {% include 'comprobantes/registros/tabla-comprobantes.html' %}
+              <a href="{% url 'cobranzas-socio' %}" class="btn btn-link btn-block">Ver mas</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+      <a href="{% url 'facturacion-socio' %}" class="text-muted">
+        <div class="card-box widget-box-three">
+          <div class="bg-icon pull-left">
+            {% if creditos %}
+                <img src="{% static 'assets/images/icons/leave.svg' %}">
+            {% else %}
+              <img src="{% static 'assets/images/icons/approval.svg' %}">
+            {% endif %}
+          </div>
+          <div class="text-right">
+            <p class="m-t-5 text-uppercase font-14 font-600">Pendientes</p>
+            <h2 class="m-b-10"><span data-plugin="counterup">{{ creditos|length }}</span></h2>
+          </div>
+        </div>
+      </a>
+     <!-- 
+      <div class="card-box widget-user">
+          <div>
+              <img src="{% static 'assets/images/icons/calendar.svg' %}" class="img-responsive img-circle" alt="user">
+              <div class="wid-u-info">
+                {% for credito in creditos %}
+                  <h5 class="m-t-20 m-b-5"> {{ credito.ingreso }} - {{ credito.dominio.nombre }}</h5>
+                  <p class="text-muted m-b-0 font-14">Periodo: {{ credito.periodo|date:"Y-m" }}</p>
+                  <p class="text-muted m-b-0 font-14">{% if credito.vencimiento %}Vencimiento: {{ credito.vencimiento|date:"d/m/Y" }}{% else %}Sin vencimiento{% endif %}</p>
+                  <p class="text-muted m-b-0 font-14">${{ credito.subtotal }}</p>
+                {% endfor %}
+                  <div class="user-position">
+                      <span class="text-danger font-secondary">Listado</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+    -->  
+  </div>
+</div>
+{% endblock %}

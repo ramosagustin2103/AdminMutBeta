@@ -1,0 +1,18 @@
+{% if configuracion_avanzada == "comprobante" %}
+  <div class="panel-group" id="configuraciones-avanzadas">
+    <a data-toggle="collapse" data-parent="#configuraciones-avanzadas" href="#config" aria-expanded="false" class="collapsed">
+      >> Configuraciones avanzadas
+    </a>
+    <div id="config" class="panel-collapse collapse">
+      <br>
+      <p>
+        <label for="id_fecha_cobro">Fecha del cobro :</label>
+        <input type="text" name="fecha-cobro" placeholder="AAAA-MM-DD" class="form-control" id="id_fecha_pago" />
+      </p>
+      <p>
+        <label for="id_condonacion">Condonacion de intereses :</label>
+        <input type="checkbox" name="condonacion" id="id_condonacion" class="form-control">
+      </p>
+    </div>
+  </div>
+{% endif %}

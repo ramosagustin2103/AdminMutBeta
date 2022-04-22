@@ -1,0 +1,74 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Herramientas
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="herramientas" %}
+{% endblock %}
+
+{% block header %}
+  Herramientas
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+
+    <div class="col-md-6">
+
+        <a href="{% url 'transferencias' %}">
+          <div class="card-box">
+              <div class="text-center">
+                <img src="{% static 'assets/images/icons/shipped.svg' %}" height="50">
+              </div>
+            <div class="text-center">
+              <h4>Transferencia entre cajas</h4>
+            </div>
+          </div>
+        </a>
+
+        <a href="{% url 'rg3369' %}">
+          <div class="card-box">
+              <div class="text-center">
+                <img src="{% static 'assets/images/icons/filing_cabinet.svg' %}" height="50">
+              </div>
+            <div class="text-center">
+              <h4>AFIP - Regimen informativo</h4>
+            </div>
+          </div>
+        </a>
+
+    </div>
+
+    <div class="col-md-6">
+      <div class="card-box ribbon-box">
+
+        <div class="ribbon ribbon-success">Resumenes analiticos</div>
+        <p class="text-muted m-b-10 font-14"></p>
+
+        <div class="panel-group" id="accordion-test-2">
+          {% for r in resumenes %}
+            <div class="panel panel-info panel-color">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion-test-2" href="#{{ r.slug }}" aria-expanded="false" class="collapsed">
+                            {{r}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ r.slug }}" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    {{r.descripcion}} <br>
+                    <a class="btn btn-info btn-sm pull-right" href="{% url 'res_par' resumen=r.slug %}"><i class="fa fa-hand-o-right"></i> Ir al resumen</a>
+                  </div>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

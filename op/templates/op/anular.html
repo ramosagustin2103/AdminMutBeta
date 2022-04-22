@@ -1,0 +1,45 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Anular orden de pago {{op.formatoAfip}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="OP" bhijo1="registro de pagos" bhijo2=op.formatoAfip %}
+{% endblock %}
+
+{% block header %}
+  Anular orden de pago {{op.formatoAfip}}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Estas seguro?</h3>
+        </div>
+        <form action="" method="POST">{% csrf_token %}
+          <div class="panel-body">
+              <p>Estas seguro que desea anular la Orden de pago: {{op}}?</p>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-xs-6">
+                <button class="btn btn-block btn-danger btn-bordered waves-effect waves-light" type="submit" value="Save">
+                  <span>Si, anular</span>
+                </button>
+              </div>
+              <div class="col-xs-6">
+                <a href="{% url 'op_ver' pk=op.pk %}" class="btn btn-block btn-default btn-bordered waves-effect waves-light">
+                  Volver
+                </a>
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+
+{% endblock %}

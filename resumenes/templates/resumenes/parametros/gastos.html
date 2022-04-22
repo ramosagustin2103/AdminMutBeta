@@ -1,0 +1,12 @@
+<label for="id_gastos">Conceptos: </label>
+<select id="id_gastos" name="gastos" multiple="" required="" class="selector form-control">
+  {% spaceless %}
+    {% for g in consorcio.gasto_set.all %}
+      <option value="{{g.id}}">
+        {% spaceless %}
+          {{g}}
+        {% endspaceless %}
+      </option>
+    {% endfor %}
+  {% endspaceless %}
+</select>

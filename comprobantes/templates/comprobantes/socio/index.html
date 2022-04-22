@@ -1,0 +1,59 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Tus pagos
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="pagos" %}
+{% endblock %}
+
+{% block header %}
+  Tus pagos
+{% endblock %}
+
+{% block contenido %}
+  {% if pagos %}
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="panel panel-border panel-warning">
+          <div class="panel-heading">
+            <h3 class="panel-title">Pagos recientes</h3>
+          </div>
+          <div class="panel-body">
+            <p>Lista de pagos realizados recientemente.</p>
+            <div class="table-responsive">
+              {% include 'comprobantes/socio/tabla-pagos.html' %}
+            </div>
+            <p><i class="fa fa-warning"></i> Comuniquese con administración si pasado un tiempo considerable no le realizaron un recibo</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="panel panel-border panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Listado de comprobantes</h3>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            {% include 'comprobantes/registros/tabla-comprobantes.html' with comprobantes=filter.qs %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel.html' %}
+{% endblock %}

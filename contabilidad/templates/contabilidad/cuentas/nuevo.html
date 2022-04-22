@@ -1,0 +1,31 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Nueva cuenta contable
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="cuentas" bhijo2="nuevo" %}
+{% endblock %}
+
+{% block header %}
+  Nueva cuenta contable
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'contabilidad/barra.html' %}
+    </div>
+		<div class="col-md-6">
+  		{% include 'comunes/simple-form.html' %}
+		</div>
+    {% if errores %}
+      <div class="col-md-3">
+        {% include 'comunes/errores.html' %}
+      </div>
+    {% endif %}
+	</div>
+{% endblock %}
+

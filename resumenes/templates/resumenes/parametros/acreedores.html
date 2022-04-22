@@ -1,0 +1,12 @@
+<label for="id_acreedores">Acreedores: </label>
+<select id="id_acreedores" name="acreedores" multiple="" required="" class="selector form-control">
+  {% spaceless %}
+    {% for a in consorcio.acreedor_set.all %}
+      <option value="{{a.id}}">
+        {% spaceless %}
+          {{a}}
+        {% endspaceless %}
+      </option>
+    {% endfor %}
+  {% endspaceless %}
+</select>

@@ -1,0 +1,146 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Resumen - {{resumen}}
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-daterangepicker/daterangepicker.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" bhijo1=resumen %}
+{% endblock %}
+
+{% block header %}
+  {{resumen}}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0 m-b-30">Seleccione los parametros</h4>
+        <form action="{% url resumen.slug %}" method="POST">{% csrf_token %}
+          <div class="row">
+            {% if resumen.slug == 'saldos-pendientes-de-socios' %}
+              <div class="col-md-3">
+                {% include 'resumenes/parametros/dominios.html' %}
+              </div>
+              <div class="col-md-3">
+                {% include 'resumenes/parametros/ingresos.html' %}
+              </div>
+              <div class="col-md-3">
+                {% include 'resumenes/parametros/intereses.html' %}
+              </div>
+              <div class="col-md-3">
+                {% include 'resumenes/parametros/fecha.html' %}
+              </div>
+            {% elif resumen.slug == 'cobranzas-y-medios' %}
+              <div class="col-md-4">
+                {% include 'resumenes/parametros/socios.html' %}
+              </div>
+              <div class="col-md-4">
+                {% include 'resumenes/parametros/opciones-c.html' %}
+              </div>
+              <div class="col-md-4">
+                {% include 'resumenes/parametros/fechas.html' %}
+              </div>
+            {% elif resumen.slug == 'deudas-pendientes-con-acreedores' %}
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/acreedores.html' %}
+              </div>
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/fecha.html' %}
+              </div>
+            {% elif resumen.slug == 'pagos-y-medios' %}
+              <div class="col-md-4">
+                {% include 'resumenes/parametros/acreedores.html' %}
+              </div>
+              <div class="col-md-4">
+                {% include 'resumenes/parametros/opciones-p.html' %}
+              </div>
+              <div class="col-md-4">
+                {% include 'resumenes/parametros/fechas.html' %}
+              </div>
+            {% elif resumen.slug == 'estado-de-cuenta' %}
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/socio.html' %}
+              </div>
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/fecha.html' %}
+              </div>
+            {% elif resumen.slug == 'movimientos-de-caja' %}
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/caja.html' %}
+              </div>
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/fecha.html' %}
+              </div>
+            {% elif resumen.slug == 'ingresos-devengados' %}
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/ingresos.html' %}
+              </div>
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/fechas.html' %}
+              </div>
+            {% elif resumen.slug == 'gastos-devengados' %}
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/gastos.html' %}
+              </div>
+              <div class="col-md-6">
+                {% include 'resumenes/parametros/fechas.html' %}
+              </div>
+            {% endif %}
+          </div>
+          <br>
+          <button type="submit" class="accion_envio btn btn-info btn-block">Generar resumen</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-daterangepicker/daterangepicker.js" %}'></script>
+  <script src='{% static "anopa/bootstrap-datepicker.es.js" %}'></script>
+  <script>
+    $(function () {
+      $('.input-daterange-datepicker').daterangepicker({
+          buttonClasses: ['btn', 'btn-sm'],
+          applyClass: 'btn-success',
+          cancelClass: 'btn-default',
+          locale: {
+              format: 'YYYY-MM-DD',
+              applyLabel: 'Aplicar',
+              cancelLabel: 'Limpiar',
+              fromLabel: 'Desde',
+              toLabel: 'Hasta',
+              separator: " / ",
+              customRangeLabel: 'Seleccionar rango',
+              daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+              monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre',
+                  'Diciembre'],
+              firstDay: 1
+          }
+      });
+    });
+  </script>
+  <script>
+    $(function () {
+      $('.datepicker-autoclose').datepicker({
+          autoclose: true,
+          todayHighlight: true,
+          format: 'yyyy-mm-dd',
+          language: 'es',
+          orientation: 'bottom'
+      });
+    })
+  </script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+{% endblock %}
+
+{% block titulo %}
+  Parametrizacion
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="parametros" bhijo1=parametro %}
+{% endblock %}
+
+{% block header %}
+  Parametrizacion
+{% endblock %}
+
+{% block contenido %}
+
+  <div class="row">
+
+    <div class="col-md-3">
+      {% include 'arquitectura/barra.html' %}
+    </div>
+
+    <div class="col-md-9">
+      <div class="panel panel-border panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Parametro {{ nombre_parametro|capfirst }}</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12">
+              {% if parametro == "Punto" %}
+                <a href="{% url 'puntosdeventa' %}" class="btn btn-info pull-right">
+                  <i class="fa fa-plus"></i> Obtener desde AFIP
+                </a>
+              {% elif parametro == "interes" or parametro == "descuento" or parametro == "bonificacion" %}
+                <a href="{% url 'crear_accesorio' clase=parametro %}" class="btn btn-info pull-right">
+                  <i class="fa fa-plus"></i> Nuevo
+                </a>
+              {% else %}
+                <a href="{% url 'crear' modelo=parametro %}" class="btn btn-info pull-right">
+                  <i class="fa fa-plus"></i> Nuevo
+                </a>
+              {% endif %}
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive" >
+                {% include 'arquitectura/tablas.html' %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% if not instance %}
+    <script src='{% static "assets/pages/jquery.toastr.js" %}'></script>
+    {% include 'comunes/js_datatable_print_excel_titulo.html' %}
+  {% endif %}
+{% endblock %}

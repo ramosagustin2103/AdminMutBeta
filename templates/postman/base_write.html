@@ -1,0 +1,85 @@
+{% extends "postman/base.html" %}
+{% load i18n static %}
+{% block extrahead %}{{ block.super }}
+{% if autocompleter_app.is_active %}{# using the available admin jQuery is enough #}
+{# should not be necessary since AS v1.3 with AJAX_SELECT_BOOTSTRAP set #}
+{#<script type="text/javascript" src="{% static 'admin/js/jquery.min.js' %}"></script>#}
+{% endif %}
+<link href="{% static 'plugins/summernote/summernote.css' %}" rel="stylesheet" />
+{{ form.media }}{# for ajax_selects (v1.3.6 at least) #}
+{% endblock %}
+{% block header %}
+  {% block pm_write_title %}{% endblock %}
+{% endblock %}
+{% block content %}
+<div class="card-box">
+{% if form.errors %}
+  <div class="alert alert-danger">
+    <ul>
+      {% for field in form %}
+          {% for error in field.errors %}
+            <li>{{field.label}} - {{ error|escape }}</li>
+          {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+<div id="postman">
+<form action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" method="post">{% csrf_token %}
+{% block pm_write_recipient %}{% endblock %}
+{% include 'postman/contactos.html' %}
+<div class="row">
+  <div class="col-md-12">
+    {% for field in form %}
+      {% if field.name == "recipients" %}
+        <input type="hidden" class="form-control" value="" name="recipients" id="id_recipients" placeholder="Para" required>
+      {% elif field.name == "subject" %}
+        <div class="form-group">
+            <input type="text" name="subject" maxlength="120" id="id_subject" class="form-control" placeholder="Asunto">
+        </div>
+      {% elif field.name == "body" %}
+        <div class="form-group">
+            <textarea name="body" class="summernote">
+            </textarea>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <button type="submit" class="btn btn-purple waves-effect waves-light pull-right pm_btn pm_btn-send"> <span>Enviar</span> <i class="fa fa-send m-l-10"></i> </button>
+  </div>
+</div>
+
+</form>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{% static 'plugins/summernote/summernote.min.js' %}"></script>
+  <script>
+      jQuery(document).ready(function(){
+
+          $('.summernote').summernote({
+              height: 350,
+              minHeight: null,
+              maxHeight: null,
+              focus: false,
+              toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['view', ['fullscreen']],
+                ['help', ['help']]
+              ],
+          });
+      });
+  </script>
+  <script type="text/javascript" src="{% static 'anopa/recipients.js' %}"></script>
+{% endblock %}

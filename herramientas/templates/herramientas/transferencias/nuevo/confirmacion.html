@@ -1,0 +1,55 @@
+{% extends 'herramientas/transferencias/nuevo/index.html' %}
+{% load humanize %}
+
+{% block panel-body %}
+  <div class="card-box text-center">
+    <h4 class="m-t-0 header-title"><i class="fa fa-exclamation-triangle"></i> Confirmación</h4>
+    <p>
+      Estas por generar una nueva Transferencia entre cajas. <br>
+      Revisa y aceptá solo si tenes certeza de que los datos que ingresaste son los correctos. <br>
+      Recorda que una vez generado no se puede eliminar.
+    </p>
+  </div>
+  <hr>
+  <div class="table-responsive">
+    <table class="table table-condensed table-bordered">
+      <tbody>
+          <tr>
+            <th class="success text-center" colspan="2">Detalles de la operacion</th>
+          </tr>
+        <tr>
+          <th>Operacion</th>
+          <th class="text-right">Tranferencia entre cajas</th>
+        </tr>
+        <tr>
+          <th>Destino de la operacion</th>
+          <th class="text-right">{{data_inicial.caja_destino}}</th>
+        </tr>
+        {% if total %}
+          <tr>
+            <th>Total del documento</th>
+            <th class="text-right">${{total|intcomma}}</th>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-responsive">
+      <table class="table table-condensed table-bordered">
+      <tbody>
+          <tr>
+          <th class="info text-center" colspan="2">Cajas de origen</th>
+          </tr>
+          {% for c in cajas %}
+          <tr>
+              <th>{{ c.origen }}</th>
+              <td class="text-right">
+              ${{c.valor|intcomma}}
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+  </div>
+{% endblock %}

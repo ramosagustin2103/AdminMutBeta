@@ -1,0 +1,45 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Procesar Reporte
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-daterangepicker/daterangepicker.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="reportes" bhijo1="nuevo" %}
+{% endblock %}
+
+{% block header %}
+  Procesar Reporte
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-6">
+    {% include 'comunes/simple-form-sincancelar.html' with pregunta="Seleccionar periodo" %}
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "anopa/bootstrap-datepicker.es.js" %}'></script>
+
+  <script>
+    $(function () {
+      $('input[name=periodo]').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        orientation: 'bottom auto',
+        language: 'es',
+      })
+    });
+  </script>
+{% endblock %}

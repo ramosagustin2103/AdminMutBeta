@@ -1,0 +1,158 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block titulo %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="shortcut icon" href='{% static "anopa/images/favicon.ico" %}'>
+
+    <link href='{% static "plugins/jquery-toastr/jquery.toast.min.css" %}' rel="stylesheet" type="text/css" />
+
+    <link href='{% static "assets/css/bootstrap.min.css" %}' rel="stylesheet" type="text/css" />
+    <link href='{% static "assets/css/core.css" %}' rel="stylesheet" type="text/css" />
+    <link href='{% static "assets/css/components.css" %}' rel="stylesheet" type="text/css" />
+    <link href='{% static "assets/css/icons.css" %}' rel="stylesheet" type="text/css" />
+    <link href='{% static "assets/css/pages.css" %}' rel="stylesheet" type="text/css" />
+    <link href='{% static "assets/css/menu.css" %}' rel="stylesheet" type="text/css" />
+    <link href='{% static "assets/css/responsive.css" %}' rel="stylesheet" type="text/css" />
+    <link href='{% static "anopa/anopa.css" %}' rel="stylesheet" type="text/css" />
+
+    {% block css %}{% endblock %}
+
+
+    <script src='{% static "assets/js/modernizr.min.js" %}'></script>
+
+  </head>
+
+
+  <body>
+    <div class="se-pre-con"></div>
+
+    <header id="topnav">
+      <div class="topbar-main">
+          <div class="container">
+
+            <div class="logo">
+
+                <a href="{% url 'home' %}" class="logo">
+                  <img src='{% static "anopa/images/icono.png" %}' alt="" height="40"> <small>{{ consorcio.nombre_raiz }}</small>
+                </a>
+            </div>
+
+            <div class="menu-extras">
+
+              <ul class="nav navbar-nav navbar-right pull-right">
+
+                <li class="dropdown navbar-c-items">
+                    <a href="" class="dropdown-toggle waves-effect profile" data-toggle="dropdown" aria-expanded="true"><img src="{% static 'assets/images/icons/assistant.svg' %}" alt="user-img" class="img-circle"> </a>
+                    <ul class="dropdown-menu dropdown-menu-right arrow-dropdown-menu arrow-menu-right user-list notify-list">
+                        <li class="text-center">
+                            <h5>Hola, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</h5>
+                        </li>
+                        <li><a href="{% url 'biblioteca' %}"><i class="dripicons-bookmark m-r-10"></i> Biblioteca</a></li>
+                        <li><a href="{% url 'perfil' %}"><i class="dripicons-user m-r-10"></i> Perfil</a></li>
+                        <li><a href="{% url 'logout' %}"><i class="dripicons-power m-r-10"></i> Logout</a></li>
+                    </ul>
+
+                </li>
+              </ul>
+
+              <div class="menu-item">
+                  <a class="navbar-toggle">
+                      <div class="lines">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                      </div>
+                  </a>
+              </div>
+
+            </div>
+
+          </div>
+      </div>
+
+      <div class="navbar-custom">
+        <div class="container">
+          <div id="navigation">
+            <ul class="navigation-menu">
+              {% include 'sidebar/index.html' %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+    <div class="wrapper">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="page-title-box">
+                {% block breadcrum %}{% endblock %}
+                <h4 class="page-title">{% block header %}{% endblock %}</h4>
+              </div>
+              {% if validacion_demo %}
+                <div class="alert alert-icon alert-white alert-warning alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <i class="mdi mdi-alert"></i>
+                    Algunas funcionalidades estan deshabilitadas para este usuario.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% block contenido %}{% endblock %}
+        </div>
+
+
+        <footer class="footer text-right">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12 text-center">
+                  Website by <b>Anopa</b>Synergy
+              </div>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+    <script src='{% static "assets/js/jquery.min.js" %}'></script>
+    <script src='{% static "assets/js/bootstrap.min.js" %}'></script>
+    <script src='{% static "assets/js/waves.js" %}'></script>
+    <script src='{% static "assets/js/jquery.slimscroll.js" %}'></script>
+    <script src='{% static "plugins/waypoints/jquery.waypoints.min.js" %}'></script>
+    <script src='{% static "plugins/counterup/jquery.counterup.min.js" %}'></script>
+    <script src='{% static "plugins/jquery-toastr/jquery.toast.min.js" %}'></script>
+    <script src='{% static "anopa/anopa.js" %}'></script>
+    {% block js %}{% endblock %}
+    <script src='{% static "assets/js/jquery.core.js" %}'></script>
+    <script src='{% static "assets/js/jquery.app.js" %}'></script>
+    <script src='{% static "plugins/jquery-validation/jquery.validate.js" %}'></script>
+    <script src='{% static "plugins/jquery-validation/localization/messages_es.js" %}'></script>
+    {% if messages %}
+        <script>
+          {% for message in messages %}
+            $(document).ready(function(){
+              $.toast({
+                  heading: '{% if message.tags == "success" %}Bien hecho!{% else %}Ups!{% endif %}',
+                  text: '{{message}}',
+                  position: 'top-right',
+                  loaderBg: '{% if message.tags == "success" %}#5ba035{%else%}#bf441d{% endif %}',
+                  icon: '{{message.tags}}',
+                  hideAfter: 6000,
+                  stack: 1
+              });
+            });
+          {% endfor %}
+        </script>
+    {% endif %}
+
+  </body>
+</html>

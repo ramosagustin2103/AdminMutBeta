@@ -1,0 +1,160 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Tus Facturas
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="facturacion" %}
+{% endblock %}
+
+{% block header %}
+  Tus Facturas
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-9">
+
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Facturacion y deudas</h3>
+            <input type='hidden' name='except' id='except' value="{% if consorcio.costo_mp %}1{% else %}0{% endif %}" />
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'creditos/registros/tabla-creditos.html' with creditos=creditos %}
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+    {% if mercado_pago %}
+        <div id="enviar_mp" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+          <div class="modal-dialog" style="width:55%;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="custom-width-modalLabel">Estas seguro?</h4>
+              </div>
+              <div class="modal-body">
+                <p>Seras redireccionado a MercadoPago para finalizar la operacion.</p>
+              </div>
+              <div class="modal-footer">
+                <form id="formExpensas" action="{% url 'preference-new' %}" method="POST">{% csrf_token %}
+
+                  <button type="submit" class="btn btn-info waves-effect waves-light">Ir a mercadopago</button>
+                  <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+        <div class="col-md-3">
+  
+          {% if mercado_pago %}
+            <div class="panel panel-border panel-warning">
+              <div class="panel-heading">
+                <h3 class="panel-title">Pago por MercadoPago</h3>
+              </div>
+              <div class="panel-body">
+                <p>
+                  <small>
+                      Si queres podes abonar por alguno de los metodos habilitados en mercadopago. <br>
+                      Debes seleccionar los conceptos, presiona el boton enviar y serás redireccionado a la entidad.
+                  </small>
+                </p>
+                <p>
+                  <table class="table table-condensed">
+                    <tr>
+                      <td>Total de creditos</td>
+                      <td class="text-right" id="total_expensas">0.00</td>
+                    </tr>
+                    <tr>
+                      <td>Costo MP</td>
+                      <td class="text-right" id="total_comision">0.00</td>
+                    </tr>
+                    <tr>
+                      <th>Total Final</th>
+                      <th class="text-right" id="total_final">0.00</th>
+                    </tr>
+                  </table>
+                </p>
+                <p>
+                  <button id="btn-pago" disabled="" type="button" class="btn btn-default btn-bordered btn-block" data-toggle="modal" data-target="#enviar_mp">Enviar</button>
+                </p>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if expensas_pagas %}
+            <div class="panel panel-border panel-warning">
+                <div class="panel-body">
+                  <p>
+                      <a href="https://expensaspagas.online/" target="_blank">
+                        <img src="http://expensaspagas.com.ar/descargas/EXP-B-360x300.png" alt="Expensas Pagas Online" /> 
+                      </a>
+
+                  </p>
+                </div>
+              </div>
+          {% endif %}
+
+
+        </div>
+
+  </div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+  $('.credclass').on('change', function () {
+    var valor = $(this).val();
+    var final = 0.00;
+    $('.credclass').each(function () {
+      if ($(this).is(':checked')) {
+        var total_individual = $(this).closest('td').siblings('td.total_individual').text().replace(',', '.');
+        total_individual = parseFloat(total_individual);
+        final = final + total_individual;
+      }
+    });
+
+    var total_expensas = $('#total_expensas');
+    total_expensas.html((final).toFixed(2));
+    var total_comision = $('#total_comision');
+    var except = $('#except').val();
+    if (except == "1") {
+      var comision = 0.00;
+    } else {
+      var comision = ((final) * 0.0440909).toFixed(2);
+    }
+    total_comision.html(comision);
+    var total_final = $('#total_final');
+    total_final.html((parseFloat(final) + parseFloat(comision)).toFixed(2));
+
+    if ($(this).is(':checked')) {
+      $('#formExpensas').append("<input type='hidden' name='vinculo[]'' value=" + valor + ">");
+    }
+    else {
+      $('input[type=hidden]').each(function () {
+        if ($(this).val() === valor) {
+          $(this).remove()
+        }
+      });
+    };
+
+    if (total_expensas.text() > 0.00) {
+      $('#btn-pago').prop("disabled", false);
+    }
+    else {
+      $('#btn-pago').prop("disabled", true);
+    }
+  });
+</script>
+  {% include 'comunes/js_datatable_print_excel.html' %}
+{% endblock %}

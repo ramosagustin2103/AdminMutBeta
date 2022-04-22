@@ -1,0 +1,20 @@
+<div class="card-box ribbon-box">
+  <div class="ribbon ribbon-success">Area de relaciones humanas</div>
+  <p class="text-muted m-b-10 font-14"></p>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Socio' %}">Socios</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Dominio' %}">Dominios</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Grupo' %}">Grupos</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Acreedor' %}">Acreedores</a>
+  <a class="btn btn-block btn-bordered btn-default m-b-25" href="{% url 'parametro' modelo='Cliente' %}">Clientes</a>
+</div>
+<div class="card-box ribbon-box">
+  <div class="ribbon ribbon-warning">Area economica</div>
+  <p class="text-muted m-b-10 font-14"></p>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Ingreso' %}">Recursos</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Gasto' %}" >Erogaciones</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Punto' %}">Puntos de gestion</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'parametro' modelo='Caja' %}">Tesoro</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'listado_accesorio' clase='interes' %}">Intereses</a>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'listado_accesorio' clase='descuento' %}">Descuentos</a>
+  <a class="btn btn-block btn-bordered btn-default m-b-25" href="{% url 'listado_accesorio' clase='bonificacion' %}">Bonificaciones</a>
+</div>

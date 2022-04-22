@@ -1,0 +1,126 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" bhijo1=resumen.nombre %}
+{% endblock %}
+
+{% block header %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0">Ingresos devengados desde: {{fechas.0}} hasta: {{fechas.1}}<a href="{% url 'res_par' resumen=resumen.slug %}" class="btn pull-right btn-pink waves-effect waves-light"><i class="fa fa-hand-o-left"></i> Consultar otros parametros</a> </h4>
+        <br>
+        <div class="table-responsive">
+          <table class="table anopa">
+            <thead>
+              <tr class="active">
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Cuenta</th>
+                <th>Periodo</th>
+                <th>Destinatario</th>
+                <th>Documento</th>
+                <th width="30" class="active text-right">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in creditos %}
+                <tr>
+                  <td>{{c.fecha|date:"d/m/Y"}}</td>
+                  <td>{{c.ingreso}}</td>
+                  <td>{{c.ingreso.cuenta_contable.nombre}}</td>
+                  <td>{{c.periodo|date:"Y-m"}}</td>
+                  <td>{% if c.dominio %}{{c.dominio.nombre}} - {% endif %}{{c.socio}}</td>
+                  <td>{% if c.factura %}Factura C {{c.factura.formatoAfip}}{% else %} S/D {% endif %}</td>
+                  <td class="active bold text-right"><strong>{{c.capital|intcomma}}</strong></td>
+                </tr>
+              {% endfor %}
+              {% for n in notas_debito %}
+                <tr>
+                  <td>{{n.fecha|date:"d/m/Y"}}</td>
+                  <td>Intereses a favor</td>
+                  <td>INTERESES A FAVOR</td>
+                  <td>{{n.credito.periodo|date:"Y-m"}}</td>
+                  <td>{% if n.credito.dominio %}{{n.credito.dominio.nombre}} - {% endif %}{{n.credito.socio}}</td>
+                  <td>{{n.comprobante.nota_debito|default:"S/ND"}}</td>
+                  <td class="active bold text-right"><strong>{{n.int_desc|intcomma}}</strong></td>
+                </tr>
+              {% endfor %}
+              {% for n in notas_debito_anulado %}
+                <tr>
+                  <td>{{n.fecha|date:"d/m/Y"}}</td>
+                  <td>Descuento</td>
+                  <td>DESCUENTOS</td>
+                  <td>{{n.credito.periodo|date:"Y-m"}}</td>
+                  <td>{% if n.credito.dominio %}{{n.credito.dominio.nombre}} - {% endif %}{{n.credito.socio}}</td>
+                  <td>{{n.comprobante.nota_debito_anulado|default:"S/ND"}}</td>
+                  <td class="active bold text-right"><strong>{% if n.int_desc %}{{n.int_desc|intcomma}}{% else %}-{{ n.capital|intcomma }}{% endif %}</strong></td>
+                </tr>
+              {% endfor %}
+              {% for n in notas_credito_automaticas %}
+                <tr>
+                  <td>{{n.fecha|date:"d/m/Y"}}</td>
+                  <td>Descuento</td>
+                  <td>DESCUENTOS</td>
+                  <td>{{n.credito.periodo|date:"Y-m"}}</td>
+                  <td>{% if n.credito.dominio %}{{n.credito.dominio.nombre}} - {% endif %}{{n.credito.socio}}</td>
+                  <td>{{ n.comprobante.nota_credito|default:"S/NC" }}</td>
+                  <td class="active bold text-right"><strong>{{n.int_desc|intcomma}}</strong></td>
+                </tr>
+              {% endfor %}
+              {% for n in notas_credito_automaticas_anulado %}
+                <tr>
+                  <td>{{n.fecha|date:"d/m/Y"}}</td>
+                  <td>Intereses a favor</td>
+                  <td>INTERESES A FAVOR</td>
+                  <td>{{n.credito.periodo|date:"Y-m"}}</td>
+                  <td>{% if n.credito.dominio %}{{n.credito.dominio.nombre}} - {% endif %}{{n.credito.socio}}</td>
+                  <td>{{ n.comprobante.nota_credito_anulado|default:"S/NC" }}</td>
+                  <td class="active bold text-right"><strong>{{n.int_desc|intcomma}}</strong></td>
+                </tr>
+              {% endfor %}
+              {% for n in notas_credito_manuales %}
+                {% if n.capital %}
+                  <tr>
+                    <td>{{n.fecha|date:"d/m/Y"}}</td>
+                    <td>{{n.credito.ingreso}}</td>
+                    <td>{{n.credito.ingreso.cuenta_contable.nombre}}</td>
+                    <td>{{n.credito.periodo|date:"Y-m"}}</td>
+                    <td>{% if n.credito.dominio %}{{n.credito.dominio.nombre}} - {% endif %}{{n.credito.socio}}</td>
+                    <td>{{n.comprobante.nota_credito|default:"S/NC"}}</td>
+                    <td class="active bold text-right"><strong>-{{n.capital|intcomma}}</strong></td>
+                  </tr>
+                {% endif %}
+                {% if n.int_desc %}
+                  <tr>
+                    <td>{{n.fecha|date:"d/m/Y"}}</td>
+                    <td>Intereses a favor</td>
+                    <td>INTERESES A FAVOR</td>
+                    <td>{{n.credito.periodo|date:"Y-m"}}</td>
+                    <td>{% if n.credito.dominio %}{{n.credito.dominio.nombre}} - {% endif %}{{n.credito.socio}}</td>
+                    <td>{{n.comprobante.nota_credito|default:"S/NC"}}</td>
+                    <td class="active bold text-right"><strong>-{{n.int_desc|intcomma}}</strong></td>
+                  </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel_titulo.html' with anopa_order_by=1 titulo_print=resumen.nombre %}
+{% endblock %}

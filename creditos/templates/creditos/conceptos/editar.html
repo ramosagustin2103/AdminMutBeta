@@ -1,0 +1,29 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Editar Concepto
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="parametros" bhijo1=parametro %}
+{% endblock %}
+
+{% block header %}
+  Editar Concepto
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'creditos/barra.html' %}
+    </div>
+		<div class="col-md-6">
+  		{% include 'comunes/simple-form.html' %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+    {% include 'comunes/datepicker.html' %}
+{% endblock %}

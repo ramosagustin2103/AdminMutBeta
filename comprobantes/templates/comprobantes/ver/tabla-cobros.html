@@ -1,0 +1,35 @@
+{% load humanize %}
+<table class="anopa table table-condensed">
+  <thead>
+    <tr>
+      <th>Dominio</th>
+      <th>Recurso</th>
+      <th>Periodo</th>
+      <th class="text-right">Capital</th>
+      <th class="text-right">Accesorios</th>
+      <th class="text-right">Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cobro in objeto.cobro_set.all %}
+    <tr>
+      <td>{{ cobro.credito.dominio.nombre|default:"S/D" }}</td>
+      <td>{% if cobro.credito %}{{ cobro.credito.ingreso }}{% else %}A cuenta{% endif %}</td>
+      <td>{{ cobro.credito.periodo|date:"Y-m" }}</td>
+      <td class="text-right">{{ cobro.capital|intcomma }}</td>
+      <td class="text-right">{{ cobro.int_desc|intcomma }}</td>
+      <td class="text-right">{{ cobro.subtotal|intcomma }}</td>
+    </tr>
+    {% endfor %}
+    {% if comprobante.saldos.all %}
+        <tr>
+          <td></td>
+          <td>Nuevo Saldo</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="text-right">{{comprobante.saldos.first.subtotal|intcomma}}</td>
+        </tr>
+    {% endif %}
+  </tbody>
+</table>

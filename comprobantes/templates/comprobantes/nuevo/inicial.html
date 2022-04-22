@@ -1,0 +1,52 @@
+{% extends extension %}
+
+{% block panel-body %}
+  {% for field in wizard.form %}
+    {% if forloop.counter == 3 %}
+    <br>
+    <div class="panel-group" id="configuraciones-avanzadas">
+      <a data-toggle="collapse" data-parent="#configuraciones-avanzadas" href="#config" aria-expanded="false" class="collapsed">
+        >> Configuraciones avanzadas
+      </a>
+      <div id="config" class="panel-collapse collapse">
+    {% endif %}
+      <p>
+        {{field.label_tag}}
+        {{field}}
+      </p>
+    {% if forloop.counter == 4 %}
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/datepicker.html' %}
+{% endblock %}
+
+
+
+
+
+{% if seleccion_multiple and forloop.counter == 2 %}
+<div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+  <a href='#' id="selectAll">Seleccionar Todo</a>  &nbsp; - &nbsp;
+  <a href='#' id="deselectAll">Deseleccionar Todo</a>
+</div>
+{% endif %}
+
+
+{% if seleccion_multiple %}
+  <!-- En desuso, por eso se lo coloque en un lugar donde no lo toma. Pano -->
+  <!-- Links para seleccionar y deseleccionar todo: funciona unicamente 1 vez, si se deselecciona todo no se puede volver a "seleccionar todo" -->
+  <script>
+    $('#selectAll').click(function() {
+      $('select#id_inicial-cobroexp option').attr("selected","selected");
+    });   
+
+    $('#deselectAll').click(function() {
+      $('select#id_inicial-cobroexp option').removeAttr("selected");
+    });
+  </script>
+{% endif %}

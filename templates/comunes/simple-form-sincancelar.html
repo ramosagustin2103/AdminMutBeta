@@ -1,0 +1,25 @@
+<form id="archivo" action="{{ vista }}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+  <div class="panel panel-default">
+    {% if pregunta %}
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ pregunta|capfirst }} <small>{{ respuesta }}</small></h3>
+    </div>
+    {% endif %}
+    <div class="panel-body">
+      {% if slug_archivo %}
+        <p>Descargar el archivo modelo haciendo <a href="{% url 'bib_descargar' slug=slug_archivo %}">click aqui</a> y rellena los campos.</p>
+      {% endif %}
+    	{{ form.as_p }}
+      {{ form_anexo.as_p}}
+      <br>
+      {% if configuracion_avanzada %}
+        {% include 'comunes/configuraciones.html' %}
+      {% endif %}
+      <input type="hidden" name="pregunta" value="{{ pregunta }}">
+      <input type="hidden" name="respuesta" value="{{ respuesta }}">
+    </div>
+    <div class="panel-footer">
+      <button type="submit" class="btn btn-bordered btn-primary btn-block">Siguiente</button>
+    </div>
+  </div>
+</form>

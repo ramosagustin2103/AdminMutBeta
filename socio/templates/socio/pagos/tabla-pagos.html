@@ -1,0 +1,29 @@
+{% load staticfiles %}
+{% load humanize %}
+
+<small>
+  <table class="anopa table table-condensed table-sm">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Ref</th>
+        <th>Titulo</th>
+        <th class="text-center">Conceptos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pago in pagos %}
+        <tr>
+          <td>{{ pago.created|date:"d/m/Y" }}</td>
+          <td>#{{ pago }}</td>
+          <td>{{ pago.preference.title }}</td>
+          <td class="text-center">
+            {% for c in pago.cobro_set.all %}
+              - {{ c.credito.periodo|date:"Y-m" }} - {{ c.credito.ingreso }}: ${{c.subtotal|intcomma}} <br>
+            {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</small>

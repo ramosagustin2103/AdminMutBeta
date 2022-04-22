@@ -1,0 +1,70 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Vinculacion de deuda con pagos
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="deudas" bhijo1="vincular-pago" %}
+{% endblock %}
+
+{% block header %}
+  Vinculacion de deuda con pagos
+{% endblock %}
+
+{% block contenido %}
+  {% if errores %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="alert alert-icon alert-warning fade in">
+        <i class="mdi mdi-alert"></i>
+          <ul>
+            {% for error in errores %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+    <form method="POST" action="">{% csrf_token %}
+    	<div class="row">
+    		<div class="col-md-8">
+    			<div class="card-box">
+            <h4 class="m-t-0 header-title">Seleccione pagos a vincular</h4>
+            <label for="id_pagos">Acreedores: </label>
+            <select id="id_pagos" name="pagos" multiple="" required="" class="selector form-control">
+              {% spaceless %}
+                {% for a in adelantos %}
+                  <option value="{{a.id}}">
+                    {% spaceless %}
+                      {{a.op}} - Adelanto de ${{a.valor}}
+                    {% endspaceless %}
+                  </option>
+                {% endfor %}
+              {% endspaceless %}
+            </select>
+    			</div>
+    		</div>
+        <div class="col-md-4">
+          <div class="card-box widget-box-three">
+            <div class="bg-icon pull-left">
+              <img src="{% static 'assets/images/icons/conference_call.svg' %}" title="advertising.svg">
+            </div>
+            <div class="text-right">
+              <p class="m-t-5 text-uppercase font-14 font-600">Deuda</p>
+              <h4 class="m-b-20">{{deuda}}</h4>
+            </div>
+          </div>
+
+          <button type="submit" class="accion_envio btn btn-bordered btn-primary btn-block">Vincular</button>
+        </div>
+    	</div>
+
+    </form>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "anopa/pagos.js" %}'></script>
+{% endblock %}

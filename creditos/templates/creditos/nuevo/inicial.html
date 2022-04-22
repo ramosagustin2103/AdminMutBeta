@@ -1,0 +1,9 @@
+{% extends 'creditos/nuevo/index.html' %}
+
+{% block panel-body %}
+    {{wizard.form.as_p}}
+{% endblock %}
+
+{% block js %}
+    {% include 'comunes/datepicker.html' %}
+{% endblock %}

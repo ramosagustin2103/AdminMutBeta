@@ -1,0 +1,123 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Cuenta {{cuenta.nombre}}
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="cuentas" bhijo2=cuenta.numero %}
+{% endblock %}
+
+{% block header %}
+  Cuenta {{cuenta.nombre}}
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'contabilidad/barra.html' %}
+    </div>
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-purple panel-border">
+            <div class="panel-heading">
+              <h3 class="panel-title">Informacion</h3>
+            </div>
+            <div class="panel-body">
+              <h4 class="m-b-25">Numero: <small>{{ cuenta.numero }}</small></h4>
+              <h4 class="m-b-25">Nombre: <small>{{ cuenta.nombre }}</small></h4>
+              <h4 class="m-b-25">Rubro: <small>{{ cuenta.dependencia }}</small></h4>
+              <div id="desvincular" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog" style="width:55%;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title" id="custom-width-modalLabel">Estas seguro?</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Esta seguro que desea desvincular {{cuenta.nombre}} del plan de cuentas.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{% url 'cuentas_desvincular' cuenta=cuenta.numero %}" class="btn btn-danger">Desvincular</a>
+                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-danger btn-bordered" data-toggle="modal" data-target="#desvincular">Desvincular</button>
+              <hr>
+              <h4 class="m-b-25">Ultimos movimientos</h4>
+              <div class="table-responsive">
+                {% include 'contabilidad/cuentas/tabla.html' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+{% endblock %}
+
+
+{% block js %}
+  <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.print.min.js" %}''></script>
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $("#anopa").length && $("#anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm"
+                  }, {
+                      extend: "print",
+                      className: "btn-sm"
+                  }],
+                  responsive: !0,
+                  ordering: false,
+                  language: {
+                    "emptyTable": "No hay entradas",
+                    "search": "Buscar: ",
+                    "paginate": {
+                        "first":"Primero",
+                        "last":"Ultimo",
+                        "next":">",
+                        "previous":"<",
+                    },
+                    "lengthMenu": "Ver _MENU_ entradas",
+                    "info": "Visualizando _START_ a _END_ de _TOTAL_ entradas",
+                    "infoEmpty": "Visualizando 0 a 0 de 0 entradas",
+                  }
+              })
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+
+    });
+  </script>
+{% endblock %}

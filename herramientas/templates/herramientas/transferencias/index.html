@@ -1,0 +1,78 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Transferencias
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="transferencias" %}
+{% endblock %}
+
+{% block header %}
+  Transferencias entre cajas
+{% endblock %}
+
+{% block contenido %}
+
+
+<div class="row">
+  <div class="col-md-3">
+    {% include 'herramientas/transferencias/barra.html' %}
+  </div>
+
+  <div class="col-md-9">
+
+    <div class="row">
+
+      <div class="col-md-6">
+        <div class="card-box widget-box-four">
+          {% with filter.qs|first as trans %}
+            {% if trans %}
+              <div class="pull-right">
+                <img src="{% static 'assets/images/icons/document.svg' %}" height="80">
+              </div>
+              <div class="wigdet-four-content pull-left">
+                <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">Ultima transferencia</h4>
+                <p class="font-secondary text-muted">
+                  <strong>Total: </strong>${{trans.total|intcomma}} <br>
+                </p>
+                <h3 class="m-b-0">
+                  <a href="{% url 'pdf-transferencia' pk=trans.pk %}" target="_blank">
+                    {{trans.formatoAfip}}
+                  </a>
+                </h3>
+              </div>
+              <div class="clearfix"></div>
+            {% else %}
+              <p>
+                Aun no hay transferencias. <br>
+              </p>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Ultimas transferencias generadas</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'herramientas/transferencias/registros/tabla-transferencias.html' with transferencias=lista %}
+              <a href="{% url 'registro de transferencias' %}" class="btn btn-link btn-block">Ver mas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+

@@ -1,0 +1,77 @@
+{% load staticfiles %}
+{% load humanize %}
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link href="{% static 'anopa/cupon.css' %}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="a4-ticket">
+
+        <div class="a4-content">
+            <div class="event-header">
+                <div class="">
+                    <img src="{% static 'anopa/images/expensas_pagas.png' %}">
+                </div>
+            </div>
+            <div class="event-info">
+                <p>{{ factura.receipt.issued_date|date:"d/m/Y" }}</p>
+                <h2>Cupon de pago</h2>
+                <p>Válido para las diferentes bocas de pago admitidas en Expensas Pagas</p>
+            </div>
+            <div class="ticket-info">
+
+                <div class="barcode-holder">
+                    <div class="barcode">
+                        <img src="data:image/png;base64,{{barcode_cupon}}" />
+                    </div><br />
+                </div>
+
+
+            </div>
+            <div class="barcode-text">
+                <p>{{ barcode_text }}</p>
+            </div>
+
+            <div class="ticket-info">
+
+                <div class="ticket-info-left">
+                    <p>
+                        <b>1° vencimiento</b>
+                    </p>
+                    <p>${{ saldo1|floatformat:2 }}</p>
+                    <p>{{ fecha1|date:"d/m/Y" }}</p>
+                </div>
+                {% if not fecha2 or fecha1 == fecha2  %}
+                {% else %}
+                <div class="ticket-info-right">
+                    <p>
+                        <b>2° vencimiento</b>
+                    </p>
+                    <p>${{ saldo2|floatformat:2 }}</p>
+                    <p>{{ fecha2|date:"d/m/Y" }}</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="event-calendar">
+              <small>Su código de pago electrónico para pagar a través de Pago Mis Cuentas, Red Link y EXP Online es: </small>
+              <h4>{{cpe}}</h4>
+            </div>
+            <div class="legal">
+                <p>
+                    Este no es un cupón para abonar a la entidad AdminCU. Se trata de un cupón de la entidad Expensas Pagas.
+                    Ante cualquier inconveniente comuniquese con su administración al siguiente numero: 0810-362-2256.
+                    <b>El equipo de AdminCU</b>
+                </p>
+            </div>
+            <div class="sponsors-holder">
+                <img src="{% static 'anopa/images/medios_pago.png' %}" alt="Sponsors" class="sponsors">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

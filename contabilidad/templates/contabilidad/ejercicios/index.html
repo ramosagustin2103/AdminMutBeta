@@ -1,0 +1,51 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Ejercicios contables
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="ejercicios" %}
+{% endblock %}
+
+{% block header %}
+  Ejercicios contables
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3">
+    {% include 'contabilidad/barra.html' %}
+  </div>
+
+  <div class="col-md-9">
+
+    <div class="panel panel-border panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Ejercicios contables</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <a href="{% url 'ejercicio_nuevo' %}" class="btn btn-info pull-right">
+              <i class="fa fa-plus"></i> Nuevo ejercicio
+            </a>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              {% include 'contabilidad/ejercicios/tabla.html' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+

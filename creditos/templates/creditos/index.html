@@ -1,0 +1,117 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Facturacion
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="facturacion" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Facturacion
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-3">
+      {% include 'creditos/barra.html' %}
+    </div>
+
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card-box widget-box-four">
+            {% if ultima_liquidacion %}
+              <div id="grafico" class="widget-box-four-chart"></div>
+                <div class="wigdet-four-content pull-left">
+                  <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">Ultima liquidacion</h4>
+                  <p class="font-secondary text-muted">
+                    {{ultima_liquidacion.fecha}}
+                    <span class="label label-purple">Pendiente</span>
+                    <span class="label label-pink">Cobrado</span>
+                  </p>
+                  <h3 class="m-b-0 m-t-20">
+                    <a href="">
+                      {{ultima_liquidacion.formatoAfip}}
+                    </a>
+                  </h3>
+                </div>
+                <div class="clearfix"></div>
+            {% else %}
+              <p>
+                Aun no tiene liquidaciones. <br>
+              </p>
+            {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card-box widget-box-four">
+            <div class="pull-right">
+              <img src="{% static 'assets/images/icons/sales_performance.svg' %}" height="80">
+            </div>
+              <div class="wigdet-four-content pull-left">
+                <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">Saldos pendientes a la fecha</h4>
+                <p class="font-secondary text-muted">{% now "d/m/Y" %}</p>
+                <h3 class="m-b-0 m-t-20">${{saldo|intcomma}}</h3>
+              </div>
+              <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-border panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Ultimas liquidaciones de facturas generadas</h3>
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                {% include 'creditos/registros/tabla-liquidaciones.html' with liquidaciones=lista  %}
+                <a href="{% url 'registro de liquidaciones' %}" class="btn btn-link btn-block">Ver mas</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% if ultima_liquidacion %}
+    <script src='{% static "plugins/jquery-sparkline/jquery.sparkline.min.js" %}'></script>
+    <script>
+
+      $( document ).ready(function() {
+
+        var DrawSparkline = function() {
+            $('#grafico').sparkline([{{ultima_liquidacion.cobrado.0|floatformat}}, {{ultima_liquidacion.cobrado.1|floatformat}}], {
+                type: 'pie',
+                width: '80',
+                height: '80',
+                sliceColors: ['#ec6794', '#5553ce']
+            });
+        }
+
+        DrawSparkline();
+
+        var resizeChart;
+
+        $(window).resize(function(e) {
+          clearTimeout(resizeChart);
+          resizeChart = setTimeout(function() {
+            DrawSparkline();
+          }, 300);
+        });
+      });
+    </script>
+  {% endif %}
+{% endblock %}

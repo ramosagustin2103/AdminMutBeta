@@ -1,0 +1,60 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Confirmacion de la deuda
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="deudas" bhijo1="confirmacion" %}
+{% endblock %}
+
+{% block header %}
+  Confirmacion de la deuda
+{% endblock %}
+
+
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="panel panel-border panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Datos de la deuda</h3>
+        </div>
+        <div class="panel-body">
+          <h3>Nueva deuda con {{ deuda.acreedor }}</h3>
+          {% if gastoDeuda %}
+            <p>Vinculado a los siguientes gastos:</p>
+            <ul>
+              {% for gasto in gastoDeuda %}
+                <li>{{ gasto.gasto }} por ${{ gasto.valor }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          {% if deuda.observacion %}
+            <h4>Observacion: </h4>
+            <p><i>{{ deuda.observacion }}</i></p>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="affix">
+        <div class="card-box">
+          <h4 class="header-title m-t-0"><i class="fa fa-exclamation-triangle"></i> Importante</h4>
+          <p>Estas por imputar una nueva deuda.</p>
+          <p>Revisa y aceptá solo si tenes certeza de que los datos que ingresaste son los correctos</p>
+          <p>Recorda que una vez generada la deuda no se puede eliminar.</p>
+        </div>
+        <form id="process" action="" method="POST">{% csrf_token %}
+          <a href="{% url 'deud_eliminar' pk=deuda.pk %}" class="accion_envio btn btn-danger pull-left">Cancelar</a>
+          <input type="hidden" name="accion" value="confirm">
+          <button type="submit" class="accion_envio btn btn-info pull-right">Confirmar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

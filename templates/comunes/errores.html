@@ -1,0 +1,14 @@
+<div class="panel panel-border panel-danger">
+  <div class="panel-heading">
+    <h3 class="panel-title">Errores</h3>
+  </div>
+  <div class="panel-body">
+    <small>
+      <ul>
+        {% for error in errores %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </small>
+  </div>
+</div>

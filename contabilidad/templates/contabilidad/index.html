@@ -1,0 +1,141 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Contabilidad
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Contable
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3">
+    {% include 'contabilidad/barra.html' %}
+  </div>
+
+  <div class="col-md-9">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        {% if ejercicio %}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card-box widget-box-four">
+                <div class="pull-right">
+                  <a href="{% url 'ejercicio_set' ejercicio=ejercicio.numero_aleatorio %}">
+                    <img src="{% static 'assets/images/icons/calendar.svg' %}" height="80">
+                  </a>
+                </div>
+                  <div class="wigdet-four-content pull-left">
+                    <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">
+                      <a href="{% url 'ejercicio_set' ejercicio=ejercicio.numero_aleatorio %}">
+                        Ejercicio Contable
+                      </a>
+                    </h4>
+                    <p class="font-secondary text-muted">
+                      <strong>Numero: </strong>{{ejercicio}} <br>
+                      <strong>Inicio: </strong>{{ejercicio.inicio|date:"d/m/Y"}}<br>
+                      <strong>Cierre: </strong>{{ ejercicio.cierre|date:"d/m/Y" }} <br>
+                    </p>
+                  </div>
+                  <div class="clearfix"></div>
+              </div>
+              <div class="card-box widget-box-four">
+                <div class="pull-left">
+                  <a href="{% url 'ejercicio_diario' ejercicio=ejercicio.numero_aleatorio %}">
+                    <img src="{% static 'assets/images/icons/news.svg' %}" height="80">
+                  </a>
+                </div>
+                  <div class="wigdet-four-content pull-right text-right">
+                    <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">
+                      <a href="{% url 'ejercicio_diario' ejercicio=ejercicio.numero_aleatorio %}">
+                        Libro Diario
+                      </a>
+                    </h4>
+                    <p class="font-secondary text-muted">
+                      <strong>Asientos registrados: </strong>{{asientos.count}}
+                    </p>
+                    <h3 class="m-b-0 m-t-30">
+                      <strong>Ultimo asiento: </strong>
+                      {% if asientos %}
+                        <a href="{% url 'asiento_redireccion' id_asiento=asientos.last.id %}">{{asientos.last}} - {{asiento.last.descripcion|default:"S/D"}}</a>
+                      {% endif %}
+                    </h3>
+                  </div>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+
+          </div>
+        {% else %}
+          <p class="text-center">Aun no tiene ejercicios contables cargados. clik <a href="{% url 'ejercicio_nuevo' %}">aqui</a> para agregar un ejercicio.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+  <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.print.min.js" %}''></script>
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-daterangepicker/daterangepicker.js" %}'></script>
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $("#anopa").length && $("#anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm"
+                  }, {
+                      extend: "print",
+                      className: "btn-sm"
+                  }],
+                  responsive: !0,
+                  ordering: false,
+                  paging: false,
+                  bInfo: false,
+                  language: {
+                    "emptyTable": "No hay entradas",
+                    "search": "Buscar: ",
+                    "lengthMenu": "Ver _MENU_ entradas",
+                  }
+              })
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+    });
+  </script>
+{% endblock %}

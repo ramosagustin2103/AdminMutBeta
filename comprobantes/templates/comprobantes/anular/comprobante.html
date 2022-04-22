@@ -1,0 +1,45 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Anular {{comprobante.tipo}} {{comprobante.nombre}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="Cobranzas" bhijo1="registro" bhijo2=comprobante.nombre %}
+{% endblock %}
+
+{% block header %}
+  Anular {{comprobante.tipo}} {{comprobante.nombre}}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Estas seguro?</h3>
+        </div>
+        <form action="" method="POST">{% csrf_token %}
+          <div class="panel-body">
+              <p>Estas seguro que desea anular el comprobante {{comprobante.tipo}}: {{comprobante.nombre}}?</p>
+          </div>
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-xs-6">
+                <button class="btn btn-block btn-danger btn-bordered waves-effect waves-light" type="submit" value="Save">
+                  <span>Si, anular</span>
+                </button>
+              </div>
+              <div class="col-xs-6">
+                <a href="{% url 'ver-comprobante' pk=comprobante.pk %}" class="btn btn-block btn-default btn-bordered waves-effect waves-light">
+                  Volver
+                </a>
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+
+{% endblock %}

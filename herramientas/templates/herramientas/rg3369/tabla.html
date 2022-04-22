@@ -1,0 +1,27 @@
+{% load herramientas_tags %}
+<table class="anopa table table-condensed">
+  <thead>
+    <tr>
+      <th>Informacion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% spaceless %}
+      {% for socio, i in informantes.items %}
+        {% with dominios=i.0 dominio=i.0.0 propietario=i.0.0.propietario determinadas=i.1 %}
+        <tr>
+          <td>
+            {{ dominio.identificacion.codigo_afip|default:"1" }}{{ socio.tipo_documento.code|default:"96" }}{{ socio.numero_documento|default:"0"|ljust:"20" }}{{ socio.nombre_completo|slice:":30"|ljust:"30" }}{% if propietario and socio.numero_documento != propietario.numero_documento %}{{ propietario.tipo_documento.code }}{{ propietario.numero_documento|ljust:"20" }}{{ propietario.nombre_completo|slice:":30"|ljust:"30" }}{{ propietario.es_extranjero|yesno:"1,0" }}{% else %}99{{ " "|ljust:"50" }}0{% endif %}{{ dominio.domicilio_calle|default:consorcio.domicilio|slice:":30"|ljust:"30"}}{{ dominio.domicilio_numero|default:" "|slice:":6"|ljust:"6" }}{{ dominio.domicilio_piso|default:" "|slice:":5"|ljust:"5" }}{{ dominio.domicilio_oficina|default:" "|slice:":5"|ljust:"5" }}{{ dominio.domicilio_sector|default:" "|slice:":5"|ljust:"5" }}{{ dominio.domicilio_torre|default:" "|slice:":5"|ljust:"5" }}{{ dominio.domicilio_manzana|default:" "|slice:":5"|ljust:"5" }}{{ socio.localidad|default:"Salta"|slice:":60"|ljust:"60" }}{{ socio.provincia.codigo_afip|stringformat:"00"|default:"09" }}{{ "4400"|ljust:"10" }}{{ dominio.domicilio_catastro|default:" "|slice:":6"|ljust:"6" }}09{{ consorcio.domicilio|slice:":30"|ljust:"30" }}{{ " "|ljust:"31" }}{{ consorcio.provincia.nombre|default:"Salta"|slice:":60"|ljust:"60" }}{{ consorcio.provincia.codigo_afip|stringformat:"00"|default:"09" }}{{ "4400"|ljust:"10" }}{{ dominio.numero|slice:":6"|ljust:"6" }}{{ dominios|superficies:"total" }}{{ dominios|superficies:"cubierta" }}{{ determinadas|numerico:"10"}}{{ determinadas|numerico:"10"}}000{{ " "|ljust:"70" }}20001{{ " "|ljust:"30" }}00000000200200{{ " "|ljust:"60" }}00000000000
+          </td>
+        </tr>
+        {% endwith %}
+      {% endfor %}
+    {% endspaceless %}
+  </tbody>
+</table>
+
+
+
+
+
+

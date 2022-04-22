@@ -1,0 +1,110 @@
+{% extends 'creditos/nuevo/index.html'%}
+{% load humanize %}
+
+{% block panel-body %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box text-center">
+        <h4 class="m-t-0 header-title"><i class="fa fa-exclamation-triangle"></i> Confirmación</h4>
+        <p>
+          Estas por generar una nueva liquidacion de facturas. <br>
+          Revisa y aceptá solo si tenes certeza de que los datos que ingresaste son los correctos. <br>
+          Recorda que una vez generado no se puede eliminar.
+        </p>
+      </div>
+      <p>
+        <div class="table-responsive">
+          <table class="table table-condensed table-bordered">
+            <thead>
+              <tr>
+                <th></th>
+                <th width="15%">Capital</th>
+                <th width="15%">Bonificacion</th>
+                <th width="15%">Subtotal</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for documento in liquidacion.listar_documentos %}
+                  <tr>
+                    <th colspan="4" class="info">
+                      {% if documento.factura.socio %}
+                        {{documento.factura.socio.nombre_completo}}
+                      {% else %}
+                        {{ documento.factura.cliente }}
+                      {% endif %}
+                    </th>
+                  </tr>
+                {% for credito in documento.creditos %}
+                  <tr>
+                    <td>{{credito.dominio.nombre}} - {{ credito.ingreso }} - {{ credito.periodo|date:"Y-m" }}. {% if credito.detalle_limpio %}Detalle: {{ credito.detalle }} {% endif %}</td>
+                    <td>{{ credito.capital|intcomma }}</td>
+                    <td>{% if credito.bonificacion %}-{{ credito.bonificacion|intcomma }}{% endif %}</td>
+                    <td>{{ credito.bruto|intcomma }}</td>
+                  </tr>
+                {% endfor %}
+                {% for credito in documento.preconceptos %}
+                  <tr>
+                    <td>{{credito.dominio.nombre}} - {{ credito.ingreso }} - {{ credito.periodo|date:"Y-m" }}. {% if credito.detalle_limpio %}Detalle: {{ credito.detalle }} {% endif %}</td>
+                    <td>{{ credito.capital|intcomma }}</td>
+                    <td>{% if credito.bonificacion %}-{{ credito.bonificacion|intcomma }}{% endif %}</td>
+                    <td>{{ credito.bruto|intcomma }}</td>
+                  </tr>
+                {% endfor %}
+                  <tr>
+                    <th colspan="3" class="text-right">Total de la factura: </th>
+                    <th>{{ documento.receipt.total_amount|intcomma }}</th>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </p>
+    </div>
+  </div>
+
+  {% if liquidacion.data_plazos %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="table table-condensed table-bordered">
+            <thead>
+              <tr>
+                <th class="warning" colspan="2">Plazos de vencimiento</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for a in data_plazos %}
+                <tr>
+                  <td>
+                    {% for ingreso in a.accesorio.ingreso.all %}{{ingreso}}; {% endfor %} - {{a.accesorio.get_clase_display}}: {% if a.accesorio.tipo == "tasa" %}{{a.accesorio.monto}}%{% else %} ${{a.accesorio.monto}} {% endif %}
+                  </td>
+                  <td>
+                    {{ a.plazo|date:"d/m/Y" }}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    {% for field in wizard.form %}
+      {% if field.label != "Confirmacion" %}
+        <hr>
+        <div class="col-md-10">
+          <div class="h3 text-right">
+            {{field.label}}
+          </div>
+        </div>
+        <div class="col-md-2">
+          {{field}}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}

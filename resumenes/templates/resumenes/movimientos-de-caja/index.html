@@ -1,0 +1,58 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" bhijo1=resumen.nombre %}
+{% endblock %}
+
+{% block header %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0">Movimientos de {{ caja }} al {{fecha|date:"d/m/Y"}}<a href="{% url 'res_par' resumen=resumen.slug %}" class="btn pull-right btn-pink waves-effect waves-light"><i class="fa fa-hand-o-left"></i> Consultar otros parametros</a> </h4>
+        <br>
+        <div class="table-responsive">
+          <table class="table anopa">
+            <thead>
+              <tr class="active">
+                <th>Fecha</th>
+                <th>Operacion</th>
+                <th>Referencia</th>
+                <th width="30" class="text-right">Debe</th>
+                <th width="30" class="text-right">Haber</th>
+                <th width="30" class="active text-right">Saldo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for fecha, movimientos in operaciones.items|dictsortreversed:0 %}
+                {% for numero, movimiento in movimientos.items|dictsortreversed:0 %}
+                  <tr>
+                    <td>{{fecha|date:"d/m/Y"}}</td>
+                    <td>{{movimiento.0}}</td>
+                    <td>{{movimiento.1}}</td>
+                    <td class="text-right">{{movimiento.2|default:"-"|intcomma}}</td>
+                    <td class="text-right">{{movimiento.3|default:"-"|intcomma|default:"-"}}</td>
+                    <td class="active bold text-right"><strong>{{movimiento.4|default:"-"|intcomma|default:"-"}}</strong></td>
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel_titulo.html' with titulo_print=resumen.nombre %}
+{% endblock %}

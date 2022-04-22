@@ -1,0 +1,27 @@
+{% load humanize %}
+{% load resumenes_tags %}
+<table class="table table-condensed">
+  {% spaceless %}
+		{% for caja, valor in cajas.items %}
+      {% if valor %}
+				<tr>
+					<td>{{ caja.nombre }}:</td>
+          <td class="text-right">{{ valor|porcentaje:total_formas_de_pago }}</td>
+					<td class="text-right">${{ valor|intcomma }}</td>
+				</tr>
+      {% endif %}
+	  {% endfor %}
+    {% if total_retenciones %}
+      <tr>
+        <td>Retenciones</td>
+        <td class="text-right">{{ total_retenciones|porcentaje:total_formas_de_pago }}</td>
+        <td class="text-right">${{total_retenciones|intcomma}}</td>
+      </tr>
+    {% endif %}
+  {% endspaceless %}
+	<tr>
+		<th>Total</th>
+    <th class="text-right">{{ total_formas_de_pago|porcentaje:total_formas_de_pago }}</th>
+		<th class="text-right">${{ total_formas_de_pago|intcomma }}</th>
+	</tr>
+</table>

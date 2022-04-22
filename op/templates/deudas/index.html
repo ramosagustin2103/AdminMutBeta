@@ -1,0 +1,61 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Deudas
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="deudas" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Deudas
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3">
+    {% include 'deudas/barra.html' %}
+  </div>
+
+  <div class="col-md-9">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card-box widget-box-four">
+          <div class="pull-right">
+            <img src="{% static 'assets/images/icons/debt.svg' %}" height="80">
+          </div>
+            <div class="wigdet-four-content pull-left">
+              <h4 class="m-t-0 font-16 m-b-5 text-overflow" title="Total Revenue">Saldo a la fecha</h4>
+              <p class="font-secondary text-muted">{{hoy}}</p>
+              <h3 class="m-b-0 m-t-20">${{saldo|intcomma}}</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-border panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Ultimas deudas cargadas</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              {% include 'deudas/registros/tabla-deudas.html' %}
+              <a href="{% url 'registro de deudas' %}" class="btn btn-link btn-block">Ver mas</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+

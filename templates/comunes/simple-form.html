@@ -1,0 +1,31 @@
+<form id="process" action="{{ vista }}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+  <div class="panel panel-default">
+    {% if pregunta %}
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ pregunta|capfirst }} </h3>
+    </div>
+    {% endif %}
+    <div class="panel-body">
+      {% if respuesta %}
+        <p>{{respuesta}}</p>
+      {% endif %}
+      {% if slug_archivo %}
+        <p>Descargar el archivo modelo haciendo <a href="{% url 'bib_descargar' slug=slug_archivo %}">click aqui</a> y rellena los campos.</p>
+      {% endif %}
+    	{{ form.as_p }}
+      {{ form_anexo.as_p}}
+      <input type="hidden" name="pregunta" value="{{ pregunta }}">
+      <input type="hidden" name="respuesta" value="{{ respuesta }}">
+    </div>
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-xs-6">
+          <a href="javascript:history.back()" class="btn btn-bordered btn-default btn-block">Cancelar</a>
+        </div>
+        <div class="col-xs-6">
+          <button type="submit" class="accion_envio btn btn-bordered btn-primary btn-block">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

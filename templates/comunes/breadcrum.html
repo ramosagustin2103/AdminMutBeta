@@ -1,0 +1,26 @@
+<div class="btn-group pull-right">
+  <ol class="breadcrumb hide-phone p-0 m-0">
+    {% if bhijo2 %}
+      <li>
+        <a href="{% url bpadre|lower %}">{{ bpadre|capfirst }}</a>
+      </li>
+      <li>
+        <a href="{% url bhijo1|lower %}">{{ bhijo1|capfirst }}</a>
+      </li>
+      <li class="active">
+        {{ bhijo2|capfirst }}
+      </li>
+    {% elif bhijo1 and not bhijo2 %}
+      <li>
+        <a href="{% url bpadre|lower %}">{{ bpadre|capfirst }}</a>
+      </li>
+      <li class="active">
+        {{ bhijo1|capfirst }}
+      </li>    
+     {% else %}
+      <li class="active">
+        {{ bpadre|capfirst }}
+      </li>
+    {% endif %}
+  </ol>
+</div>

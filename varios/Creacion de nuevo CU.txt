@@ -1,0 +1,57 @@
+- Crear contribuyente.
+	+ Entrar en el admin de Django
+	+ Modulo AFIP > Contribuyentes
+	+ Llenar campos obligatorios y Guardar
+	+ Luego seleccionarlo en la lista y generar tanto la clave como el CSR. Guardar el CSR
+- Crear certificado en AFIP
+	+ Entrar a mi cuenta 20368038858:Acaseca33!!
+	+ Administracion de Certificados Digitales. El mio
+	+ Agregar Alias
+	+ Descargar el CRT que se generó en el alias y colocarlo en el admin de django en el contribuyente recien creado
+- Solicitar la designacion desde el club hacia mi cuenta
+	+ Aceptar la designacion
+- Hacer que el certificado pueda acceder al servicio "facturacion electronica"
+	+ En la cuenta de afip ir a "administrador de relaciones de clave fiscal" > Nueva relacion
+	+ Seleccionar como representado al club
+	+ Confirmar Facturacion electronica y seleccionar el certificado recien creado
+	(El club debe generar los puntos de venta necesarios que utilicen web-services)
+- Gestionar puntos de venta
+	+ Modulo AFIP > Contribuyentes
+	+ Seleccionar el contribuyente y ejecutar la accion "obtener puntos de venta"
+- Crear Perfil del contribuyente.
+- Cargar logo en Taxpayerextras.
+
+************************************************************************************************
+
+- Crear Consorcio.
+	+ Modulo CONSORCIOS > Consorcios
+- Crear usuarios administrativo y contable
+	+ Modulo AUTENTICACION  Y AUTORIZACION > Usuarios
+	+ En el momento de crearlos poner "Guardar y continuar editando"
+	+ Agregar Nombre, Apellido, mail y el grupo correspondiente. Guardar
+- Agregar los usuarios anteriores en el consorcio
+	+ Entrar en el consorcio Creado en punto an-anterior (jaja)
+	+ Agregar los usuarios creados en el punto anterior
+- Crear Plan de cuentas.
+	+ En el mismo Modulo y tabla (CONSORCIOS > Consorcios), seleccionar el consorcio recien creado y ejectur la accion "cargar plan de cuentas"
+
+************************************************************************************************
+
+- Crear los ingresos
+	+ Cargar a manopla los tipos de ingresos que tiene
+	+ Expensas debe ser Ingreso Primario.
+- Crear los gastos necesarios (primarios o no)
+	+ Cargar a manopla los tipos de gastos que tiene
+	+ Si tiene sueldos crear gasto sueldos primario (creo que ya no es necesario)
+- Crear formas de cobro y pago
+	+ Cargar a manopla los tipos de cajas (tesoreria) que tiene
+- Crear acreedores
+	+ Cargar a manopla los acreedores que tiene
+	+ No olvidar de AFIP
+- Agregar socios a traves de importacion de datos en un excel preparado especialmente para esto
+	+ Modulo ARQUITECTURA > Socios > Importar
+	+ Hacer un excel con los titulos de las columnas que propone el impotador
+	+ Dejar vacio la columna de id
+- Lo mismo con los dominios
+
+- Agregarle a los socios y dominios sus deudas preexistentes a la utilizacion de admincu

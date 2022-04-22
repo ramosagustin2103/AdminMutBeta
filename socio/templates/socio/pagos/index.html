@@ -1,0 +1,117 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Pagos y comprobantes
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+{% endblock %}
+
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="pagos" %}
+{% endblock %}
+
+{% block header %}
+  Pagos y comprobantes
+{% endblock %}
+
+{% block contenido %}
+  {% if pagos %}
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="panel panel-border panel-warning">
+          <div class="panel-heading">
+            <h3 class="panel-title">Pagos recientes</h3>
+          </div>
+          <div class="panel-body">
+            <p>Lista de pagos realizados recientemente.</p>
+            <div class="table-responsive">
+              {% include 'socio/pagos/tabla-pagos.html' %}
+            </div>
+            <p><i class="fa fa-warning"></i> Comuniquese con administración si pasado un tiempo considerable no le realizaron un recibo</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="panel panel-border panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Listado de comprobantes</h3>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            {% include 'comprobantes/tabla.html' %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.print.min.js" %}''></script>
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $(".anopa").length && $(".anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm"
+                  }, {
+                      extend: "print",
+                      className: "btn-sm"
+                  }],
+                  responsive: !0,
+                  ordering: false,
+                  bPaginate: false,
+                  bInfo: false,
+                  language: {
+                    "emptyTable": "No hay entradas",
+                    "search": "Buscar: ",
+                    "paginate": {
+                        "first":"Primero",
+                        "last":"Ultimo",
+                        "next":">",
+                        "previous":"<",
+                    },
+                    "lengthMenu": "Ver _MENU_ entradas",
+                    "info": "Visualizando _START_ a _END_ de _TOTAL_ entradas",
+                    "infoEmpty": "Visualizando 0 a 0 de 0 entradas",
+                  }
+              })
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+    });
+
+  </script>
+{% endblock %}

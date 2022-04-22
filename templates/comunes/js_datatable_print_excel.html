@@ -1,0 +1,50 @@
+{% load staticfiles %}
+<link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+<link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+<link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+<script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+<script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+<script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+<script src='{% static "plugins/datatables/dataTables.responsive.min.js" %}'></script>
+<script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+<script src='{% static "plugins/datatables/jszip.min.js" %}'></script>
+<script src='{% static "plugins/datatables/vfs_fonts.js" %}'></script>
+<script src='{% static "plugins/datatables/buttons.html5.min.js" %}'></script>
+<script src='{% static "plugins/datatables/buttons.print.min.js" %}'></script>
+
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $(".anopa").length && $(".anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm",
+                  }, {
+                      extend: "print",
+                      className: "btn-sm",
+                  }],
+                  scrollX: true,
+                  ordering:false,
+                  paginate:false,
+                  searching: false,
+                    language: {
+                      "emptyTable": "No hay entradas",
+                      "lengthMenu": "Ver _MENU_ entradas",
+                      "info": "Visualizando _START_ a _END_ de _TOTAL_ entradas",
+                      "infoEmpty": "Visualizando 0 a 0 de 0 entradas",
+                    },
+                });
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+    });
+  </script>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}{# not myself but a site-level one (TEMPLATE_DIRS setting) #}
+{% load i18n static %}{% load postman_tags %}
+{% block extrahead %}{{ block.super }}
+<link type="text/css" media="all" rel="stylesheet" href="{% static 'postman/css/postman.css' %}" />
+{% endblock %}
+{% block postman_menu %}
+  <div id="postman_menu">{% postman_unread as unread_count %}
+    <a href="{% url 'postman:inbox' %}" class="list-group-item b-0">
+      <i class="mdi mdi-inbox font-18 vertical-middle m-r-10"></i>Recibidas
+      {% if unread_count %}
+        <span class="badge badge-danger pull-right">{{ unread_count }}</span>
+      {% endif %}
+    </a>
+    <a href="{% url 'postman:sent' %}" class="list-group-item b-0">
+      <i class="mdi mdi-send font-18 vertical-middle m-r-10"></i>Enviadas
+    </a>
+  </div>
+{% endblock %}

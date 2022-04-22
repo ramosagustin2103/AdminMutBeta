@@ -1,0 +1,62 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Pago parcial
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="OP" bhijo1="pago-parcial" %}
+{% endblock %}
+
+{% block header %}
+  Pago parcial
+{% endblock %}
+
+{% block contenido %}
+    <form id="formOP" method="POST" action="">{% csrf_token %}
+      {% if errores %}
+        <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-icon alert-warning fade in">
+            <i class="mdi mdi-alert"></i>
+              <ul>
+                {% for error in errores %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    	<div class="row">
+        <div class="col-md-8">
+    			<div class="card-box">
+            <h4 class="m-t-0 header-title">Indique el monto del pago parcial</h4>
+            {{form.as_p}}
+    			</div>
+
+    		</div>
+
+    		<div class="col-md-4">
+          <div class="card-box widget-box-three">
+            <div class="bg-icon pull-left">
+              <img src="{% static 'assets/images/icons/conference_call.svg' %}" title="advertising.svg">
+            </div>
+            <div class="text-right">
+              <p class="m-t-5 text-uppercase font-14 font-600">Pago parcial</p>
+              <h4 class="m-b-20">{{deuda}}</h4>
+            </div>
+          </div>
+
+          <button type="submit" class="accion_envio btn btn-bordered btn-primary btn-block">Siguiente</button>
+        </div>
+    	</div>
+      <br>
+    </form>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "anopa/pagos.js" %}'></script>
+{% endblock %}

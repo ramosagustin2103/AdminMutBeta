@@ -1,0 +1,29 @@
+{% if is_paginated %}
+  <div class="text-right">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="btn-group m-b-10">
+          {% if lista.has_previous %}
+            <a href="?page={{ lista.previous_page_number }}" class="btn btn-default waves-effect"><</a>
+            {% if not lista.previous_page_number == 1 %}
+              <a href="?page=1" class="btn btn-default waves-effect">1</a>
+              <a href="" disabled="disabled" class="btn btn-default waves-effect">...</a>
+            {% endif %}
+              <a href="?page={{ lista.previous_page_number }}" class="btn btn-default waves-effect">{{ lista.previous_page_number }}</a>
+          {% endif %}
+
+          <a href="" disabled="disabled" class="btn btn-purple waves-effect">{{ lista.number }}</a>
+
+          {% if lista.has_next %}
+            <a href="?page={{ lista.next_page_number }}" class="btn btn-default waves-effect">{{ lista.next_page_number }}</a>
+            {% if not lista.next_page_number == lista.paginator.num_pages %}
+              <a href="" disabled="disabled" class="btn btn-default waves-effect">...</a>
+              <a href="?page={{ lista.paginator.num_pages }}" class="btn btn-default waves-effect">{{lista.paginator.num_pages}}</a>
+            {% endif %}
+            <a href="?page={{ lista.next_page_number }}" class="btn btn-default waves-effect">></a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

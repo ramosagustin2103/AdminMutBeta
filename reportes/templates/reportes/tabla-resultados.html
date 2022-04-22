@@ -1,0 +1,28 @@
+{% load humanize %}
+<table class="table anopa table-condensed">
+  <tbody>
+    <tr>
+      <th>Concepto/Periodo</th>
+      {% for columna in columnas %}
+        <th style="width: 100px" class="text-center">{{columna|date:"Y-m"}}</th>
+      {% endfor %}
+    </tr>
+    {% for lista in resultados %}
+      <tr class="linea {% if "99999" in lista.0.numero %}active{% elif lista.0.numero|make_list|first == '4' %}text-success{% else %}text-danger{% endif %}">
+
+        <td>
+          {{lista.0.nombre|title}}
+        </td>
+        {% for valor in lista.1 %}
+          <td class="text-center {% if lista.0.numero == "999999" %}{% if valor < 0 %}danger{% else %}success{% endif %}{% endif %}">
+            {% if valor %}
+              {{valor|floatformat:"0"|intcomma}}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

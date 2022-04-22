@@ -1,0 +1,75 @@
+{% load humanize %}
+<table id="anopa" class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Concepto/Periodo</th>
+      {% for mes in meses %}
+        <th style="width: 100px" class="text-center">{{mes|date:"Y-m"}}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  
+    {% spaceless %}
+      {% for cuenta in data %}
+        <tr class="text-white bg-{% if cuenta.0.numero|make_list|first == '4' %}success{% else %}danger{% endif %}">
+          <td>{{cuenta.0.nombre|title}}</td>
+          {% for mes in cuenta.1 %}
+            <td class="text-center">
+              {% if mes.1 %}
+                {{mes.1|intcomma}}
+              {% else %}
+                -
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    {% endspaceless %}
+
+    <tr id="totales">
+      <td>Total <small>(Ingresos-Gastos)</small></td>
+      {% for mes in totales %}
+        <td class="text-center">
+          {% if mes.1 %}
+            {{mes.1|intcomma}}
+          {% else %}
+            -
+          {% endif %}
+        </td>
+      {% endfor %}
+    </tr>
+    <tr id="reserva">
+      <td>Reserva</td>
+      {% for mes in reservado %}
+        <td class="text-center">
+          {{mes.1|intcomma}}
+        </td>
+      {% endfor %}
+    </tr>    
+    <tr id="per_cap">
+      <td>Por {% if consorcio.superficie %}m2{% else %}dominio{% endif %}</td>
+      {% for mes in per_cap %}
+        <td class="text-center">
+          {{mes.1|intcomma}}
+        </td>
+      {% endfor %}
+    </tr>
+    {% if not impresion %}
+      <tr>
+        <td>A reservar por {% if consorcio.superficie %}m2{% else %}dominio{% endif %}</td>
+        {% for mes in reservado %}
+          {% if forloop.last %}
+            <td class="text-center">
+              <input type="number" id="a_res_per_cap" step="0.01" class="form-control">
+            </td>
+          {% else %}
+            <td>
+            </td>
+          {% endif %}
+        {% endfor %}
+
+      </tr>      
+    {% endif %}
+  </tbody>
+</table>

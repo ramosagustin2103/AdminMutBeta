@@ -1,0 +1,68 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Liquidacion {{liquidacion.formatoAfip}}</title>
+    <link href="{% static 'anopa/pdf.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+    <body>
+      <div class="receipt">
+        <header>
+          <div class="taxpayer-details group">
+            <address>
+              {% if cons.contribuyente.extras %}
+                <img src="{{ cons.contribuyente.extras.logo_as_data_uri }}" alt="Logo"><br>
+              {% else %}
+                <h2>{{ cons.nombre_completo }}</h2>
+              {% endif %}
+              {{ cons.domicilio }}<br>
+              {{ cons.provincia }}<br>
+            </address>
+
+
+            <div class="receipt-details">
+              <h2>Liquidacion de expensas</h2>
+              {{liquidacion.formatoAfip}}<br>
+              {{liquidacion.fecha|date:"d/m/Y"}}<br>
+              Ficha: {% if socio %}{{socio}}{% else %}General{% endif %}
+            </div>
+
+        </header>
+        <hr>
+        <p>Detalle de los creditos vinculados: </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Detalle</th>
+              <th>Recurso</th>
+              <th>Periodo</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in creditos %}
+              <tr>
+                <td>{{ c.dominio.nombre }} - {{c.socio}}</td>
+                <td>{{ c.ingreso }}</td>
+                <td>{{ c.periodo|date:"Y-m" }}</td>
+                <td>{{ c.capital|intcomma }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+
+        <footer>
+          <hr>
+          <div class="taxpayer-details group">
+            <div class="receipt-details">
+              <h3>Total: {{total_creditos|intcomma}}</h3>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </body>
+</html>

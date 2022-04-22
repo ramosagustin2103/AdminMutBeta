@@ -1,0 +1,33 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Parametrizacion
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="parametros" bhijo1=parametro %}
+{% endblock %}
+
+{% block header %}
+  Parametrizacion
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'arquitectura/barra.html' %}
+    </div>  
+		<div class="col-md-6">
+  		{% include 'comunes/simple-form.html' %}
+		</div>
+    {% if instancia.primario %}
+      <div class="col-md-3">
+        {% include 'comunes/alerta.html' with tipo="warning" %}
+      </div>    
+    {% endif %}
+	</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

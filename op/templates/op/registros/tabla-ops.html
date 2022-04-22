@@ -1,0 +1,50 @@
+{% load staticfiles %}
+{% load humanize %}
+  <table class="anopa table display nowrap" style="width:100%">
+    <thead>
+      <tr>
+        <th>Numero</th>
+        <th>Fecha documento</th>
+        <th>Fecha operacion</th>
+        <th>Acreedor</th>
+        <th class="text-right">Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for op in ops %}
+        <tr>
+          {% if op.confirmado %}
+            <td>{{ op.formatoAfip }} {% if op.anulado %} <span class="label label-danger">Anulado</span> {% endif %}</td>
+            <td>{{ op.fecha|date:"d/m/Y" }}</td>
+            <td>{% if op.fecha_operacion %}{{ op.fecha_operacion|date:"d/m/Y" }}{% else %}{{ op.fecha|date:"d/m/Y" }}{% endif %}</td>
+          {% else %}
+            <td></td>
+            <td></td>
+            <td></td>
+          {% endif %}
+          <td>{{ op.acreedor }}</td>
+          <td class="text-right">{{ op.total|intcomma }}</td>
+          <td class="text-right">
+            {% if op.confirmado %}
+              {% if user.groups.all.0.name == "contable" and op.asiento %}
+              <a href="{% url 'asiento_redireccion' id_asiento=op.asiento.id %}" class="btn btn-icon btn-xs btn-info btn-bordered waves-efect waves-light">
+                <i class="fa fa-indent"></i>
+              </a>
+              {% endif %}
+              <a href="{% url 'op_ver' pk=op.pk %}" class="btn btn-icon btn-xs btn-pink btn-bordered waves-efect waves-light">
+                <i class="fa fa-list"></i>
+              </a>
+              <a href="{% url 'op_pdf' pk=op.pk %}" target="_blank" class="btn btn-icon btn-xs btn-purple btn-bordered waves-efect waves-light">
+                <i class="fa fa-print"></i>
+              </a>
+            {% else %}
+              <a href="confirm/{{ op.pk }}" class="btn btn-icon btn-xs btn-warning btn-bordered waves-efect waves-light">
+                <i class="fa fa-exclamation-triangle"></i>
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>

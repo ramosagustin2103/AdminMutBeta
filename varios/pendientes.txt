@@ -1,0 +1,23 @@
+import ftplib
+conexion = ftplib.FTP("simplesolutions.com.ar", "admincu@simplesolutions.com.ar", "hG39_{S&}A-8")
+
+conexion.cwd("praderassanlorenzo")
+conexion.cwd("facturas") o conexion.cwd("recibos")
+
+facturas = Factura.objects.filter(consorcio_id=8)
+for f in facturas:
+    nombre = "praderasdesanlorenzo_{}_FACTURA_{}.pdf".format(f.socio.id, f.id)
+    archivo = open(f.pdf.path, "rb")
+    ftpCommand = "STOR {}".format(nombre)
+    respuesta = conexion.storbinary(ftpCommand, fp=archivo)
+    print(respuesta)
+
+
+
+Hola pano
+Hola seba
+
+Copiado y pegado
+
+import shutil
+pegado = "/home/anopa/media/praderitas/{}".format()

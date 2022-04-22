@@ -1,0 +1,77 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Pagos generados
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-daterangepicker/daterangepicker.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="OP" bhijo1="registro de pagos" %}
+{% endblock %}
+
+{% block header %}
+  Pagos generados
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3">
+    {% include 'op/barra.html' %}
+  </div>
+  <div class="col-md-9">
+    <div class="card-box">
+      <form action="" method="POST">{% csrf_token %}
+        <div class="form-inline">
+          <button type="submit" class="btn btn-info btn-bordered">Filtrar</button>
+          <input type="text" id="input-daterange-datepicker" name="fechas" class="form-control">
+          <a href="" class="btn btn-inverse pull-right btn-bordered">Resetear filtro</a>
+        </div>
+      </form>
+      <br>
+      <div class="table-responsive">
+      {% include 'op/tabla.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel.html' %}
+
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-daterangepicker/daterangepicker.js" %}'></script>
+  <script>
+    $(function () {
+      $('#input-daterange-datepicker').daterangepicker({
+          buttonClasses: ['btn', 'btn-sm'],
+          applyClass: 'btn-success',
+          cancelClass: 'btn-default',
+          locale: {
+              format: 'YYYY-MM-DD',
+              applyLabel: 'Aplicar',
+              cancelLabel: 'Limpiar',
+              fromLabel: 'Desde',
+              toLabel: 'Hasta',
+              separator: " / ",
+              customRangeLabel: 'Seleccionar rango',
+              daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+              monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre',
+                  'Diciembre'],
+              firstDay: 1
+          }
+      });
+    });
+
+  </script>
+{% endblock %}

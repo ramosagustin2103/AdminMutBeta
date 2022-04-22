@@ -1,0 +1,50 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Nuevo ejercicio contable
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="ejercicios" bhijo2="nuevo" %}
+{% endblock %}
+
+{% block header %}
+  Nuevo ejercicio contable
+{% endblock %}
+
+{% block contenido %}
+	<div class="row">
+    <div class="col-md-3">
+      {% include 'contabilidad/barra.html' %}
+    </div>
+		<div class="col-md-6">
+  		{% include 'comunes/simple-form.html' %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "anopa/bootstrap-datepicker.es.js" %}'></script>  
+  <script>
+    $(function () {
+      $('#id_inicio').datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        orientation: 'bottom auto',
+        language: 'es',
+      });
+      $('#id_cierre').datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        orientation: 'bottom auto',
+        language: 'es',
+      });      
+    })
+  </script>
+{% endblock %}

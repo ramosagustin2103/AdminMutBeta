@@ -1,0 +1,12 @@
+<label for="id_ingresos">Conceptos: </label>
+<select id="id_ingresos" name="ingresos" multiple="" required="" class="selector form-control">
+  {% spaceless %}
+    {% for i in consorcio.ingreso_set.all %}
+      <option value="{{i.id}}">
+        {% spaceless %}
+          {{i}}
+        {% endspaceless %}
+      </option>
+    {% endfor %}
+  {% endspaceless %}
+</select>

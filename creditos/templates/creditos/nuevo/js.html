@@ -1,0 +1,78 @@
+{% load staticfiles %}
+<script>
+  $(document).ready(function(){
+
+      $('#form-nuevo').validate({
+        errorPlacement: function (error, element) {
+          element.attr('title', error.text());
+          $(".error").tooltip();
+        },
+      });
+
+      $(".destinatario").each(function() {
+          $(this).rules('add', {no_destinatario: true});
+      });
+
+      $.validator.addMethod(
+          "no_destinatario",
+          function(value, element) {
+            var row = element.closest('tr');
+            var value_subtotal = $(row).find('.subtotal').val();
+            if (value_subtotal.length != 0) {
+              if (value.length != 0) {
+                return true;
+              } else {
+                return false;
+              }
+            } else {
+              return true;
+            }
+          },
+          "Debe seleccionar un destinatario"
+      );
+
+      $(".ingreso").each(function () {
+        $(this).rules('add', { no_ingreso: true });
+      });
+
+      $.validator.addMethod(
+        "no_ingreso",
+        function (value, element) {
+          var row = element.closest('tr');
+          var value_subtotal = $(row).find('.subtotal').val();
+          if (value_subtotal.length != 0) {
+            if (value.length != 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        },
+        "Debe seleccionar un ingreso"
+      );
+
+      $(".distribucion").each(function () {
+        $(this).rules('add', { no_distribucion: true });
+      });
+
+      $.validator.addMethod(
+        "no_distribucion",
+        function (value, element) {
+          var row = element.closest('tr');
+          var value_subtotal = $(row).find('.subtotal').val();
+          if (value_subtotal.length != 0) {
+            if (value.length != 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        },
+        "Debe seleccionar un distribucion"
+      );
+  });
+</script>

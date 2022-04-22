@@ -1,0 +1,43 @@
+{% load humanize %}
+<table id="anopa" class="anopa table table-condensed">
+  <thead>
+    <tr>
+      <th>N°</th>
+      <th>Cuenta</th>
+      <th>Debe</th>
+      <th>Haber</th>
+      <th>Desc</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for asiento in asientos %}
+      <tr>
+        <td colspan="5" class="text-center info">
+          <a href="{% if ejercicio.activo %}{% url 'asiento_mod' numero=forloop.counter %}{% else %}#{% endif %}">
+            <small>
+              -- Asiento n° {{ forloop.counter }} - Fecha {{ asiento.fecha_asiento|date:"d/m/Y" }} -- 
+            </small>
+          </a>          
+        </td>
+      </tr>
+      {% for op in asiento.operaciones.all|dictsort:"haber" %}
+        <tr>
+          <td>{{ op.cuenta.numero }}</td>
+          <td>{{ op.cuenta.nombre }}</td>
+          <td>{{ op.debe|intcomma }}</td>
+          <td>{{ op.haber|intcomma }}</td>
+          <td>{{ op.descripcion }}</td>
+        </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="5" class="text-center"><i>*
+          {% if asiento.descripcion %}
+            {{asiento.descripcion}}
+          {% else %}
+            S/C
+          {% endif %}
+        </i></td>
+      </tr>      
+    {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,69 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Liquidacion de facturas {{liquidacion.formatoAfip}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="facturacion" bhijo1="registro de liquidaciones" bhijo2=liquidacion.formatoAfip %}
+{% endblock %}
+
+{% block header %}
+  Liquidacion de facturas {{liquidacion.formatoAfip}}
+{% endblock %}
+
+{% block contenido %}
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card-box widget-box-three ribbon-box">
+              <div class="bg-icon pull-left">
+                <img src="{% static 'assets/images/icons/rules.svg' %}">
+              </div>
+              <div class="text-right">
+                <p class="m-t-5 text-uppercase font-14 font-600">Creditos liquidados</p>
+                <h2 class="m-b-10">{{ creditos.count }}</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card-box widget-box-three ribbon-box">
+              <div class="bg-icon pull-left">
+                <img src="{% static 'assets/images/icons/sales_performance.svg' %}">
+              </div>
+              <div class="text-right">
+                <p class="m-t-5 text-uppercase font-14 font-600">Total</p>
+                <h2 class="m-b-10">$ {{ liquidacion.suma_brutos|intcomma }}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-border panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Listado de creditos generados</h3>
+              </div>
+              <div class="panel-body">
+                <div class="table-responsive">
+                  {% include 'creditos/registros/tabla-creditos.html' with creditos=creditos %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel_titulo.html' %}
+{% endblock %}

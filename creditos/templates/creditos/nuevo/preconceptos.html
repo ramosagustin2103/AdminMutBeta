@@ -1,0 +1,9 @@
+{% extends 'creditos/nuevo/index.html'%}
+{% load staticfiles %}
+
+{% block panel-body %}
+
+  {{ wizard.form.management_form }}
+  <h4 class="m-t-0 header-title">Seleccione Conceptos pre cargados para agregar a la liquidacion</h4>
+  {{wizard.form.as_p}}
+{% endblock %}

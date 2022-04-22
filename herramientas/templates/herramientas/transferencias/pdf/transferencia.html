@@ -1,0 +1,77 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Transferencia entre cajas: {{transferencia.formatoAfip}}</title>
+    <link href="{% static 'anopa/pdf.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="receipt">
+
+      <header>
+        <div class="taxpayer-details group">
+          <address>
+            {% if transferencia.consorcio.contribuyente.extras %}
+              <img src="{{ transferencia.consorcio.contribuyente.extras.logo_as_data_uri }}" alt="Logo"><br>
+            {% else %}
+              <h3>{{ transferencia.consorcio.nombre_completo }}</h3>
+            {% endif %}
+            {{ transferencia.consorcio.domicilio }}<br>
+            {{ transferencia.consorcio.provincia }}
+          </address>
+
+          <div class="receipt-details">
+            <div class="receipt-type-description">
+              Transferencia entre cajas
+            </div>
+            <strong>Nº</strong> {{ transferencia.formatoAfip }}<br>
+            {{ transferencia.fecha|date:"d/m/Y" }}<br>
+            <small>
+              C.U.I.T.:{{ transferencia.consorcio.cuit }}<br>
+              Ingresos Brutos: Exento<br>
+              Inicio de actividad: {{transferencia.consorcio.contribuyente.active_since|date:"d/m/Y"}}
+            </small>
+          </div>
+        </div>
+
+        <hr>
+
+      </header>
+
+    <p><strong>Origenes de las transacciones:</strong></p>
+    <table>
+        <thead>
+        <tr>
+            <th>Caja</th>
+            <th>Referencia</th>
+            <th>Valor</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for caja in transferencia.cajatransferencia_set.all %}
+            <tr>
+                <td>{{ caja.origen }}</td>
+                <td>{{ caja.referencia|default:"" }}</td>
+                <td>{{ caja.valor|intcomma }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+      <div class="taxpayer-details group">
+        <div class="receipt-details">
+          <table>
+            <tr>
+              <th>Caja destino:</th>
+              <th>{{ transferencia.cajatransferencia_set.first.destino }}</th>
+              <th>{{ transferencia.total|intcomma }}</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Nuevo consorcio
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="consorcios" bhijo1="nuevo" %}
+{% endblock %}
+
+{% block header %}
+  Nuevo consorcio
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+  	<div class="col-md-3">
+      {% include 'superusuario/consorcios/barra.html' %}
+    </div>  
+    <div class="col-md-6">
+	    {% include 'comunes/simple-form-sincancelar.html' %}
+    </div>
+  </div>
+{% endblock %}

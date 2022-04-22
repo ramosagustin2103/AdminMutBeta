@@ -1,0 +1,104 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Biblioteca
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/lightbox/css/lightbox.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="biblioteca" %}
+{% endblock %}
+
+{% block header %}
+  Biblioteca de archivos
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    {% if not user.groups.all.0.name == 'socio' %}
+      <div class="col-md-3">
+        <div class="card-box">
+          <a href="{% url 'bib_nuevo' tipo='Categoria' %}" class="btn btn-block btn-bordered btn-default">Agregar categoria</a>
+          <a href="{% url 'bib_nuevo' tipo='Libro' %}" class="btn btn-block btn-bordered btn-default">Agregar documento</a>
+        </div>
+      </div>
+    {% endif %}
+    <div class="col-md-{% if not user.groups.all.0.name == 'socio' %}9{% else %}12{% endif %}">
+        <div class="panel-group" id="tab_bib">
+          {% for cat in categorias %}
+
+            {% if user.groups.all.0 in cat.compartido.all %}
+              <div class="panel panel-info panel-color">
+                  <div class="panel-heading">
+                      <h4 class="panel-title">
+                          <a data-toggle="collapse" data-parent="#tab_bib" href="#collapse{{ forloop.counter }}" aria-expanded="false" class="collapsed">
+                              <i class="{{cat.icono}}"></i> {% if cat.consorcio %}{{cat.consorcio}}{%else%}AdminCU{%endif%} - {{cat}}
+                          </a>
+                      </h4>
+                  </div>
+                  <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                      <div class="panel-body">
+                        {% if cat.descripcion %}
+                          <p>
+                            {{cat.descripcion }} <br>
+                            {% if not user.groups.all.0.name == 'socio' %}
+                              {% if cat.consorcio %}
+                                <p><a href="{% url 'bib_eliminar' tipo='Categoria' instance=cat.slug %}" class="btn btn-xs btn-danger btn-bordered">Eliminar categoria</a></p>
+                              {% endif %}
+                            {% endif %}
+                          </p>
+                        {% endif %}
+                        {% if cat.libro_set.all %}
+                          {% if cat.galeria %}
+                            {% for libro in cat.libro_set.all %}
+                              <div class="col-sm-3">
+                                  <a href="{{libro.ubicacion.url}}" data-lightbox="gallery-set" data-title="{{libro.nombre}}">
+                                    <img src="{{libro.ubicacion.url}}" style="width:300px;height:150px;" alt="" class="img-responsive"/>
+                                  </a>
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            <table class="table">
+                              {% for libro in cat.libro_set.all %}
+                              <tr>
+                                <td>{{libro.nombre}}</td>
+                                <td width="20">
+                                  <a href="{% url 'bib_descargar' slug=libro.slug %}" class="file-download">
+                                    <img src="{% static libro.imagen %}" height="30" alt="icon">
+                                  </a>
+                                </td>
+                                {% if not user.groups.all.0.name == 'socio' %}
+                                  {% if libro.consorcio %}
+                                  <td width="20">
+                                    <a href="{% url 'bib_eliminar' tipo='Libro' instance=libro.slug %}" class="file-close"><i class="mdi mdi-close-circle"></i></a>
+                                  </td>
+                                  {% endif %}
+                                {% endif %}
+                              </tr>
+                              {% endfor %}
+                            </table>
+                          {% endif %}
+                        {% else %}
+                          <p><i>Aún no hay archivos en esta sección</i></p>
+                        {% endif %}
+                      </div>
+                  </div>
+              </div>
+            {% endif %}
+
+          {% endfor %}
+
+        </div>
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/lightbox/js/lightbox.min.js" %}'></script>
+{% endblock %}

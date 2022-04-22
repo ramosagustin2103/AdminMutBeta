@@ -1,0 +1,38 @@
+{% extends 'raiz.html' %}
+{% load humanize %}
+
+{% block titulo %}
+  Eliminar {{object}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="reportes" bhijo1="eliminar" %}
+{% endblock %}
+
+{% block header %}
+  Eliminar {{object}}
+{% endblock %}
+
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+    <div class="panel panel-border panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title">Estas seguro?</h3>
+      </div>
+      <form id="form-team-new" method="POST">{% csrf_token %}
+        <div class="panel-body">
+          <p>Estas seguro que quieres eliminar {{object}}?</p>
+        </div>
+        <div class="panel-footer">
+          <button class="btn btn-block btn-danger btn-bordered" type="submit" value="Save">
+            <span>SI, ELIMINAR</span>
+          </button>
+        </div>
+
+        </form>
+
+      </div>
+  </div>
+{% endblock %}

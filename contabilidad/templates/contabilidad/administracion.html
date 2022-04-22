@@ -1,0 +1,64 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Administracion
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="administracion" %}
+{% endblock %}
+
+{% block header %}
+  Modulo Administracion
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card-box">
+
+        <div class="row m-t-20">
+
+          <div class="col-sm-6">
+            <div class="faq-box">
+              <a href="{% url 'facturacion' %}">
+                <img src="{% static 'assets/images/icons/sales_performance.svg' %}" alt="icon" class="img-responsive center-block">
+                <h4>Area de Facturacion y creditos</h4>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="faq-box">
+              <a href="{% url 'cobranzas' %}">
+                <img src="{% static 'assets/images/icons/document.svg' %}" alt="icon" class="img-responsive center-block">
+                <h4>Area de cobranzas</h4>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="faq-box">
+              <a href="{% url 'deudas' %}">
+                <img src="{% static 'assets/images/icons/debt.svg' %}" alt="icon" class="img-responsive center-block">
+                <h4>Area de deudas</h4>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="faq-box">
+              <a href="{% url 'op' %}">
+                <img src="{% static 'assets/images/icons/money_transfer.svg' %}" alt="icon" class="img-responsive center-block">
+                <h4>Area de pagos</h4>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

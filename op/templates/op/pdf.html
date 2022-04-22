@@ -1,0 +1,135 @@
+{% load staticfiles %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>OP {{op.formatoAfip}}</title>
+    <link href="{% static 'anopa/pdf.css' %}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="receipt">
+
+      <header>
+        <div class="taxpayer-details group">
+          <address>
+            {% if cons.contribuyente.extras %}
+              <img src="{{ cons.contribuyente.extras.logo_as_data_uri }}" alt="Logo"><br>
+            {% else %}
+              <h3>{{ cons.nombre_completo }}</h3>
+            {% endif %}
+            {{ cons.domicilio }}<br>
+            {{ cons.provincia }}
+          </address>
+
+          <div class="receipt-details">
+            <div class="receipt-type-description">
+              Orden de Pago
+            </div>
+            <strong>Nº</strong> {{ op.formatoAfip }}<br>
+            {{ op.fecha|date:"d/m/Y" }}
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="client">
+
+          <div class="client-data">
+            <strong>Paguese a:</strong>
+            {{ op.acreedor }} <br>
+            <strong>{{ op.acreedor.tipo_documento|default:"Doc:" }}:</strong>
+            {{ op.acreedor.numero_documento|default:"-" }} <br>
+          </div>
+        </div>
+
+        <hr>
+
+      </header>
+
+      {% if op.descripcion %}
+        <p><strong>Descripcion:</strong></p>
+        <i>{{op.descripcion}}</i>
+      {% endif %}
+
+      {% if deudas %}
+        <hr>
+        <p><strong>Deudas pagadas:</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Numero</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for deuda in deudas %}
+            <tr>
+              <td>{{ deuda.deuda.fecha|date:"d/m/Y" }}</td>
+              <td>{{ deuda.deuda.numero }}</td>
+              <td>{{ deuda.deuda.total|intcomma }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+      {% if gastos %}
+        <hr>
+        <p><strong>Gastos vinculados:</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Gasto</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for gasto in gastos %}
+            <tr>
+              <td>{{ gasto.gasto }}</td>
+              <td>{{ gasto.valor|intcomma }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+      {% if retenciones %}
+        <hr>
+        <p><strong>Retenciones generadas:</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Retencion</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ret in retenciones %}
+            <tr>
+              <td>{{ ret.deuda.retencion }}</td>
+              <td>-{{ ret.valor|intcomma }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+
+      <hr>
+      <p><strong>Medios de pago:</strong></p>
+      <table>
+        {% for c in cajas %}
+        <tr>
+          <td>{{ c.caja }}</td>
+          <td>{% if c.referencia %}{{ c.referencia }}{% endif %}</td>
+          <td>{{ c.valor|intcomma }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+  </body>
+</html>

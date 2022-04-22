@@ -1,0 +1,25 @@
+{% load humanize %}
+<table id="anopa" class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th class="text-right">Debe</th>
+      <th class="text-right">Haber</th>
+      <th>Descripcion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for asiento in asientos %}
+      {% for op in asiento.operaciones.all|dictsort:"haber" %}
+        {% if op.cuenta == cuenta %}
+          <tr class="small">
+            <td>{{ asiento.fecha_asiento|date:"d/m/Y" }}</td>
+            <td class="text-right">{{ op.debe|intcomma }}</td>
+            <td class="text-right">{{ op.haber|intcomma }}</td>
+            <td>{{ op.descripcion }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}        
+    {% endfor %}
+  </tbody>
+</table>

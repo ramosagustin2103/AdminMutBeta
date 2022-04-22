@@ -1,0 +1,26 @@
+{% load staticfiles %}
+{% load humanize %}
+<table id="anopa" class="table table-condensed">
+  <thead>
+    <tr>
+      <th>Numero</th>
+      <th>Nombre</th>
+      <th>Abreviatura</th>
+      <th class="text-center">AFIP</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in consorcios %}
+      <tr>
+        <td>{{ c.numero }}</td>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.abreviatura }}</td>
+        <td class="text-center">
+          <a href="{% url 'cons_set' cont=c.contribuyente.id %}" class="btn btn-icon btn-xs btn-pink btn-bordered waves-efect waves-light">
+            <i class="fa fa-plug"></i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

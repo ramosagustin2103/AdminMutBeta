@@ -1,0 +1,35 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Registro de Comprobantes
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="cobranzas" bhijo1="registro" %}
+{% endblock %}
+
+{% block header %}
+  Registro de Comprobantes
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3">
+    {% include 'comunes/filtro.html' %}
+  </div>
+  <div class="col-md-9">
+    <div class="card-box">
+      {% include 'comunes/paginador.html' %}
+      <div class="table-responsive">
+        {% include 'comprobantes/registros/tabla-comprobantes.html' with comprobantes=lista %}
+      </div>
+      {% include 'comunes/paginador.html' %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel.html' %}
+{% endblock %}

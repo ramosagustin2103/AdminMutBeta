@@ -1,0 +1,110 @@
+html, body {
+  font-family: "Open Sans",sans-serif;
+  margin: 0;
+  padding: 0;
+}
+@page {
+    size: A4 landscape;
+    margin: 1.2cm;
+}
+
+@media print {
+    html, body {
+        font-size: 0.8em;
+        margin: -4mm;
+    }
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+th, td {
+  padding-right: 6px;
+  padding-left: 6px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+th {
+  border-bottom: 2px solid #DDD;
+}
+
+.linea{
+  border: 1px solid #DDD;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-success {
+  color: #32c861 !important;
+}
+
+.text-info {
+  color: #34d3eb !important
+}
+
+.text-danger {
+  color: #f96a74 !important;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.card-box {
+  padding: 20px;
+  border: 1px solid #e2e2e2;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  background-clip: padding-box;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+}
+
+.taxpayer-details:after {
+  clear: both;
+  content: '';
+  display: block;
+}
+
+.taxpayer-details > address {
+  float: left;
+  text-align: center;
+  width: 40%;
+}
+
+.taxpayer-details img {
+  margin-bottom: 1em;
+  max-height: 40px;
+  max-width: 125px;
+}
+
+.logo img {
+  margin-bottom: 1em;
+  max-height: 20px;
+  max-width: 62.5px;
+}
+
+
+
+.taxpayer-details > .receipt-details {
+  float: right;
+}
+
+.receipt-details > address {
+  float: right;
+  text-align: center;
+  width: 40%;
+}
+
+.receipt-details .receipt-type-description {
+  text-align: center;
+  width: 40%;
+}

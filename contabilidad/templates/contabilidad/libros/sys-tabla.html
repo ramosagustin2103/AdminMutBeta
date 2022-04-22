@@ -1,0 +1,26 @@
+{% load humanize %}
+<table id="anopa" class="table">
+  <thead>
+    <tr>
+      <th>N° Cuenta</th>
+      <th>Cuenta</th>
+      <th class="text-right">Debe</th>
+      <th class="text-right">Haber</th>
+      <th class="text-right">Saldo</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in cuentas %}
+      {% if c.debe == 0 and c.haber == 0 %}
+      {% else %}
+        <tr class="small">
+          <td>{{ c.numero }}</td>
+          <td>{{ c.nombre }}</td>
+          <td class="text-right">{{ c.debe|intcomma }}</td>
+          <td class="text-right">{{ c.haber|intcomma }}</td>
+          <td class="text-right">{{ c.saldo }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,17 @@
+<div class="card-box ribbon-box">
+  <div class="ribbon ribbon-pink">Menu Comprobantes</div>
+  <p class="text-muted m-b-10 font-14"></p>
+  {% if user.groups.all.0.name == "administrativo" %}
+    <a class="btn btn-block btn-bordered btn-default" href="{% url 'nuevo-rcx' %}">Nuevo Recibo</a>
+    <a class="btn btn-block btn-bordered btn-default m-b-30" href="{% url 'nuevo-ncc' %}">Nueva Nota de Credito</a>
+
+    <!-- <a class="btn btn-block btn-bordered btn-default m-b-30" href="'nuevo-cobros-importacion'">Importar cobros</a> -->
+  {% endif %}
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'registro' %}">Registro de comprobantes</a>
+</div>
+
+<div class="card-box ribbon-box">
+  <div class="ribbon ribbon-success">Analítica</div>
+  <p class="text-muted m-b-10 font-14"></p>
+  <a class="btn btn-block btn-bordered btn-default" href="{% url 'res_par' resumen='cobranzas-y-medios' %}">Resumen de cobranzas</a>
+</div>

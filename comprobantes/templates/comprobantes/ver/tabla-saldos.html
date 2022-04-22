@@ -1,0 +1,35 @@
+{% load humanize %}
+<table class="anopa table table-condensed">
+  <thead>
+    <tr>
+      <th>Concepto</th>
+      <th>Fecha</th>
+      <th class="text-right">Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% with saldo=objeto.saldos.first %}
+      <tr>
+        <td>Saldo creado</td>
+        <td>
+          {{ saldo.fecha|date:"d/m/Y" }}
+        </td>
+        <td class="text-right">
+          {{ saldo.subtotal|intcomma }}
+        </td>
+      </tr>
+      {% for s in saldo.hijos.all %}
+        <tr>
+          <td>Utilizacion en {{s.utilizacion}}</td>
+          <td>{{s.fecha|date:"d/m/Y"}}</td>
+          <td class="text-right">{{s.subtotal|intcomma}}</td>
+        </tr>
+      {% endfor %}
+        <tr>
+          <th>Remanente</th>
+          <th></th>
+          <th class="text-right">{{saldo.saldo|intcomma}}</th>
+        </tr>
+    {% endwith %}
+  </tbody>
+</table>

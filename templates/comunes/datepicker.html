@@ -1,0 +1,22 @@
+{% load staticfiles %}
+<link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+<script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+<script src='{% static "anopa/bootstrap-datepicker.es.js" %}'></script>
+<script>
+  $(function () {
+    $('.datepicker').datepicker({
+      format: "yyyy-mm-dd",
+      autoclose: true,
+      orientation: 'bottom auto',
+      language: 'es',
+    });
+  })
+  $(function () {
+    $('.datepicker-autoclose').datepicker({
+      format: "yyyy-mm-dd",
+      autoclose: true,
+      orientation: 'bottom auto',
+      language: 'es',
+    });
+  })
+</script>

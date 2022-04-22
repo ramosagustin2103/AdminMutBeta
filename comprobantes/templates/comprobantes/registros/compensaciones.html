@@ -1,0 +1,70 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Compensaciones generadas
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/bootstrap-daterangepicker/daterangepicker.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="comprobantes" bhijo1="registro de compensaciones" %}
+{% endblock %}
+
+{% block header %}
+  Compensaciones generadas
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-3">
+      {% include 'comprobantes/barra.html' %}
+    </div>
+    <div class="col-md-9">
+      <div class="card-box">
+        {% include 'comunes/filtro.html' %}
+        <br>
+        <div class="table-responsive">
+        {% include 'comprobantes/registros/tabla-compensaciones.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel.html' %}
+
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" %}'></script>
+  <script src='{% static "plugins/bootstrap-daterangepicker/daterangepicker.js" %}'></script>
+  <script>
+    $(function () {
+      $('#input-daterange-datepicker').daterangepicker({
+          buttonClasses: ['btn', 'btn-sm'],
+          applyClass: 'btn-success',
+          cancelClass: 'btn-default',
+          locale: {
+              format: 'YYYY-MM-DD',
+              applyLabel: 'Aplicar',
+              cancelLabel: 'Limpiar',
+              fromLabel: 'Desde',
+              toLabel: 'Hasta',
+              separator: " / ",
+              customRangeLabel: 'Seleccionar rango',
+              daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+              monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre',
+                  'Diciembre'],
+              firstDay: 1
+          }
+      });
+    });
+  </script>
+{% endblock %}

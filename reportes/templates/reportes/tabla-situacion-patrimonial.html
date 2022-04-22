@@ -1,0 +1,71 @@
+{% load humanize %}
+<div class="row">
+  <table class="table">
+    <tr>
+      <td style="vertical-align: top">
+        <h5 class="text-info">Bienes</h5>
+        <table class="table table-condensed">
+
+          {% for s in subtotales_activo %}
+            {% if not s.total == 0 %}
+              <tr>
+                <td>{{ s.cuenta.nombre|title }}</td>
+                <td class="text-right">{{ s.total|floatformat:"0"|intcomma }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </td>
+      <td style="vertical-align: top">
+        <h5 class="text-info">Deudas</h5>
+        <table class="table table-condensed">
+          {% for s in subtotales_pasivo %}
+            {% if not s.total == 0 %}
+              <tr>
+                <td>{{ s.cuenta.nombre|title }}</td>
+                <td class="text-right">{{ s.total|floatformat:"0"|intcomma }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          <tr>
+            <th>Total Deudas</th>
+            <th class="text-right">{{suma_pasivo|floatformat:"0"|intcomma}}</th>
+          </tr>
+        </table>
+        <h5 class="text-info">Patrimonio Neto</h5>
+        <table class="table table-condensed">
+          {% for s in subtotales_patrimonio %}
+            {% if not s.total == 0 %}
+              <tr>
+                <td>{{ s.cuenta.nombre|title }}</td>
+                <td class="text-right">{{ s.total|floatformat:"0"|intcomma }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          <tr>
+            <th>Total Pat. Net.</th>
+            <th class="text-right">{{suma_patrimonio|floatformat:"0"|intcomma}}</th>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="table table-condensed">
+          <tr class="text-success">
+            <th>Total Bienes</th>
+            <th class="text-right">{{ suma_activo|floatformat:"0"|intcomma }}</th>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="table table-condensed">
+          <tr class="text-success">
+            <th>Total Deudas + PN</th>
+            <th class="text-right">{{ suma_pasivo_patrimonio|floatformat:"0"|intcomma }}</th>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>

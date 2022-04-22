@@ -1,0 +1,69 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="resumenes" bhijo1=resumen.nombre %}
+{% endblock %}
+
+{% block header %}
+  {{resumen.nombre}}
+{% endblock %}
+
+{% block contenido %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card-box">
+        <h4 class="header-title m-t-0">Gastos devengados desde: {{fechas.0}} hasta: {{fechas.1}}<a href="{% url 'res_par' resumen=resumen.slug %}" class="btn pull-right btn-pink waves-effect waves-light"><i class="fa fa-hand-o-left"></i> Consultar otros parametros</a> </h4>
+        <br>
+        <div class="table-responsive">
+          <table class="table anopa">
+            <thead>
+              <tr class="active">
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Cuenta</th>
+                <th>Acreedor</th>
+                <th>Documento</th>
+                <th>Descripcion</th>
+                <th width="30" class="active text-right">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in deudas %}
+                <tr>
+                  <td>{{d.fecha|date:"d/m/Y"}}</td>
+                  <td>{{d.gasto}}</td>
+                  <td>{{d.gasto.cuenta_contable.nombre}}</td>
+                  <td>{{d.deuda.acreedor}}</td>
+                  <td>Deuda {{d.deuda.numero}}</td>
+                  <td>{{d.deuda.observacion|default:""}}</td>
+                  <td class="active bold text-right"><strong>{{d.valor|intcomma}}</strong></td>
+                </tr>
+              {% endfor %}
+              {% for o in ops %}
+                <tr>
+                  <td>{{o.fecha|date:"d/m/Y"}}</td>
+                  <td>{{o.gasto}}</td>
+                  <td>{{o.gasto.cuenta_contable.nombre}}</td>
+                  <td>{{o.op.acreedor}}</td>
+                  <td>OP {{o.op }}</td>
+                  <td>{{o.op.descripcion|default:""}}</td>
+                  <td class="active bold text-right"><strong>{{o.valor|intcomma}}</strong></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  {% include 'comunes/js_datatable_print_excel_titulo.html' with anopa_order_by=1 titulo_print=resumen.nombre %}
+{% endblock %}

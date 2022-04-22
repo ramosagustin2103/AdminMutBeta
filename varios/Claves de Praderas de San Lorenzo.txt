@@ -1,0 +1,8 @@
+Claves de Praderas de San Lorenzo
+
+	psl.sofia -> praderas1234
+	psl.ana -> praderas1234
+	psl.teresa -> praderas1234
+	psl.estudio -> praderas1234
+	psl.pablo.a -> praderas1234
+	psl.pablo.c -> praderas1234

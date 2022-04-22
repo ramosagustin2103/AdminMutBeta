@@ -1,0 +1,23 @@
+{% extends 'creditos/nuevo/index.html' %}
+
+{% block panel-body %}
+  <div class="alert alert-icon alert-white alert-warning alert-dismissible fade in" role="alert">
+      <i class="mdi mdi-alert"></i>
+      <strong>Aclaraciones:</strong>
+      <ul>
+        <li>Solo se admiten archivos de tipo ".xlsx"</li>
+        <li>
+          Debe contener las siguientes columnas con sus respectivos formatos:
+          <ol>
+            <li>periodo: Fecha</li>
+            <li>ingreso: Texto (Debe colocarse el nombre tal cual se encuentra en parametros)</li>
+            <li>dominio: Texto (Debe colocarse el numero de dominio tal cual se encuentra en parametros)</li>
+            <li>capital: Numero</li>
+            <li>detalle: Texto (Puede estar vacio)</li>
+          </ol>
+        </li>
+      </ul>
+  </div>
+    {{wizard.form.as_p}}
+{% endblock %}
+

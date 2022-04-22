@@ -1,0 +1,112 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+
+{% block titulo %}
+  Plan de cuentas
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/jstree/style.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="contabilidad" bhijo1="cuentas" %}
+{% endblock %}
+
+{% block header %}
+  Plan de cuentas
+{% endblock %}
+
+{% block contenido %}
+
+  <div class="row">
+    <div class="col-md-3">
+      {% include 'contabilidad/barra.html' %}
+    </div>
+    <div class="col-md-9">
+      <div class="panel panel-border panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">Plan de cuentas</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-12">
+              <a href="{% url 'cuentas_nuevo' %}" class="btn btn-info pull-right">
+                <i class="fa fa-plus"></i> Nueva cuenta
+              </a>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div id="basicTree">
+                <ul>
+                  {% for rubro in rubros %}
+                    <li>{{ rubro.nombre }}
+                      <ul>
+                        {% for subrubro in rubro.cuenta_set.all %}
+                          {% if subrubro.nivel != 4 %}
+                            <li>{{ subrubro.nombre }}
+                              <ul>
+                                {% for metacuenta in subrubro.cuenta_set.all %}
+                                  {% if metacuenta.nivel != 4 %}
+                                    <li>{{ metacuenta.nombre }}
+                                      <ul>
+                                        {% for cuenta in metacuenta.cuenta_set.all %}
+                                          {% if cuenta in plan.cuentas.all %}
+                                            <li data-jstree='{"type":"file"}'><a href="{% url 'cuentas_set' cuenta=cuenta.numero %}">{{cuenta}}</a></li>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </ul>
+                                    </li>
+                                  {% else %}
+                                    {% if metacuenta in plan.cuentas.all %}
+                                      <li data-jstree='{"type":"file"}'> <a href="{% url 'cuentas_set' cuenta=metacuenta.numero %}">{{metacuenta}}</a></li>
+                                    {% endif %}
+                                  {% endif %}
+                                {% endfor %}
+                              </ul>
+                            </li>
+                          {% else %}
+                            {% if subrubro in plan.cuentas.all %}
+                              <li data-jstree='{"type":"file"}'><a href="{% url 'cuentas_set' cuenta=subrubro.numero %}">{{subrubro}}</a></li>
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script src='{% static "plugins/jstree/jstree.min.js" %}'></script>
+  <script>
+    $(document).ready(function(){
+      $('#basicTree').jstree({
+      'core' : {
+        'themes' : {
+          'responsive': false
+        }
+      },
+          'types' : {
+
+              'file' : {
+                  'icon' : 'fa fa-file'
+              }
+          },
+          'plugins' : ['types',]
+      }).bind("select_node.jstree", function (e, data) {
+           var href = data.node.a_attr.href;
+           document.location.href = href;
+      });
+    });
+  </script>
+{% endblock %}

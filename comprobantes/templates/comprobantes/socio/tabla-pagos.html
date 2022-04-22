@@ -1,0 +1,33 @@
+{% load staticfiles %}
+{% load humanize %}
+
+<small>
+  <table class="anopa table table-condensed table-sm">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Ref</th>
+        <th>Titulo</th>
+        <th class="text-center">Conceptos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pago in pagos %}
+        {% with payment=pago.payments.last %}
+          {% if payment.status == "approved" %}
+            <tr>
+              <td>{{ payment.created|date:"d/m/Y" }}</td>
+              <td>#{{ payment }}</td>
+              <td>{{ payment.preference.title }}</td>
+              <td class="text-center">
+                {% for c in pago.cobro_set.all %}
+                  - {{ c.credito.periodo|date:"Y-m" }} - {{ c.credito.ingreso }}: ${{c.subtotal|intcomma}} <br>
+                {% endfor %}
+              </td>
+            </tr>
+          {% endif %}
+        {% endwith %}
+      {% endfor %}
+    </tbody>
+  </table>
+</small>

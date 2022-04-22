@@ -1,0 +1,14 @@
+<label for="id_dominios">Dominios: </label>
+<select id="id_dominios" name="dominios" multiple="" required="" class="selector form-control">
+  {% spaceless %}
+    {% for s in consorcio.socio_set.all %}
+      {% spaceless %}
+        {% for d in s.socio.all%}
+          <option value="{{d.id}}">
+              {{s}} - {{d}}
+          </option>
+          {% endfor %}
+        {% endspaceless %}
+    {% endfor %}
+  {% endspaceless %}
+</select>

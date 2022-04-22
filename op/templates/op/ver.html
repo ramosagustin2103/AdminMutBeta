@@ -1,0 +1,229 @@
+{% extends 'raiz.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block titulo %}
+  Orden de pago {{op.formatoAfip}}
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href='{% static "plugins/datatables/jquery.dataTables.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/buttons.bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "plugins/datatables/dataTables.bootstrap.min.css" %}'>
+{% endblock %}
+
+{% block breadcrum %}
+  {% include 'comunes/breadcrum.html' with bpadre="OP" bhijo1="registro de pagos" bhijo2=op.formatoAfip %}
+{% endblock %}
+
+{% block header %}
+  Orden de pago {{op.formatoAfip}} para {{op.acreedor}}
+{% endblock %}
+
+{% block contenido %}
+
+  <div class="row">
+
+    <div class="col-md-12">
+
+      <div class="card-box widget-box-three">
+        <div class="bg-icon pull-left">
+          <img src="{% static 'assets/images/icons/fine_print.svg' %}">
+        </div>
+        <div class="text-right">
+          <table class="table">
+            {% if op.asiento_anulado %}
+              <tr>
+                <th>Estado</th>
+                <td><h2 class="text-danger">Pago Anulado el {{ op.anulado|date:"d/m/Y" }}</h2></td>
+              </tr>
+            {% endif %}
+            <tr>
+              <th>Pago</th>
+              <td>
+                <a href="{% url 'op_pdf' pk=op.pk %}" target="_blank">
+                  {{op.formatoAfip}}
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <th>Fecha del Pago</th>
+              <td>{{ op.fecha|date:"d/m/Y" }}</td>
+            </tr>
+            <tr>
+              <th>Descripcion del pago</th>
+              <td>
+                {% if op.descripcion %}
+                  {{ op.descripcion }}
+                {% else %}
+                  No hay aclaraciones
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th>Formas de pago</th>
+              <td>
+                <ul>
+                  {% if retenciones %}
+                    {% for r in retenciones %}
+                      <li>{{r.deuda.retencion}}: {{r.valor|intcomma}}</li>
+                    {% endfor %}
+                  {% endif %}
+                  {% for c in cajas %}
+                    <li>{{ c.caja }}: {{ c.valor|intcomma }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <th>Acciones</th>
+              <td>
+                {% if user.groups.all.0.name == "contable" %}
+                  {% if op.asiento %}
+                    <a href="{% url 'asiento_redireccion' id_asiento=op.asiento.id %}" class="btn btn-icon btn-xs btn-info btn-bordered waves-efect waves-light">
+                      Ver asiento
+                    </a>
+                  {% endif %}
+                  {% if op.asiento_anulado %}
+                    <a href="{% url 'asiento_redireccion' id_asiento=op.asiento_anulado.id %}" class="btn btn-icon btn-xs btn-info btn-bordered waves-efect waves-light">
+                      Ver asiento anulacion
+                    </a>
+                  {% endif %}
+                {% endif %}
+                {% if user.groups.all.0.name == "administrativo" %}
+                  {% if not op.anulado %}
+                    <a href="{% url 'op_anular' pk=op.pk %}" class="btn btn-icon btn-xs btn-danger btn-bordered waves-efect waves-light">
+                      Anular
+                    </a>
+                  {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    {% if deudas %}
+      <div class="col-md-12">
+        <div class="panel panel-border panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Listado de deudas pagadas</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="anopa table table-condensed">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Numero</th>
+                    <th class="text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for d in deudas %}
+                    <tr>
+                      <td>{{ d.deuda.fecha|date:"d/m/Y" }}</td>
+                      <td>{{ d.deuda.numero }}</td>
+                      <td  class="text-right">{{ d.valor|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if gastos %}
+      <div class="col-md-12">
+        <div class="panel panel-border panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Listado de erogaciones</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="anopa table table-condensed">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th class="text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for g in gastos %}
+                    <tr>
+                      <td>{{ g.gasto }}</td>
+                      <td  class="text-right">{{ g.valor|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+{% endblock %}
+
+
+{% block js %}
+  <script src='{% static "plugins/datatables/jquery.dataTables.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.bootstrap.js" %}'></script>
+  <script src='{% static "plugins/datatables/dataTables.buttons.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/buttons.bootstrap.min.js" %}'></script>
+  <script src='{% static "plugins/datatables/jszip.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/vfs_fonts.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.html5.min.js" %}''></script>
+  <script src='{% static "plugins/datatables/buttons.print.min.js" %}''></script>
+
+  <script src='{% static "plugins/moment/moment.js" %}'></script>
+  <script>
+    $(function () {
+      var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $(".anopa").length && $(".anopa").DataTable({
+                  dom: "Bfrtip",
+                  buttons: [{
+                      extend: "excel",
+                      className: "btn-sm"
+                  }],
+                  responsive: !0,
+                  ordering: false,
+                  paging: false,
+                  bInfo: false,
+                  language: {
+                    "emptyTable": "No hay entradas",
+                    "search": "Buscar: ",
+                    "paginate": {
+                        "first":"Primero",
+                        "last":"Ultimo",
+                        "next":">",
+                        "previous":"<",
+                    },
+                    "lengthMenu": "Ver _MENU_ entradas",
+                    "info": "Visualizando _START_ a _END_ de _TOTAL_ entradas",
+                    "infoEmpty": "Visualizando 0 a 0 de 0 entradas",
+                  }
+              })
+          },
+          TableManageButtons = function() {
+              "use strict";
+              return {
+                  init: function() {
+                      handleDataTableButtons()
+                  }
+              }
+          }();
+      TableManageButtons.init();
+
+    });
+
+  </script>
+{% endblock %}

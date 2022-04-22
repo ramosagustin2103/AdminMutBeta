@@ -1,0 +1,17 @@
+{% load humanize %}
+<table class="anopa table">
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th class="text-right">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for gasto in gastoDeuda %}
+    <tr>
+      <td>{{ gasto.gasto }}</td>
+      <td class="text-right">{{ gasto.valor|intcomma }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
