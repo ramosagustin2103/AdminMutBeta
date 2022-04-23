@@ -605,7 +605,7 @@ class NewExp():
 			#datetime(2022, 4, 15),
 			#datetime(2022, 4, 16),
 			#datetime(2022, 4, 17),
-			#datetime(2022, 4, 18),
+			datetime(2022, 4, 18),
 			datetime(2022, 4, 19),
 			datetime(2022, 4, 20),
 			datetime(2022, 4, 21),			
