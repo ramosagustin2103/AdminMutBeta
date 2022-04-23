@@ -107,7 +107,7 @@ WSGI_APPLICATION = 'admincu.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'admincu',
+        'NAME': 'adminmut',
         'USER': 'root',
         'PASSWORD': 'Arnold21.',
         'HOST': 'localhost',
